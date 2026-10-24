@@ -1,0 +1,2054 @@
+[
+  {
+    "name": "agent-status",
+    "displayName": "Agent Status",
+    "description": "What an agent is doing now: idle, working, needs input, or failed. Active states pulse.",
+    "usage": "import AgentStatus from \"./agent-status\"\n\n<AgentStatus />",
+    "tweakSchema": [
+      {
+        "key": "state",
+        "label": "State",
+        "type": "enum",
+        "default": "thinking",
+        "options": [
+          "idle",
+          "thinking",
+          "waiting",
+          "error"
+        ]
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "alert",
+    "displayName": "Alert",
+    "description": "An inline message that stays until dismissed, with four severities and an optional action. Errors are announced immediately.",
+    "usage": "import Alert from \"./alert\"\n\n<Alert />",
+    "tweakSchema": [
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Your trial ends in 3 days"
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "type": "string",
+        "default": "Add a payment method to keep your projects and deploys running."
+      },
+      {
+        "key": "severity",
+        "label": "Severity",
+        "type": "enum",
+        "default": "info",
+        "options": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ]
+      },
+      {
+        "key": "dismissible",
+        "label": "Dismissible",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "actionLabel",
+        "label": "Action",
+        "type": "string",
+        "default": "Add payment method"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 10,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "approval-card",
+    "displayName": "Approval Card",
+    "description": "Asks the user to approve or reject an agent action before it runs, with a risk level. The choice can be changed until the agent acts.",
+    "usage": "import ApprovalCard from \"./approval-card\"\n\n<ApprovalCard />",
+    "tweakSchema": [
+      {
+        "key": "action",
+        "label": "Action",
+        "type": "string",
+        "default": "Email 214 customers about the price change"
+      },
+      {
+        "key": "details",
+        "label": "Details",
+        "type": "string",
+        "default": "Subject: Your plan is changing on Nov 1. Sent from billing@acme.com. Recipients are every customer on the Team plan."
+      },
+      {
+        "key": "risk",
+        "label": "Risk",
+        "type": "enum",
+        "default": "medium",
+        "options": [
+          "low",
+          "medium",
+          "high"
+        ]
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "badge",
+    "displayName": "Badge",
+    "description": "Small status label with five tones and an optional dot.",
+    "usage": "import Badge from \"./badge\"\n\n<Badge />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "New"
+      },
+      {
+        "key": "tone",
+        "label": "Tone",
+        "type": "enum",
+        "default": "accent",
+        "options": [
+          "neutral",
+          "accent",
+          "success",
+          "warning",
+          "danger"
+        ]
+      },
+      {
+        "key": "dot",
+        "label": "Dot",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 5,
+        "min": 0,
+        "max": 12
+      }
+    ]
+  },
+  {
+    "name": "button",
+    "displayName": "Button",
+    "description": "Primary, secondary, ghost, and destructive buttons. Loading keeps the label in place and blocks repeat clicks.",
+    "usage": "import Button from \"./button\"\n\n<Button />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Continue"
+      },
+      {
+        "key": "variant",
+        "label": "Variant",
+        "type": "enum",
+        "default": "primary",
+        "options": [
+          "primary",
+          "secondary",
+          "ghost",
+          "destructive"
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "enum",
+        "default": "md",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "key": "loading",
+        "label": "Loading",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 8,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "card",
+    "displayName": "Card",
+    "description": "Container with an eyebrow, title, body, and footer. Turn on interactive when the whole card is a link.",
+    "usage": "import Card from \"./card\"\n\n<Card />",
+    "tweakSchema": [
+      {
+        "key": "eyebrow",
+        "label": "Eyebrow",
+        "type": "string",
+        "default": "Team plan"
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Everything a small team needs"
+      },
+      {
+        "key": "body",
+        "label": "Body",
+        "type": "string",
+        "default": "Unlimited projects, shared environment variables, and audit history for every member."
+      },
+      {
+        "key": "footer",
+        "label": "Footer",
+        "type": "string",
+        "default": "$24 per seat, billed monthly"
+      },
+      {
+        "key": "interactive",
+        "label": "Interactive",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "carousel",
+    "displayName": "Carousel",
+    "description": "Draggable slides with arrows, dots, and keyboard support. Autoplay is off by default and always has a pause button.",
+    "usage": "import Carousel from \"./carousel\"\n\n<Carousel />",
+    "tweakSchema": [
+      {
+        "key": "slides",
+        "label": "Slides",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Slide"
+          },
+          {
+            "key": "caption",
+            "label": "Caption",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "hue",
+            "label": "Hue",
+            "type": "number",
+            "default": 24,
+            "min": 0,
+            "max": 359
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "loop",
+        "label": "Loop",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "interval",
+        "label": "Interval (ms)",
+        "type": "number",
+        "default": 5000,
+        "min": 1500,
+        "max": 12000,
+        "step": 500
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 280,
+        "min": 160,
+        "max": 520
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "chat-thread",
+    "displayName": "Chat Thread",
+    "description": "Scrollable conversation that follows new messages and offers Jump to latest when the reader scrolls up.",
+    "usage": "import ChatThread from \"./chat-thread\"\n\n<ChatThread />",
+    "tweakSchema": [
+      {
+        "key": "messages",
+        "label": "Messages",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "role",
+            "label": "Role",
+            "type": "enum",
+            "default": "user",
+            "options": [
+              "user",
+              "assistant"
+            ]
+          },
+          {
+            "key": "text",
+            "label": "Text",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 360,
+        "min": 160,
+        "max": 800
+      }
+    ]
+  },
+  {
+    "name": "checkbox",
+    "displayName": "Checkbox",
+    "description": "Native checkbox, restyled, with an animated checkmark, an indeterminate state, and an optional description.",
+    "usage": "import Checkbox from \"./checkbox\"\n\n<Checkbox />",
+    "tweakSchema": [
+      {
+        "key": "checked",
+        "label": "Checked",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "indeterminate",
+        "label": "Indeterminate",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "I agree to the terms"
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "type": "string",
+        "default": "You can change this later in settings."
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 4,
+        "min": 0,
+        "max": 9
+      }
+    ]
+  },
+  {
+    "name": "data-table",
+    "displayName": "Data Table",
+    "description": "A sortable table with row selection. Headers expose sort state, and the selection count is announced.",
+    "usage": "import DataTable from \"./data-table\"\n\n<DataTable />",
+    "tweakSchema": [
+      {
+        "key": "rows",
+        "label": "Rows",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "customer",
+            "label": "Customer",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "plan",
+            "label": "Plan",
+            "type": "string",
+            "default": "Team"
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "type": "string",
+            "default": "Active"
+          },
+          {
+            "key": "mrr",
+            "label": "MRR",
+            "type": "number",
+            "default": 0,
+            "min": 0,
+            "max": 100000
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "selectable",
+        "label": "Selectable",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "density",
+        "label": "Density",
+        "type": "enum",
+        "default": "comfortable",
+        "options": [
+          "compact",
+          "comfortable"
+        ]
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "dialog",
+    "displayName": "Dialog",
+    "description": "Modal with a title, body, and two actions. Traps focus, closes on Escape, and returns focus to its trigger.",
+    "usage": "import Dialog from \"./dialog\"\n\n<Dialog />",
+    "tweakSchema": [
+      {
+        "key": "open",
+        "label": "Open",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Delete this project?"
+      },
+      {
+        "key": "body",
+        "label": "Body",
+        "type": "string",
+        "default": "The project, its deploys, and its environment variables are removed for everyone on the team. This can't be undone."
+      },
+      {
+        "key": "primaryLabel",
+        "label": "Primary",
+        "type": "string",
+        "default": "Delete project"
+      },
+      {
+        "key": "secondaryLabel",
+        "label": "Secondary",
+        "type": "string",
+        "default": "Keep project"
+      },
+      {
+        "key": "destructive",
+        "label": "Destructive",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "diff-review",
+    "displayName": "Diff Review",
+    "description": "Accept or reject an agent's proposed changes hunk by hunk or all at once, with undo until the result is applied.",
+    "usage": "import DiffReview from \"./diff-review\"\n\n<DiffReview />",
+    "tweakSchema": [
+      {
+        "key": "file",
+        "label": "File",
+        "type": "string",
+        "default": "src/billing/retry.ts"
+      },
+      {
+        "key": "hunks",
+        "label": "Changes",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Change"
+          },
+          {
+            "key": "before",
+            "label": "Before",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "after",
+            "label": "After",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "dropdown-menu",
+    "displayName": "Dropdown Menu",
+    "description": "A button that opens a list of actions. Arrow keys, Home, End, and type-ahead move through items; Escape returns focus.",
+    "usage": "import DropdownMenu from \"./dropdown-menu\"\n\n<DropdownMenu />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Actions"
+      },
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "label",
+            "label": "Label",
+            "type": "string",
+            "default": "Item"
+          },
+          {
+            "key": "shortcut",
+            "label": "Shortcut",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "destructive",
+            "label": "Destructive",
+            "type": "boolean",
+            "default": false
+          },
+          {
+            "key": "disabled",
+            "label": "Disabled",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "defaultOpen",
+        "label": "Open",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "showResult",
+        "label": "Show last action",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 10,
+        "min": 0,
+        "max": 20
+      }
+    ]
+  },
+  {
+    "name": "image-viewer",
+    "displayName": "Image Viewer",
+    "description": "Thumbnails that open a full-screen viewer with zoom, arrow-key navigation, and focus that returns where it started.",
+    "usage": "import ImageViewer from \"./image-viewer\"\n\n<ImageViewer />",
+    "tweakSchema": [
+      {
+        "key": "images",
+        "label": "Images",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "alt",
+            "label": "Alt text",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 10,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "message-bubble",
+    "displayName": "Message Bubble",
+    "description": "One chat message. The user's sits in a raised bubble, the assistant's reads as plain text. Copy confirms in place.",
+    "usage": "import MessageBubble from \"./message-bubble\"\n\n<MessageBubble />",
+    "tweakSchema": [
+      {
+        "key": "role",
+        "label": "Role",
+        "type": "enum",
+        "default": "assistant",
+        "options": [
+          "assistant",
+          "user"
+        ]
+      },
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "Revenue is up 12% on the quarter, led by the enterprise tier. Churn fell to 2.1%, the lowest it has been this year."
+      },
+      {
+        "key": "name",
+        "label": "Name",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "timestamp",
+        "label": "Time",
+        "type": "string",
+        "default": "10:42"
+      },
+      {
+        "key": "showActions",
+        "label": "Show copy",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "plan-list",
+    "displayName": "Plan List",
+    "description": "An agent's planned steps with done, running, and pending states and a progress bar.",
+    "usage": "import PlanList from \"./plan-list\"\n\n<PlanList />",
+    "tweakSchema": [
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Plan"
+      },
+      {
+        "key": "steps",
+        "label": "Steps",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "label",
+            "label": "Label",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "type": "enum",
+            "default": "pending",
+            "options": [
+              "done",
+              "running",
+              "pending"
+            ]
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "pricing-table",
+    "displayName": "Pricing Table",
+    "description": "Plans side by side with a monthly and annual switch, a highlighted plan, and stacking on narrow widths.",
+    "usage": "import PricingTable from \"./pricing-table\"\n\n<PricingTable />",
+    "tweakSchema": [
+      {
+        "key": "plans",
+        "label": "Plans",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "name",
+            "label": "Name",
+            "type": "string",
+            "default": "Plan"
+          },
+          {
+            "key": "price",
+            "label": "Monthly price",
+            "type": "number",
+            "default": 0,
+            "min": 0,
+            "max": 9999
+          },
+          {
+            "key": "description",
+            "label": "Description",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "features",
+            "label": "Features (split with ;)",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "cta",
+            "label": "Button",
+            "type": "string",
+            "default": "Choose plan"
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "defaultBilling",
+        "label": "Billing",
+        "type": "enum",
+        "default": "monthly",
+        "options": [
+          "monthly",
+          "annual"
+        ]
+      },
+      {
+        "key": "discount",
+        "label": "Annual discount (%)",
+        "type": "number",
+        "default": 20,
+        "min": 0,
+        "max": 60
+      },
+      {
+        "key": "currency",
+        "label": "Currency",
+        "type": "string",
+        "default": "$"
+      },
+      {
+        "key": "highlight",
+        "label": "Highlight plan #",
+        "type": "number",
+        "default": 1,
+        "min": 0,
+        "max": 5
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "prompt-composer",
+    "displayName": "Prompt Composer",
+    "description": "Prompt box that grows with its content. Enter sends, Shift+Enter adds a line, and send becomes stop while running.",
+    "usage": "import PromptComposer from \"./prompt-composer\"\n\n<PromptComposer />",
+    "tweakSchema": [
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "type": "string",
+        "default": "Ask about your data…"
+      },
+      {
+        "key": "isRunning",
+        "label": "Running",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "maxRows",
+        "label": "Max rows",
+        "type": "number",
+        "default": 6,
+        "min": 1,
+        "max": 12
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "reasoning-trace",
+    "displayName": "Reasoning Trace",
+    "description": "The steps an agent took, folded away by default, with how long each took.",
+    "usage": "import ReasoningTrace from \"./reasoning-trace\"\n\n<ReasoningTrace />",
+    "tweakSchema": [
+      {
+        "key": "steps",
+        "label": "Steps",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "label",
+            "label": "Label",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "seconds",
+            "label": "Seconds",
+            "type": "number",
+            "default": 1,
+            "min": 0,
+            "max": 120,
+            "step": 0.1
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "running",
+        "label": "Running",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "defaultOpen",
+        "label": "Open by default",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "scroll-area",
+    "displayName": "Scroll Area",
+    "description": "A fixed-height scrolling list with edge fades that appear only when there is more to see.",
+    "usage": "import ScrollArea from \"./scroll-area\"\n\n<ScrollArea />",
+    "tweakSchema": [
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Recent deploys"
+      },
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 240,
+        "min": 120,
+        "max": 520
+      },
+      {
+        "key": "fades",
+        "label": "Edge fades",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "segmented-control",
+    "displayName": "Segmented Control",
+    "description": "Compact single choice from two to five options, with arrow-key navigation and a sliding selection.",
+    "usage": "import SegmentedControl from \"./segmented-control\"\n\n<SegmentedControl />",
+    "tweakSchema": [
+      {
+        "key": "options",
+        "label": "Options",
+        "type": "array",
+        "default": [
+          "Day",
+          "Week",
+          "Month"
+        ],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "defaultValue",
+        "label": "Selected",
+        "type": "string",
+        "default": "Week"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 8,
+        "min": 0,
+        "max": 20
+      }
+    ]
+  },
+  {
+    "name": "sign-in-form",
+    "displayName": "Sign-in Form",
+    "description": "A sign-in or sign-up form with field validation that explains itself and focuses the first error.",
+    "usage": "import SignInForm from \"./sign-in-form\"\n\n<SignInForm />",
+    "tweakSchema": [
+      {
+        "key": "mode",
+        "label": "Mode",
+        "type": "enum",
+        "default": "signin",
+        "options": [
+          "signin",
+          "signup"
+        ]
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "subtitle",
+        "label": "Subtitle",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "providerLabel",
+        "label": "Provider label",
+        "type": "string",
+        "default": "Continue with Google"
+      },
+      {
+        "key": "showProvider",
+        "label": "Show provider",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "submitLabel",
+        "label": "Submit label",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "split-pane",
+    "displayName": "Split Pane",
+    "description": "Two panes with a draggable divider that also works from the keyboard, horizontally or stacked.",
+    "usage": "import SplitPane from \"./split-pane\"\n\n<SplitPane />",
+    "tweakSchema": [
+      {
+        "key": "direction",
+        "label": "Direction",
+        "type": "enum",
+        "default": "horizontal",
+        "options": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      {
+        "key": "initial",
+        "label": "Start size (%)",
+        "type": "number",
+        "default": 38,
+        "min": 5,
+        "max": 95
+      },
+      {
+        "key": "min",
+        "label": "Min (%)",
+        "type": "number",
+        "default": 20,
+        "min": 5,
+        "max": 50
+      },
+      {
+        "key": "max",
+        "label": "Max (%)",
+        "type": "number",
+        "default": 80,
+        "min": 50,
+        "max": 95
+      },
+      {
+        "key": "startLabel",
+        "label": "Start label",
+        "type": "string",
+        "default": "Files"
+      },
+      {
+        "key": "endLabel",
+        "label": "End label",
+        "type": "string",
+        "default": "Preview"
+      },
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 260,
+        "min": 160,
+        "max": 520
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "streaming-text",
+    "displayName": "Streaming Text",
+    "description": "Reveals a reply word by word like a streamed answer. Respects reduced motion.",
+    "usage": "import StreamingText from \"./streaming-text\"\n\n<StreamingText />",
+    "tweakSchema": [
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "Revenue grew 12% quarter over quarter, led by the enterprise tier. Churn fell to 2.1%, the lowest this year, mostly from fewer failed payments."
+      },
+      {
+        "key": "speed",
+        "label": "Speed (ms/word)",
+        "type": "number",
+        "default": 40,
+        "min": 10,
+        "max": 300
+      },
+      {
+        "key": "cursor",
+        "label": "Cursor",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "suggestion-chips",
+    "displayName": "Suggestion Chips",
+    "description": "Follow-up prompts shown under an agent reply. Picking one marks it.",
+    "usage": "import SuggestionChips from \"./suggestion-chips\"\n\n<SuggestionChips />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Suggestions",
+        "type": "array",
+        "default": [],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "switch",
+    "displayName": "Switch",
+    "description": "On and off setting with a label and description. The whole row is the click target.",
+    "usage": "import Switch from \"./switch\"\n\n<Switch />",
+    "tweakSchema": [
+      {
+        "key": "checked",
+        "label": "On",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Email notifications"
+      },
+      {
+        "key": "description",
+        "label": "Description",
+        "type": "string",
+        "default": "Get a summary when a deploy finishes."
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "tabs",
+    "displayName": "Tabs",
+    "description": "Underlined tabs with one panel each. Arrow keys, Home, and End move between tabs.",
+    "usage": "import Tabs from \"./tabs\"\n\n<Tabs />",
+    "tweakSchema": [
+      {
+        "key": "tabs",
+        "label": "Tabs",
+        "type": "array",
+        "default": [],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "panels",
+        "label": "Panels",
+        "type": "array",
+        "default": [],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "defaultTab",
+        "label": "Default tab",
+        "type": "string",
+        "default": "Overview"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "terminal-output",
+    "displayName": "Terminal Output",
+    "description": "A command's output with an exit status in words, streaming lines, auto-follow, and copy.",
+    "usage": "import TerminalOutput from \"./terminal-output\"\n\n<TerminalOutput />",
+    "tweakSchema": [
+      {
+        "key": "command",
+        "label": "Command",
+        "type": "string",
+        "default": "pnpm test"
+      },
+      {
+        "key": "lines",
+        "label": "Output lines",
+        "type": "array",
+        "default": [],
+        "items": [],
+        "hidden": true
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "type": "enum",
+        "default": "failed",
+        "options": [
+          "running",
+          "passed",
+          "failed"
+        ]
+      },
+      {
+        "key": "seconds",
+        "label": "Seconds",
+        "type": "number",
+        "default": 4.2,
+        "min": 0,
+        "max": 600,
+        "step": 0.1
+      },
+      {
+        "key": "stream",
+        "label": "Stream lines",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "speed",
+        "label": "Line delay (ms)",
+        "type": "number",
+        "default": 220,
+        "min": 40,
+        "max": 1200,
+        "step": 20
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 260,
+        "min": 140,
+        "max": 520
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "text-input",
+    "displayName": "Text Input",
+    "description": "Text field with a visible label, helper text, and an error state. Password fields get a show and hide toggle.",
+    "usage": "import TextInput from \"./text-input\"\n\n<TextInput />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Work email"
+      },
+      {
+        "key": "helper",
+        "label": "Helper",
+        "type": "string",
+        "default": "We only use this to send your receipts."
+      },
+      {
+        "key": "error",
+        "label": "Error",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "type": "string",
+        "default": "name@company.com"
+      },
+      {
+        "key": "type",
+        "label": "Type",
+        "type": "enum",
+        "default": "email",
+        "options": [
+          "text",
+          "email",
+          "password",
+          "url"
+        ]
+      },
+      {
+        "key": "required",
+        "label": "Required mark",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 8,
+        "min": 0,
+        "max": 20
+      }
+    ]
+  },
+  {
+    "name": "toast",
+    "displayName": "Toast",
+    "description": "Notification with a title and detail. Dismisses itself, pauses on hover and focus, and announces errors.",
+    "usage": "import Toast from \"./toast\"\n\n<Toast />",
+    "tweakSchema": [
+      {
+        "key": "message",
+        "label": "Message",
+        "type": "string",
+        "default": "Update available"
+      },
+      {
+        "key": "description",
+        "label": "Detail",
+        "type": "string",
+        "default": "Reload to get the latest changes."
+      },
+      {
+        "key": "severity",
+        "label": "Severity",
+        "type": "enum",
+        "default": "info",
+        "options": [
+          "info",
+          "success",
+          "warning",
+          "error"
+        ]
+      },
+      {
+        "key": "duration",
+        "label": "Duration (ms)",
+        "type": "number",
+        "default": 5000,
+        "min": 0,
+        "max": 20000,
+        "step": 500
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 10,
+        "min": 0,
+        "max": 24
+      }
+    ]
+  },
+  {
+    "name": "tool-call-card",
+    "displayName": "Tool Call Card",
+    "description": "One tool call with its status, duration, input, and result. Folds open and closed.",
+    "usage": "import ToolCallCard from \"./tool-call-card\"\n\n<ToolCallCard />",
+    "tweakSchema": [
+      {
+        "key": "name",
+        "label": "Tool name",
+        "type": "string",
+        "default": "search_billing_events"
+      },
+      {
+        "key": "input",
+        "label": "Input",
+        "type": "string",
+        "default": "{ \"status\": \"failed\", \"since\": \"2026-07-01\" }"
+      },
+      {
+        "key": "output",
+        "label": "Output",
+        "type": "string",
+        "default": "412 events matched. 247 later retried successfully."
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "type": "enum",
+        "default": "done",
+        "options": [
+          "running",
+          "done",
+          "failed"
+        ]
+      },
+      {
+        "key": "seconds",
+        "label": "Seconds",
+        "type": "number",
+        "default": 1.6,
+        "min": 0,
+        "max": 120,
+        "step": 0.1
+      },
+      {
+        "key": "defaultOpen",
+        "label": "Open by default",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "tooltip",
+    "displayName": "Tooltip",
+    "description": "A short text label for a control. Opens after a hover delay or instantly on keyboard focus, and closes on Escape.",
+    "usage": "import Tooltip from \"./tooltip\"\n\n<Tooltip />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Trigger",
+        "type": "string",
+        "default": "Hover or focus me"
+      },
+      {
+        "key": "content",
+        "label": "Content",
+        "type": "string",
+        "default": "Copy link"
+      },
+      {
+        "key": "shortcut",
+        "label": "Shortcut",
+        "type": "string",
+        "default": "⌘C"
+      },
+      {
+        "key": "side",
+        "label": "Side",
+        "type": "enum",
+        "default": "top",
+        "options": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ]
+      },
+      {
+        "key": "delay",
+        "label": "Delay (ms)",
+        "type": "number",
+        "default": 250,
+        "min": 0,
+        "max": 1200,
+        "step": 50
+      },
+      {
+        "key": "forceOpen",
+        "label": "Always open",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 8,
+        "min": 0,
+        "max": 20
+      }
+    ]
+  }
+]

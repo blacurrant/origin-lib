@@ -1,0 +1,828 @@
+{
+ "groups": [
+  {
+   "id": "foundations",
+   "title": "Foundations",
+   "note": "Primitives every screen uses.",
+   "track": "basic"
+  },
+  {
+   "id": "forms",
+   "title": "Forms and inputs",
+   "note": "Everything a user types, picks, or uploads.",
+   "track": "basic"
+  },
+  {
+   "id": "navigation",
+   "title": "Navigation",
+   "note": "Moving between pages, sections, and actions.",
+   "track": "basic"
+  },
+  {
+   "id": "overlays",
+   "title": "Overlays",
+   "note": "Layers above the page: dialogs, menus, tooltips.",
+   "track": "basic"
+  },
+  {
+   "id": "feedback",
+   "title": "Feedback and status",
+   "note": "Telling the user what happened and what is happening.",
+   "track": "basic"
+  },
+  {
+   "id": "data",
+   "title": "Data display",
+   "note": "Showing lists, tables, metrics, and charts.",
+   "track": "basic"
+  },
+  {
+   "id": "layout",
+   "title": "Layout",
+   "note": "Structure, spacing, and responsive frames.",
+   "track": "basic"
+  },
+  {
+   "id": "media",
+   "title": "Media",
+   "note": "Images, galleries, and video.",
+   "track": "basic"
+  },
+  {
+   "id": "agent-core",
+   "title": "Agent conversation",
+   "note": "The chat surface an AI product is built on.",
+   "track": "agentic"
+  },
+  {
+   "id": "agent-control",
+   "title": "Agent control and trust",
+   "note": "Approvals, status, and the user's ability to steer or stop the agent.",
+   "track": "agentic"
+  },
+  {
+   "id": "agent-work",
+   "title": "Agent work products",
+   "note": "What an agent produces or changes: diffs, artifacts, runs, canvases.",
+   "track": "agentic"
+  },
+  {
+   "id": "patterns",
+   "title": "Page patterns",
+   "note": "Full screens assembled from the parts above.",
+   "track": "basic"
+  }
+ ],
+ "items": [
+  {
+   "group": "foundations",
+   "name": "Button",
+   "purpose": "Primary, secondary, ghost, destructive; loading and disabled states",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Icon button",
+   "purpose": "Square button with icon and accessible label",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Link",
+   "purpose": "Inline and standalone links with visited and focus states",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Typography",
+   "purpose": "Type scale: headings, body, caption, code",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Badge and tag",
+   "purpose": "Status and label chips",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Avatar",
+   "purpose": "User or agent avatar with fallback and stacking",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Icon system",
+   "purpose": "Consistent icon set with size and color tokens",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Divider",
+   "purpose": "Horizontal and vertical separators",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Skeleton",
+   "purpose": "Placeholder shapes while content loads",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Spinner",
+   "purpose": "Indeterminate loading indicator",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Empty state",
+   "purpose": "Message and action when there is no data",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Image",
+   "purpose": "Responsive image with fallback and fixed aspect ratio",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Copy button",
+   "purpose": "Copies a value and confirms",
+   "tier": "Core"
+  },
+  {
+   "group": "foundations",
+   "name": "Keyboard shortcut",
+   "purpose": "Displays key combinations",
+   "tier": "Next"
+  },
+  {
+   "group": "foundations",
+   "name": "Theme toggle",
+   "purpose": "Light and dark switch",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "Text input",
+   "purpose": "Single-line field with label, help text, and error",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Form field",
+   "purpose": "Wrapper: label, description, error, required mark",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Textarea",
+   "purpose": "Multi-line input with auto-grow and character count",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Password input",
+   "purpose": "Masked input with show and hide",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Search input",
+   "purpose": "Search field with clear and submit",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Number input",
+   "purpose": "Numeric field with steppers and formatting",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Select",
+   "purpose": "Single-choice dropdown",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Combobox",
+   "purpose": "Searchable single select",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Multi-select",
+   "purpose": "Several choices shown as removable tokens",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Checkbox",
+   "purpose": "Single and grouped, with indeterminate state",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Radio group",
+   "purpose": "Single choice from a visible set",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Switch",
+   "purpose": "On and off toggle",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Segmented control",
+   "purpose": "Compact single choice for views or modes",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Slider",
+   "purpose": "Single value slider with keyboard support",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Range slider",
+   "purpose": "Minimum and maximum values",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "Date picker",
+   "purpose": "Calendar popover for one date",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "Date range picker",
+   "purpose": "Start and end date selection",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "Time picker",
+   "purpose": "Time entry with time zone support",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "Color picker",
+   "purpose": "Swatches, area, and hex input",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "File upload",
+   "purpose": "Dropzone with progress, preview, and remove",
+   "tier": "Core"
+  },
+  {
+   "group": "forms",
+   "name": "OTP input",
+   "purpose": "Code entry in separate boxes with paste",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "Rating",
+   "purpose": "Star or score input",
+   "tier": "Next"
+  },
+  {
+   "group": "forms",
+   "name": "Rich text editor",
+   "purpose": "Formatting toolbar and editing surface",
+   "tier": "Later"
+  },
+  {
+   "group": "forms",
+   "name": "Signature pad",
+   "purpose": "Freehand signature capture",
+   "tier": "Later"
+  },
+  {
+   "group": "navigation",
+   "name": "Tabs",
+   "purpose": "Switch between views in one place",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Breadcrumb",
+   "purpose": "Location trail with overflow handling",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Pagination",
+   "purpose": "Page controls with size selector",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Sidebar",
+   "purpose": "Collapsible app navigation with sections",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Top navbar",
+   "purpose": "Header with navigation and account actions",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Dropdown menu",
+   "purpose": "Action list opened from a button",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Context menu",
+   "purpose": "Right-click action list",
+   "tier": "Next"
+  },
+  {
+   "group": "navigation",
+   "name": "Command palette",
+   "purpose": "Keyboard search across actions and pages",
+   "tier": "Next"
+  },
+  {
+   "group": "navigation",
+   "name": "Stepper",
+   "purpose": "Multi-step progress through a flow",
+   "tier": "Core"
+  },
+  {
+   "group": "navigation",
+   "name": "Tree view",
+   "purpose": "Nested items that expand and collapse",
+   "tier": "Next"
+  },
+  {
+   "group": "navigation",
+   "name": "Dock",
+   "purpose": "Bottom app launcher with active state",
+   "tier": "Later"
+  },
+  {
+   "group": "overlays",
+   "name": "Dialog",
+   "purpose": "Focus-trapped modal with title, body, and actions",
+   "tier": "Core"
+  },
+  {
+   "group": "overlays",
+   "name": "Confirm dialog",
+   "purpose": "Asks before a destructive action",
+   "tier": "Core"
+  },
+  {
+   "group": "overlays",
+   "name": "Drawer or sheet",
+   "purpose": "Side panel for details and forms",
+   "tier": "Core"
+  },
+  {
+   "group": "overlays",
+   "name": "Bottom sheet",
+   "purpose": "Mobile sheet with snap points",
+   "tier": "Next"
+  },
+  {
+   "group": "overlays",
+   "name": "Popover",
+   "purpose": "Floating panel anchored to a trigger",
+   "tier": "Core"
+  },
+  {
+   "group": "overlays",
+   "name": "Tooltip",
+   "purpose": "Hover and focus label",
+   "tier": "Core"
+  },
+  {
+   "group": "overlays",
+   "name": "Hover card",
+   "purpose": "Preview of a link or user on hover",
+   "tier": "Next"
+  },
+  {
+   "group": "feedback",
+   "name": "Alert banner",
+   "purpose": "Inline status message with severity",
+   "tier": "Core"
+  },
+  {
+   "group": "feedback",
+   "name": "Toast",
+   "purpose": "Brief notification that dismisses itself",
+   "tier": "Core"
+  },
+  {
+   "group": "feedback",
+   "name": "Notification center",
+   "purpose": "Persistent list of notifications",
+   "tier": "Next"
+  },
+  {
+   "group": "feedback",
+   "name": "Progress bar",
+   "purpose": "Determinate progress with label",
+   "tier": "Core"
+  },
+  {
+   "group": "feedback",
+   "name": "Progress ring",
+   "purpose": "Radial progress and gauge",
+   "tier": "Next"
+  },
+  {
+   "group": "feedback",
+   "name": "Loading overlay",
+   "purpose": "Blocks an area while work runs",
+   "tier": "Next"
+  },
+  {
+   "group": "data",
+   "name": "Data table",
+   "purpose": "Sort, filter, paginate, select rows, resize columns",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "List",
+   "purpose": "Rows with leading media, actions, and selection",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "Card",
+   "purpose": "Container with header, body, and footer",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "Stat card",
+   "purpose": "Metric with value, change, and trend",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "Accordion",
+   "purpose": "Stacked sections that expand",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "Collapsible",
+   "purpose": "Show and hide a block of content",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "Timeline",
+   "purpose": "Dated events in order",
+   "tier": "Next"
+  },
+  {
+   "group": "data",
+   "name": "Code block",
+   "purpose": "Syntax-highlighted code with copy",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "JSON viewer",
+   "purpose": "Collapsible JSON tree",
+   "tier": "Next"
+  },
+  {
+   "group": "data",
+   "name": "Line, bar, and area chart",
+   "purpose": "Time series and category comparison",
+   "tier": "Core"
+  },
+  {
+   "group": "data",
+   "name": "Donut and pie chart",
+   "purpose": "Share of a whole",
+   "tier": "Next"
+  },
+  {
+   "group": "data",
+   "name": "Sparkline",
+   "purpose": "Inline trend in a table or card",
+   "tier": "Next"
+  },
+  {
+   "group": "data",
+   "name": "Kanban board",
+   "purpose": "Columns of draggable cards",
+   "tier": "Later"
+  },
+  {
+   "group": "layout",
+   "name": "Stack, grid, and container",
+   "purpose": "Spacing and responsive grid primitives",
+   "tier": "Core"
+  },
+  {
+   "group": "layout",
+   "name": "App shell",
+   "purpose": "Sidebar, header, and content frame",
+   "tier": "Core"
+  },
+  {
+   "group": "layout",
+   "name": "Split pane",
+   "purpose": "Draggable, resizable panels",
+   "tier": "Next"
+  },
+  {
+   "group": "layout",
+   "name": "Scroll area",
+   "purpose": "Styled scrolling with fixed regions",
+   "tier": "Core"
+  },
+  {
+   "group": "layout",
+   "name": "Virtual list",
+   "purpose": "Renders only visible rows for long lists",
+   "tier": "Later"
+  },
+  {
+   "group": "media",
+   "name": "Carousel",
+   "purpose": "Swipeable slides with indicators",
+   "tier": "Next"
+  },
+  {
+   "group": "media",
+   "name": "Image viewer",
+   "purpose": "Lightbox with zoom and navigation",
+   "tier": "Next"
+  },
+  {
+   "group": "media",
+   "name": "Video player",
+   "purpose": "Playback controls and captions",
+   "tier": "Later"
+  },
+  {
+   "group": "agent-core",
+   "name": "Chat thread",
+   "purpose": "Scrollable conversation with jump-to-latest",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Message",
+   "purpose": "User and assistant messages with roles",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Markdown renderer",
+   "purpose": "Headings, lists, tables, code, and links in replies",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Streaming text",
+   "purpose": "Renders tokens as they arrive, with cursor",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Prompt composer",
+   "purpose": "Multi-line input with send, stop, attachments, mentions, and slash commands",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Stop and regenerate",
+   "purpose": "Cancels a run; regenerates a reply",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Reasoning trace",
+   "purpose": "Collapsible thinking steps with duration",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Tool call card",
+   "purpose": "Tool name, inputs, status, and result",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Suggestions",
+   "purpose": "Clickable follow-up prompts",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Citations and sources",
+   "purpose": "Inline markers that open source cards",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Attachments",
+   "purpose": "File chips and previews in composer and messages",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Message actions",
+   "purpose": "Copy, retry, thumbs up or down, edit",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Welcome state",
+   "purpose": "Starter prompts and capabilities",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Error and retry",
+   "purpose": "Failed run with retry and details",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-core",
+   "name": "Model selector",
+   "purpose": "Choose a model and see its limits",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-core",
+   "name": "Context meter",
+   "purpose": "Shows how much context is in use",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-core",
+   "name": "Message queue",
+   "purpose": "Prompts waiting to send",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-core",
+   "name": "Branch picker",
+   "purpose": "Switch between alternate replies",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-core",
+   "name": "Checkpoint divider",
+   "purpose": "Marks a restore point in the conversation",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-core",
+   "name": "Voice input",
+   "purpose": "Mic button, live transcript, and listening state",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-control",
+   "name": "Tool approval",
+   "purpose": "Approve, edit, or reject an action before it runs",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-control",
+   "name": "Plan and task list",
+   "purpose": "The agent's steps with live status",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-control",
+   "name": "Agent status",
+   "purpose": "Idle, running, waiting for you, or failed",
+   "tier": "Core"
+  },
+  {
+   "group": "agent-control",
+   "name": "Agent activity timeline",
+   "purpose": "Steps, tool calls, and durations for a run",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-control",
+   "name": "Questions to user",
+   "purpose": "Structured questions the agent asks, with choices",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-control",
+   "name": "Memory cards",
+   "purpose": "What the agent remembers, editable by the user",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-control",
+   "name": "Recommendation card",
+   "purpose": "Suggested action with confidence and buttons",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-control",
+   "name": "Context cards",
+   "purpose": "Retrieved knowledge chunks with sources",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-work",
+   "name": "Diff review",
+   "purpose": "Accept or reject proposed file or data changes",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-work",
+   "name": "Artifact panel",
+   "purpose": "Side panel for generated code, documents, or previews",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-work",
+   "name": "Terminal output",
+   "purpose": "Streaming command output with exit status",
+   "tier": "Next"
+  },
+  {
+   "group": "agent-work",
+   "name": "Test results",
+   "purpose": "Pass and fail list from an agent run",
+   "tier": "Later"
+  },
+  {
+   "group": "agent-work",
+   "name": "Schema display",
+   "purpose": "Structured output shape",
+   "tier": "Later"
+  },
+  {
+   "group": "agent-work",
+   "name": "Workflow canvas",
+   "purpose": "Nodes, edges, and controls for agent pipelines",
+   "tier": "Later"
+  },
+  {
+   "group": "agent-work",
+   "name": "Image results",
+   "purpose": "Gallery of generated images with variants",
+   "tier": "Later"
+  },
+  {
+   "group": "patterns",
+   "name": "Chat app",
+   "purpose": "Sidebar, thread, and composer assembled",
+   "tier": "Core"
+  },
+  {
+   "group": "patterns",
+   "name": "Sign-in and sign-up",
+   "purpose": "Auth forms with social login and validation",
+   "tier": "Core"
+  },
+  {
+   "group": "patterns",
+   "name": "Settings page",
+   "purpose": "Sectioned forms with save and reset",
+   "tier": "Core"
+  },
+  {
+   "group": "patterns",
+   "name": "Dashboard",
+   "purpose": "Stat cards, charts, and a table on one screen",
+   "tier": "Core"
+  },
+  {
+   "group": "patterns",
+   "name": "Onboarding",
+   "purpose": "Multi-step setup with progress",
+   "tier": "Next"
+  },
+  {
+   "group": "patterns",
+   "name": "Pricing",
+   "purpose": "Plan comparison with billing toggle",
+   "tier": "Next"
+  }
+ ]
+}
