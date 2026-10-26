@@ -2050,5 +2050,127 @@
         "max": 20
       }
     ]
+  },
+  {
+    "name": "distribution-chart",
+    "displayName": "Distribution Chart",
+    "description": "Glowing area curves on a shared grid with a soft reflection. Compare a concentrated result with a spread-out one, side by side or overlaid, and read both at the same position.",
+    "usage": "import DistributionChart from \"./distribution-chart\"\n\n<DistributionChart />",
+    "tweakSchema": [
+      {
+        "key": "series",
+        "label": "Series",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "label",
+            "label": "Label",
+            "type": "string",
+            "default": "Series"
+          },
+          {
+            "key": "center",
+            "label": "Center",
+            "type": "number",
+            "default": 50,
+            "min": 0,
+            "max": 100
+          },
+          {
+            "key": "spread",
+            "label": "Spread",
+            "type": "number",
+            "default": 20,
+            "min": 2,
+            "max": 60
+          },
+          {
+            "key": "peak",
+            "label": "Peak",
+            "type": "number",
+            "default": 50,
+            "min": 0,
+            "max": 100
+          },
+          {
+            "key": "shape",
+            "label": "Shape",
+            "type": "number",
+            "default": 2,
+            "min": 2,
+            "max": 10,
+            "step": 0.5
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "layout",
+        "label": "Layout",
+        "type": "enum",
+        "default": "split",
+        "options": [
+          "split",
+          "overlay"
+        ]
+      },
+      {
+        "key": "reflection",
+        "label": "Reflection",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "grid",
+        "label": "Grid",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "animate",
+        "label": "Animate",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 300,
+        "min": 160,
+        "max": 560
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "secondary",
+        "label": "Second curve",
+        "type": "color",
+        "default": "#4fa8dc"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 6,
+        "min": 0,
+        "max": 20
+      }
+    ]
   }
 ]

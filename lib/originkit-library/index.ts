@@ -10,6 +10,7 @@ import Carousel from "./carousel";
 import ChatThread from "./chat-thread";
 import Checkbox from "./checkbox";
 import DataTable from "./data-table";
+import DistributionChart from "./distribution-chart";
 import Dialog from "./dialog";
 import DiffReview from "./diff-review";
 import DropdownMenu from "./dropdown-menu";
@@ -52,6 +53,7 @@ export const components: Record<string, ComponentType<any>> = {
   "data-table": DataTable,
   "dialog": Dialog,
   "diff-review": DiffReview,
+  "distribution-chart": DistributionChart,
   "dropdown-menu": DropdownMenu,
   "image-viewer": ImageViewer,
   "message-bubble": MessageBubble,

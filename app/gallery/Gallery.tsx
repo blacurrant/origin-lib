@@ -14,7 +14,7 @@ const SITE = (process.env.NEXT_PUBLIC_ORIGINKIT_SITE_URL ?? "https://www.origink
 /** Width a block component renders at before it is scaled to fit its tile. */
 function renderWidth(name: string) {
   const meta = META[name] ?? {};
-  return meta.block ? Math.min(meta.width?.def ?? 380, 760) : undefined;
+  return meta.block ? Math.min(meta.width?.def ?? 380, 560) : undefined;
 }
 
 /** Scale the demo down (never up) so the whole thing sits inside the tile. */
@@ -153,6 +153,68 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
   );
 }
 
+function Hero({ groups, theme, accent }: { groups: CoreGroup[]; theme: Theme; accent: string }) {
+  const dark = theme === "dark";
+  const total = groups.reduce((n, g) => n + g.entries.length, 0);
+  const agentic = groups.filter((g) => g.track === "agentic").reduce((n, g) => n + g.entries.length, 0);
+  const sub = dark ? "text-[#a5a7a9]" : "text-[#5f5c56]";
+  const chip = dark ? "border-[#2a2a2c] bg-[#111112] text-[#d4d5d6]" : "border-[#d9d5ce] bg-[#f6f4f0] text-[#3a3935]";
+
+  return (
+    <section aria-labelledby="gallery-title" className="relative isolate px-2 pb-12 pt-10 text-center sm:pb-14 sm:pt-16">
+      {/* Soft accent glow behind the headline; follows the accent picker. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[340px] w-[min(820px,100%)] -translate-x-1/2 rounded-full blur-3xl"
+        style={{ background: `radial-gradient(closest-side, ${accent}${dark ? "26" : "1f"}, transparent)` }}
+      />
+
+      {agentic > 0 && (
+        <p className={`mx-auto inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium ${chip}`}>
+          <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 0 3px ${accent}33` }} />
+          {agentic} agentic components for AI products
+        </p>
+      )}
+
+      <h1
+        id="gallery-title"
+        className="mx-auto mt-6 max-w-[16ch] text-balance text-[clamp(36px,5.2vw,72px)] font-semibold leading-[1.02] tracking-[-0.045em] sm:max-w-none"
+      >
+        Real components. Running live.
+      </h1>
+      <p className={`mx-auto mt-4 max-w-[36rem] text-pretty text-[16px] leading-[1.55] sm:text-[17px] ${sub}`}>
+        {total} foundation and agentic components. Preview them here, then copy one into Framer or let your editor add it
+        through the MCP.
+      </p>
+
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="#components"
+          className={`inline-flex h-12 items-center gap-2.5 rounded-full px-6 text-[15px] font-medium transition-colors ${FOCUS} ${
+            dark ? "bg-[#f7f7f7] text-[#141413] hover:bg-white" : "bg-[#141413] text-[#f7f7f7] hover:bg-black"
+          }`}
+        >
+          Browse components
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 3.5v9M4 8.5l4 4 4-4" />
+          </svg>
+        </a>
+        <Link
+          href={`${SITE}/connect`}
+          className={`inline-flex h-12 items-center gap-2.5 rounded-full border pl-6 pr-2 text-[15px] font-medium transition-colors ${FOCUS} ${
+            dark ? "border-[#2a2a2c] text-[#f7f7f7] hover:bg-[#161617]" : "border-[#d9d5ce] text-[#141413] hover:bg-[#f6f4f0]"
+          }`}
+        >
+          Connect the MCP
+          <span className={`rounded-full px-2.5 py-1 text-[12.5px] ${dark ? "bg-[#1f1f21] text-[#d4d5d6]" : "bg-[#e4e0d9] text-[#3a3935]"}`}>
+            Claude Code · Cursor
+          </span>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 export function Gallery({ groups }: { groups: CoreGroup[] }) {
   const [active, setActive] = useState("all");
   const [theme, setTheme] = useState<Theme>("dark");
@@ -282,8 +344,10 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-[1760px] px-4 pb-24 pt-8 sm:px-8">
-        <div className={`sticky top-[68px] z-20 -mx-4 px-4 pb-3 pt-1 sm:-mx-8 sm:px-8 ${solid}`}>
+      <main className="mx-auto max-w-[1760px] px-4 pb-24 pt-2 sm:px-8">
+        <Hero groups={groups} theme={theme} accent={accent} />
+
+        <div id="components" className={`sticky scroll-mt-[68px] top-[68px] z-20 -mx-4 px-4 pb-3 pt-1 sm:-mx-8 sm:px-8 ${solid}`}>
           <div
             ref={tabsRef}
             role="tablist"

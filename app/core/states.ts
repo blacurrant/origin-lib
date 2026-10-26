@@ -33,6 +33,7 @@ export const META: Record<string, Meta> = {
   tooltip: { minHeight: 240 },
   alert: { block: true, replay: "Show again", width: { def: 460, min: 300, max: 560 } },
   "data-table": { block: true, width: { def: 600, min: 420, max: 760 } },
+  "distribution-chart": { block: true, replay: "Replay", width: { def: 680, min: 360, max: 900 } },
   "split-pane": { block: true, width: { def: 560, min: 360, max: 760 } },
   "scroll-area": { block: true, width: { def: 380, min: 280, max: 560 } },
   carousel: { block: true, width: { def: 480, min: 300, max: 640 } },
@@ -221,6 +222,26 @@ export const STATES: Record<string, StateSet> = {
       { label: "Compact", props: { density: "compact" } },
       { label: "No selection", props: { selectable: false } },
       { label: "Empty", props: { rows: [] } },
+    ],
+  },
+  "distribution-chart": {
+    min: 340,
+    block: true,
+    cells: [
+      { label: "Overlaid", props: { layout: "overlay", height: 220 } },
+      {
+        label: "Three curves",
+        props: {
+          layout: "overlay",
+          height: 220,
+          series: [
+            { label: "Week 1", center: 30, spread: 12, peak: 70, shape: 2 },
+            { label: "Week 4", center: 55, spread: 16, peak: 48, shape: 2 },
+            { label: "Week 8", center: 75, spread: 22, peak: 26, shape: 3 },
+          ],
+        },
+      },
+      { label: "Plain", props: { grid: false, reflection: false, height: 220 } },
     ],
   },
   "split-pane": {

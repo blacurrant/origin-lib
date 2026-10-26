@@ -5,7 +5,7 @@ export const BUILT_BY_GROUP: Record<string, string[]> = {
   navigation: ["tabs", "dropdown-menu"],
   overlays: ["dialog", "tooltip"],
   feedback: ["toast", "alert"],
-  data: ["card", "data-table"],
+  data: ["card", "data-table", "distribution-chart"],
   layout: ["split-pane", "scroll-area"],
   media: ["carousel", "image-viewer"],
   patterns: ["sign-in-form", "pricing-table"],
