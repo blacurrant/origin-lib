@@ -5,3 +5,43 @@
 :root { color-scheme: dark; }
 
 html, body { background: #0f0f10; color: #f7f7f7; font-family: Inter, ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+/* Range inputs in the blocks inspector: a thin filled track and a round thumb. */
+.blocks-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.blocks-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #f2f2f3 var(--pct, 50%), #2e2e33 var(--pct, 50%));
+}
+.blocks-range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: #2e2e33;
+}
+.blocks-range::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: #f2f2f3;
+}
+.blocks-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.blocks-range::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
