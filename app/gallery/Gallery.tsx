@@ -116,7 +116,7 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
             <button
               type="button"
               onClick={() => setRun((n) => n + 1)}
-              className={`h-8 rounded-full border px-3 text-[12px] font-medium backdrop-blur ${ghost} ${FOCUS}`}
+              className={`h-8 rounded-full border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
             >
               {meta.replay}
             </button>
@@ -124,13 +124,13 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
           <button
             type="button"
             onClick={copyPrompt}
-            className={`h-8 rounded-full border px-3 text-[12px] font-medium backdrop-blur ${ghost} ${FOCUS}`}
+            className={`h-8 rounded-full border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
           >
             {copied ? "Copied" : "Copy prompt"}
           </button>
           <Link
             href={`/core#${entry.name}`}
-            className={`inline-flex h-8 items-center rounded-full border px-3 text-[12px] font-medium backdrop-blur ${ghost} ${FOCUS}`}
+            className={`inline-flex h-8 items-center rounded-full border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
           >
             Details
           </Link>
@@ -197,13 +197,15 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
   };
 
   const page = dark ? "bg-[#0a0a0b] text-[#f7f7f7]" : "bg-[#efede8] text-[#141413]";
-  const pill = dark ? "border-[#1f1f21] bg-[#0f0f10]" : "border-[#dcd8d0] bg-[#f8f6f2]";
+  // Same solid colour as the page, so the bars read as part of it and tiles scroll cleanly beneath.
+  const solid = dark ? "bg-[#0a0a0b]" : "bg-[#efede8]";
+  const pill = dark ? "border-[#1f1f21] bg-[#0a0a0b]" : "border-[#dcd8d0] bg-[#efede8]";
   const muted = dark ? "text-[#8f9093] hover:text-[#f7f7f7]" : "text-[#6b6862] hover:text-[#141413]";
   const on = dark ? "bg-[#f7f7f7] text-[#0a0a0b]" : "bg-[#141413] text-[#f7f7f7]";
 
   return (
     <div className={`min-h-screen ${page}`}>
-      <header className="sticky top-0 z-30 px-4 pt-4 sm:px-8">
+      <header className={`sticky top-0 z-30 px-4 pb-3 pt-4 sm:px-8 ${solid}`}>
         <div className="relative mx-auto flex max-w-[1760px] items-center justify-between gap-3">
           <Link href="/" className={`flex items-center gap-2.5 rounded-full ${FOCUS}`}>
             <span aria-hidden className="grid h-8 w-8 place-items-center rounded-full" style={{ background: accent }}>
@@ -212,7 +214,7 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
             <span className="text-[17px] font-semibold tracking-[-0.02em]">Originkit</span>
           </Link>
 
-          <nav aria-label="Primary" className={`absolute left-1/2 hidden -translate-x-1/2 rounded-full border p-1 backdrop-blur md:flex ${pill}`}>
+          <nav aria-label="Primary" className={`absolute left-1/2 hidden -translate-x-1/2 rounded-full border p-1 md:flex ${pill}`}>
             {[
               { label: "Components", href: "/gallery", current: true },
               { label: "Library", href: "/" },
@@ -281,13 +283,13 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
       </header>
 
       <main className="mx-auto max-w-[1760px] px-4 pb-24 pt-8 sm:px-8">
-        <div className="sticky top-[72px] z-20 -mx-4 px-4 py-3 sm:-mx-8 sm:px-8">
+        <div className={`sticky top-[68px] z-20 -mx-4 px-4 pb-3 pt-1 sm:-mx-8 sm:px-8 ${solid}`}>
           <div
             ref={tabsRef}
             role="tablist"
             aria-label="Component type"
             onKeyDown={onTabKey}
-            className={`mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border p-1.5 backdrop-blur [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${pill}`}
+            className={`mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${pill}`}
           >
             {tabs.map((t) => {
               const selected = t.id === active;
