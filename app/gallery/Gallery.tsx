@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { components as library } from "@/lib/originkit-library";
 import { META } from "@/app/core/states";
 import { ACCENTS, DEFAULT_ACCENT, type CoreEntry, type CoreGroup, type Theme } from "@/app/core/types";
@@ -153,63 +154,135 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
   );
 }
 
+const MONO = "font-['Geist_Mono',ui-monospace,monospace]";
+
+/** One component from each type, so the prompt cycles across the whole library. */
+function heroNames(groups: CoreGroup[]) {
+  return groups.flatMap((g) => g.entries.slice(0, 1).map((e) => e.name));
+}
+
 function Hero({ groups, theme, accent }: { groups: CoreGroup[]; theme: Theme; accent: string }) {
   const dark = theme === "dark";
+  const reduced = useReducedMotion();
+  const names = useMemo(() => heroNames(groups), [groups]);
+  const [i, setI] = useState(0);
+  const [held, setHeld] = useState(false);
+  const [copied, setCopied] = useState(false);
   const total = groups.reduce((n, g) => n + g.entries.length, 0);
   const agentic = groups.filter((g) => g.track === "agentic").reduce((n, g) => n + g.entries.length, 0);
+  const name = names[i % names.length] ?? "button";
+  const prompt = `Using originkit MCP, get me the ${name} component.`;
+
+  // Cycle through names; hold still while the prompt is hovered, focused, or motion is reduced.
+  useEffect(() => {
+    if (held || reduced || names.length < 2) return;
+    const t = window.setInterval(() => setI((n) => n + 1), 2400);
+    return () => window.clearInterval(t);
+  }, [held, reduced, names.length]);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* clipboard blocked */
+    }
+  };
+
+  const ink = dark ? "text-[#f7f7f7]" : "text-[#141413]";
   const sub = dark ? "text-[#a5a7a9]" : "text-[#5f5c56]";
-  const chip = dark ? "border-[#2a2a2c] bg-[#111112] text-[#d4d5d6]" : "border-[#d9d5ce] bg-[#f6f4f0] text-[#3a3935]";
+  const faint = dark ? "text-[#6f7173]" : "text-[#8a867f]";
+  const line = dark ? "border-[#1f1f21]" : "border-[#dcd8d0]";
+  const card = dark ? "border-[#1f1f21] bg-[#111112]" : "border-[#e0ddd7] bg-[#f6f4f0]";
+  const stats = [
+    { n: total, label: "live" },
+    { n: groups.length, label: "types" },
+    { n: agentic, label: "for agents" },
+  ];
 
   return (
-    <section aria-labelledby="gallery-title" className="relative isolate px-2 pb-12 pt-10 text-center sm:pb-14 sm:pt-16">
-      {/* Soft accent glow behind the headline; follows the accent picker. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[340px] w-[min(820px,100%)] -translate-x-1/2 rounded-full blur-3xl"
-        style={{ background: `radial-gradient(closest-side, ${accent}${dark ? "26" : "1f"}, transparent)` }}
-      />
+    <section aria-labelledby="gallery-title" className={`border-b pb-10 pt-8 sm:pb-12 sm:pt-12 ${line}`}>
+      <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+        <div>
+          <p className={`${MONO} flex items-center gap-2 text-[12px] uppercase tracking-[0.14em] ${faint}`}>
+            <span aria-hidden className="h-2 w-2 rounded-[2px]" style={{ background: accent }} />
+            Originkit / Gallery
+          </p>
+          <h1
+            id="gallery-title"
+            className={`mt-5 text-[clamp(42px,5.2vw,78px)] font-semibold leading-[0.95] tracking-[-0.05em] ${ink}`}
+          >
+            Ask for it
+            <br />
+            by name<span style={{ color: accent }}>.</span>
+          </h1>
+          <p className={`mt-5 max-w-[34rem] text-pretty text-[16px] leading-[1.55] sm:text-[17px] ${sub}`}>
+            Every tile below is the real component, running. Find the one you need, then drop it into Framer or have your
+            editor install it with one line.
+          </p>
+        </div>
 
-      {agentic > 0 && (
-        <p className={`mx-auto inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13.5px] font-medium ${chip}`}>
-          <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 0 3px ${accent}33` }} />
-          {agentic} agentic components for AI products
-        </p>
-      )}
+        <div onMouseEnter={() => setHeld(true)} onMouseLeave={() => setHeld(false)} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
+          <div className={`overflow-hidden rounded-[22px] border ${card}`}>
+            <div className={`flex items-center justify-between border-b px-5 py-3 ${line}`}>
+              <span className={`${MONO} text-[11px] uppercase tracking-[0.14em] ${faint}`}>In your editor</span>
+              <span className={`${MONO} text-[11px] tabular-nums ${faint}`}>
+                {String((i % names.length) + 1).padStart(2, "0")} / {String(names.length).padStart(2, "0")}
+              </span>
+            </div>
+            <div className="flex items-start gap-3 px-5 pb-5 pt-4">
+              <span aria-hidden className={`${MONO} pt-[3px] text-[14px]`} style={{ color: accent }}>
+                &gt;
+              </span>
+              <p className={`${MONO} min-w-0 flex-1 text-[15px] leading-[1.6] sm:text-[16px] ${dark ? "text-[#d4d5d6]" : "text-[#3a3935]"}`}>
+                Using originkit MCP, get me the{" "}
+                <span className="relative inline-flex overflow-hidden align-bottom">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={name}
+                      initial={{ y: "100%", opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: "-100%", opacity: 0 }}
+                      transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1] }}
+                      className={`font-medium ${ink}`}
+                      style={{ textDecoration: "underline", textDecorationColor: accent, textUnderlineOffset: 4, textDecorationThickness: 2 }}
+                    >
+                      {name}
+                    </motion.span>
+                  </AnimatePresence>
+                </span>{" "}
+                component.
+              </p>
+            </div>
+            <div className={`flex items-center justify-between gap-3 border-t px-3 py-3 pl-5 ${line}`}>
+              <Link href={`${SITE}/connect`} className={`rounded text-[14px] font-medium underline-offset-4 hover:underline ${sub} ${FOCUS}`}>
+                Connect your editor
+              </Link>
+              <button
+                type="button"
+                onClick={copy}
+                className={`h-9 rounded-full px-4 text-[13.5px] font-medium transition-colors ${FOCUS} ${
+                  dark ? "bg-[#f7f7f7] text-[#141413] hover:bg-white" : "bg-[#141413] text-[#f7f7f7] hover:bg-black"
+                }`}
+              >
+                {copied ? "Copied" : "Copy prompt"}
+              </button>
+              <span className="sr-only" aria-live="polite">
+                {copied ? "Prompt copied" : ""}
+              </span>
+            </div>
+          </div>
 
-      <h1
-        id="gallery-title"
-        className="mx-auto mt-6 max-w-[16ch] text-balance text-[clamp(36px,5.2vw,72px)] font-semibold leading-[1.02] tracking-[-0.045em] sm:max-w-none"
-      >
-        Real components. Running live.
-      </h1>
-      <p className={`mx-auto mt-4 max-w-[36rem] text-pretty text-[16px] leading-[1.55] sm:text-[17px] ${sub}`}>
-        {total} foundation and agentic components. Preview them here, then copy one into Framer or let your editor add it
-        through the MCP.
-      </p>
-
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a
-          href="#components"
-          className={`inline-flex h-12 items-center gap-2.5 rounded-full px-6 text-[15px] font-medium transition-colors ${FOCUS} ${
-            dark ? "bg-[#f7f7f7] text-[#141413] hover:bg-white" : "bg-[#141413] text-[#f7f7f7] hover:bg-black"
-          }`}
-        >
-          Browse components
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 3.5v9M4 8.5l4 4 4-4" />
-          </svg>
-        </a>
-        <Link
-          href={`${SITE}/connect`}
-          className={`inline-flex h-12 items-center gap-2.5 rounded-full border pl-6 pr-2 text-[15px] font-medium transition-colors ${FOCUS} ${
-            dark ? "border-[#2a2a2c] text-[#f7f7f7] hover:bg-[#161617]" : "border-[#d9d5ce] text-[#141413] hover:bg-[#f6f4f0]"
-          }`}
-        >
-          Connect the MCP
-          <span className={`rounded-full px-2.5 py-1 text-[12.5px] ${dark ? "bg-[#1f1f21] text-[#d4d5d6]" : "bg-[#e4e0d9] text-[#3a3935]"}`}>
-            Claude Code · Cursor
-          </span>
-        </Link>
+          <dl className={`${MONO} mt-4 flex flex-wrap gap-x-5 gap-y-1 px-1 text-[12px] uppercase tracking-[0.14em] ${faint}`}>
+            {stats.map((s) => (
+              <div key={s.label} className="flex items-baseline gap-1.5">
+                <dd className={`tabular-nums ${ink}`}>{s.n}</dd>
+                <dt>{s.label}</dt>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </section>
   );
@@ -347,7 +420,7 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
       <main className="mx-auto max-w-[1760px] px-4 pb-24 pt-2 sm:px-8">
         <Hero groups={groups} theme={theme} accent={accent} />
 
-        <div id="components" className={`sticky scroll-mt-[68px] top-[68px] z-20 -mx-4 px-4 pb-3 pt-1 sm:-mx-8 sm:px-8 ${solid}`}>
+        <div id="components" className={`sticky mt-6 scroll-mt-[68px] top-[68px] z-20 -mx-4 px-4 pb-3 pt-1 sm:-mx-8 sm:px-8 ${solid}`}>
           <div
             ref={tabsRef}
             role="tablist"

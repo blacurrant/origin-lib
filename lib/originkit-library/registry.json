@@ -2172,5 +2172,1904 @@
         "max": 20
       }
     ]
+  },
+  {
+    "name": "card-swap",
+    "displayName": "Card Swap",
+    "description": "Stacked 3D deck where the front card slides out and drops to the back with spring motion.",
+    "usage": "import CardSwap from \"./card-swap\"\n\n<CardSwap />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Cards",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Mountain"
+          },
+          {
+            "key": "from",
+            "label": "From",
+            "type": "color",
+            "default": "#ffb36b"
+          },
+          {
+            "key": "to",
+            "label": "To",
+            "type": "color",
+            "default": "#7b2d5b"
+          },
+          {
+            "key": "image",
+            "label": "Image URL",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "interval",
+        "label": "Interval (ms)",
+        "type": "number",
+        "default": 2800,
+        "min": 900,
+        "max": 10000,
+        "step": 100
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 16,
+        "min": 0,
+        "max": 32,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "spiral-3d-slider",
+    "displayName": "Spiral 3D Slider",
+    "description": "Items on a 3D helix that you turn by dragging, scrolling or arrow keys; the nearest item snaps to the front with a spring.",
+    "usage": "import Spiral3dSlider from \"./spiral-3d-slider\"\n\n<Spiral3dSlider />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Item"
+          },
+          {
+            "key": "subtitle",
+            "label": "Subtitle",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "color",
+            "label": "Color",
+            "type": "color",
+            "default": "#fa7319"
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "turns",
+        "label": "Turns",
+        "type": "number",
+        "default": 1,
+        "min": 0.5,
+        "max": 3,
+        "step": 0.1
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 170,
+        "min": 80,
+        "max": 300,
+        "step": 1
+      },
+      {
+        "key": "itemWidth",
+        "label": "Item width",
+        "type": "number",
+        "default": 108,
+        "min": 60,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "cornerRadius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "like",
+    "displayName": "Like",
+    "description": "Like button with a springy press, a seeded particle burst in the accent colour and a rolling count.",
+    "usage": "import Like from \"./like\"\n\n<Like />",
+    "tweakSchema": [
+      {
+        "key": "count",
+        "label": "Count",
+        "type": "number",
+        "default": 128,
+        "min": 0,
+        "max": 99999,
+        "step": 1
+      },
+      {
+        "key": "liked",
+        "label": "Liked",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "icon",
+        "label": "Icon",
+        "type": "enum",
+        "default": "heart",
+        "options": [
+          "heart",
+          "thumb"
+        ]
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Like"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 999,
+        "min": 0,
+        "max": 999
+      }
+    ]
+  },
+  {
+    "name": "wake-slider",
+    "displayName": "Wake Slider",
+    "description": "Tick slider where a trailing wake of magnification follows the pointer as you drag.",
+    "usage": "import WakeSlider from \"./wake-slider\"\n\n<WakeSlider />",
+    "tweakSchema": [
+      {
+        "key": "value",
+        "label": "Value",
+        "type": "number",
+        "default": 50,
+        "min": -1000,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "min",
+        "label": "Min",
+        "type": "number",
+        "default": 0,
+        "min": -1000,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "max",
+        "label": "Max",
+        "type": "number",
+        "default": 100,
+        "min": -1000,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "step",
+        "label": "Step",
+        "type": "number",
+        "default": 1,
+        "min": 0.01,
+        "max": 100,
+        "step": 0.01
+      },
+      {
+        "key": "ticks",
+        "label": "Ticks",
+        "type": "number",
+        "default": 40,
+        "min": 8,
+        "max": 80,
+        "step": 1
+      },
+      {
+        "key": "showValue",
+        "label": "Show value",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 2,
+        "min": 0,
+        "max": 4,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "rolling-counter",
+    "displayName": "Rolling Counter",
+    "description": "Number stepper pill with odometer digits that roll in the direction of change, hold to repeat with acceleration and keyboard control.",
+    "usage": "import RollingCounter from \"./rolling-counter\"\n\n<RollingCounter />",
+    "tweakSchema": [
+      {
+        "key": "value",
+        "label": "Value",
+        "type": "number",
+        "default": 95,
+        "min": -9999,
+        "max": 9999,
+        "step": 1
+      },
+      {
+        "key": "min",
+        "label": "Min",
+        "type": "number",
+        "default": 0,
+        "min": -9999,
+        "max": 9999,
+        "step": 1
+      },
+      {
+        "key": "max",
+        "label": "Max",
+        "type": "number",
+        "default": 120,
+        "min": -9999,
+        "max": 9999,
+        "step": 1
+      },
+      {
+        "key": "step",
+        "label": "Step",
+        "type": "number",
+        "default": 1,
+        "min": 1,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Quantity"
+      },
+      {
+        "key": "holdToRepeat",
+        "label": "Hold repeat",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 999,
+        "min": 0,
+        "max": 999
+      }
+    ]
+  },
+  {
+    "name": "dock",
+    "displayName": "Dock",
+    "description": "Frosted glass dock whose icons magnify with a smooth falloff as the pointer moves.",
+    "usage": "import Dock from \"./dock\"\n\n<Dock />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "label",
+            "label": "Label",
+            "type": "string",
+            "default": "App"
+          },
+          {
+            "key": "glyph",
+            "label": "Glyph",
+            "type": "enum",
+            "default": "compass"
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "baseSize",
+        "label": "Base size",
+        "type": "number",
+        "default": 52,
+        "min": 32,
+        "max": 80,
+        "step": 1
+      },
+      {
+        "key": "magnification",
+        "label": "Magnify",
+        "type": "number",
+        "default": 1.7,
+        "min": 1,
+        "max": 2.5,
+        "step": 0.05
+      },
+      {
+        "key": "distance",
+        "label": "Distance",
+        "type": "number",
+        "default": 140,
+        "min": 60,
+        "max": 300,
+        "step": 5
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 24,
+        "min": 0,
+        "max": 40,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "tilt",
+    "displayName": "Tilt",
+    "description": "Card that tilts in 3D toward the pointer with a moving glare and layered depth.",
+    "usage": "import Tilt from \"./tilt\"\n\n<Tilt />",
+    "tweakSchema": [
+      {
+        "key": "strength",
+        "label": "Strength",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 30,
+        "step": 1
+      },
+      {
+        "key": "glare",
+        "label": "Glare",
+        "type": "number",
+        "default": 0.45,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Aurora Pass"
+      },
+      {
+        "key": "subtitle",
+        "label": "Subtitle",
+        "type": "string",
+        "default": "Move your pointer across the card"
+      },
+      {
+        "key": "badge",
+        "label": "Badge",
+        "type": "string",
+        "default": "Limited"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 22,
+        "min": 0,
+        "max": 40,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "liq-toggle",
+    "displayName": "Liquid Toggle",
+    "description": "Gooey switch whose thumb stretches into the track like a drop of liquid and settles with a spring.",
+    "usage": "import LiqToggle from \"./liq-toggle\"\n\n<LiqToggle />",
+    "tweakSchema": [
+      {
+        "key": "checked",
+        "label": "On",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "enum",
+        "default": "md",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Notifications"
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "orbit-card-stack",
+    "displayName": "Orbit Card Stack",
+    "description": "Cards travelling around a tilted elliptical orbit with depth, slow autoplay, drag with inertia and click to bring a card to the front.",
+    "usage": "import OrbitCardStack from \"./orbit-card-stack\"\n\n<OrbitCardStack />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Cards",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Card"
+          },
+          {
+            "key": "subtitle",
+            "label": "Subtitle",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "color",
+            "label": "Color",
+            "type": "color",
+            "default": "#fa7319"
+          },
+          {
+            "key": "image",
+            "label": "Image URL",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 90,
+        "step": 1,
+        "unit": "deg/s"
+      },
+      {
+        "key": "radiusX",
+        "label": "Radius X",
+        "type": "number",
+        "default": 170,
+        "min": 80,
+        "max": 260,
+        "step": 1
+      },
+      {
+        "key": "radiusY",
+        "label": "Radius Y",
+        "type": "number",
+        "default": 44,
+        "min": 10,
+        "max": 120,
+        "step": 1
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "label-input",
+    "displayName": "Label Input",
+    "description": "Text field with a floating label that springs up on focus, helper and error text, a leading hint and a password reveal.",
+    "usage": "import LabelInput from \"./label-input\"\n\n<LabelInput />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Email address"
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "type",
+        "label": "Type",
+        "type": "enum",
+        "default": "email",
+        "options": [
+          "text",
+          "email",
+          "password"
+        ]
+      },
+      {
+        "key": "hint",
+        "label": "Leading hint",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "helper",
+        "label": "Helper",
+        "type": "string",
+        "default": "We will only use it to send your receipt."
+      },
+      {
+        "key": "error",
+        "label": "Error",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "validate",
+        "label": "Validate email",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "disabled",
+        "label": "Disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 29
+      }
+    ]
+  },
+  {
+    "name": "one-time-code",
+    "displayName": "One-Time Code",
+    "description": "Verification code input with auto-advance, paste, springy digits and a demo success or shake-and-error result.",
+    "usage": "import OneTimeCode from \"./one-time-code\"\n\n<OneTimeCode />",
+    "tweakSchema": [
+      {
+        "key": "length",
+        "label": "Digits",
+        "type": "number",
+        "default": 6,
+        "min": 3,
+        "max": 8,
+        "step": 1
+      },
+      {
+        "key": "groupSize",
+        "label": "Group size",
+        "type": "number",
+        "default": 3,
+        "min": 0,
+        "max": 6,
+        "step": 1
+      },
+      {
+        "key": "correctCode",
+        "label": "Correct code",
+        "type": "string",
+        "default": "123456"
+      },
+      {
+        "key": "autoFocus",
+        "label": "Auto focus",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "showHint",
+        "label": "Show demo hint",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 26
+      }
+    ]
+  },
+  {
+    "name": "seek",
+    "displayName": "Seek",
+    "description": "Media scrubber with buffered segment, hover time preview and a simulated play button.",
+    "usage": "import Seek from \"./seek\"\n\n<Seek />",
+    "tweakSchema": [
+      {
+        "key": "duration",
+        "label": "Duration (s)",
+        "type": "number",
+        "default": 204,
+        "min": 5,
+        "max": 7200,
+        "step": 1
+      },
+      {
+        "key": "playing",
+        "label": "Playing",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "showBuffered",
+        "label": "Buffered",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "startTime",
+        "label": "Start (s)",
+        "type": "number",
+        "default": 42,
+        "min": 0,
+        "max": 7200,
+        "step": 1
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 999,
+        "min": 0,
+        "max": 999,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "snap-carousel",
+    "displayName": "Snap Carousel",
+    "description": "Swipeable carousel with momentum, spring snapping, scaled neighbours and a stretching pill indicator.",
+    "usage": "import SnapCarousel from \"./snap-carousel\"\n\n<SnapCarousel />",
+    "tweakSchema": [
+      {
+        "key": "slides",
+        "label": "Slides",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Slide"
+          },
+          {
+            "key": "image",
+            "label": "Image URL",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "loop",
+        "label": "Loop",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "showArrows",
+        "label": "Arrows",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "slideWidth",
+        "label": "Slide width",
+        "type": "number",
+        "default": 64,
+        "min": 40,
+        "max": 90,
+        "unit": "%"
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 210,
+        "min": 140,
+        "max": 420
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 16,
+        "min": 0,
+        "max": 32
+      }
+    ]
+  },
+  {
+    "name": "glass-carousel",
+    "displayName": "Glass Carousel",
+    "description": "Endless draggable row of panels passing under a fixed frosted glass lens that refracts them, with a click to focus view.",
+    "usage": "import GlassCarousel from \"./glass-carousel\"\n\n<GlassCarousel />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Panel"
+          },
+          {
+            "key": "subtitle",
+            "label": "Subtitle",
+            "type": "string",
+            "default": "Subtitle"
+          },
+          {
+            "key": "image",
+            "label": "Image URL",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "panelHeight",
+        "label": "Panel height",
+        "type": "number",
+        "default": 190,
+        "min": 120,
+        "max": 320
+      },
+      {
+        "key": "gap",
+        "label": "Gap",
+        "type": "number",
+        "default": 16,
+        "min": 0,
+        "max": 64
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 18,
+        "min": 0,
+        "max": 32
+      }
+    ]
+  },
+  {
+    "name": "coverflow-drag",
+    "displayName": "Coverflow Drag",
+    "description": "Drag-first coverflow of tilted cards on a perspective stage with momentum, spring snapping, click-to-centre and an optional reflection.",
+    "usage": "import CoverflowDrag from \"./coverflow-drag\"\n\n<CoverflowDrag />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Cards",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Card"
+          },
+          {
+            "key": "subtitle",
+            "label": "Subtitle",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "color",
+            "label": "Color",
+            "type": "color",
+            "default": "#fa7319"
+          },
+          {
+            "key": "image",
+            "label": "Image URL",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "angle",
+        "label": "Angle",
+        "type": "number",
+        "default": 55,
+        "min": 0,
+        "max": 80,
+        "step": 1,
+        "unit": "deg"
+      },
+      {
+        "key": "reflection",
+        "label": "Reflection",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "text-repel",
+    "displayName": "Text Repel",
+    "description": "Large text whose letters spring away from the pointer inside a radius and settle back when it leaves.",
+    "usage": "import TextRepel from \"./text-repel\"\n\n<TextRepel />",
+    "tweakSchema": [
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "Push me away"
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 120,
+        "min": 40,
+        "max": 320
+      },
+      {
+        "key": "strength",
+        "label": "Strength",
+        "type": "number",
+        "default": 52,
+        "min": 10,
+        "max": 200
+      },
+      {
+        "key": "fontSize",
+        "label": "Font size",
+        "type": "number",
+        "default": 76,
+        "min": 24,
+        "max": 200
+      },
+      {
+        "key": "weight",
+        "label": "Weight",
+        "type": "number",
+        "default": 520,
+        "min": 100,
+        "max": 900,
+        "step": 100
+      },
+      {
+        "key": "demo",
+        "label": "Ghost cursor",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "letter-cascade",
+    "displayName": "Letter Cascade",
+    "description": "Text whose letters cascade in and out with a staggered spring in four modes, looping and replaying on hover.",
+    "usage": "import LetterCascade from \"./letter-cascade\"\n\n<LetterCascade />",
+    "tweakSchema": [
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "Every letter lands"
+      },
+      {
+        "key": "mode",
+        "label": "Mode",
+        "type": "enum",
+        "default": "rise",
+        "options": [
+          "rise",
+          "drop",
+          "blur",
+          "flip"
+        ]
+      },
+      {
+        "key": "stagger",
+        "label": "Stagger",
+        "type": "number",
+        "default": 45,
+        "min": 10,
+        "max": 150,
+        "unit": "ms"
+      },
+      {
+        "key": "loop",
+        "label": "Loop",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hold",
+        "label": "Hold",
+        "type": "number",
+        "default": 1.6,
+        "min": 0,
+        "max": 8,
+        "step": 0.1,
+        "unit": "s"
+      },
+      {
+        "key": "fontSize",
+        "label": "Font size",
+        "type": "number",
+        "default": 64,
+        "min": 20,
+        "max": 160
+      },
+      {
+        "key": "weight",
+        "label": "Weight",
+        "type": "number",
+        "default": 700,
+        "min": 100,
+        "max": 900,
+        "step": 100
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "magnetic-dock",
+    "displayName": "Magnetic Dock",
+    "description": "Floating icon bar whose buttons are pulled toward the pointer with springs, with a stretching bar and a label chip.",
+    "usage": "import MagneticDock from \"./magnetic-dock\"\n\n<MagneticDock />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "label",
+            "label": "Label",
+            "type": "string",
+            "default": "Item"
+          },
+          {
+            "key": "icon",
+            "label": "Icon",
+            "type": "enum",
+            "default": "star"
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "strength",
+        "label": "Strength",
+        "type": "number",
+        "default": 0.45,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 120,
+        "min": 40,
+        "max": 300
+      },
+      {
+        "key": "demo",
+        "label": "Ghost cursor",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "layered-stack",
+    "displayName": "Layered Stack",
+    "description": "Stack of glass layers that fan out with a staggered spring on hover so every title is readable, and click to bring a layer to the front.",
+    "usage": "import LayeredStack from \"./layered-stack\"\n\n<LayeredStack />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Layers",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Layer"
+          },
+          {
+            "key": "subtitle",
+            "label": "Subtitle",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "color",
+            "label": "Color",
+            "type": "color",
+            "default": "#fa7319"
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "spread",
+        "label": "Spread",
+        "type": "number",
+        "default": 40,
+        "min": 24,
+        "max": 80,
+        "step": 1,
+        "unit": "px"
+      },
+      {
+        "key": "perspective",
+        "label": "Perspective",
+        "type": "number",
+        "default": 900,
+        "min": 300,
+        "max": 2000,
+        "step": 10
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 16,
+        "min": 0,
+        "max": 32
+      }
+    ]
+  },
+  {
+    "name": "signature",
+    "displayName": "Signature",
+    "description": "Signature pad with smoothed, speed-sensitive strokes, undo, clear and a replay that writes the signature back out.",
+    "usage": "import Signature from \"./signature\"\n\n<Signature />",
+    "tweakSchema": [
+      {
+        "key": "strokeWidth",
+        "label": "Stroke",
+        "type": "number",
+        "default": 2.6,
+        "min": 1,
+        "max": 8,
+        "step": 0.1
+      },
+      {
+        "key": "ink",
+        "label": "Ink",
+        "type": "color",
+        "default": ""
+      },
+      {
+        "key": "showControls",
+        "label": "Controls",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "accordionos",
+    "displayName": "Accordion OS",
+    "description": "OS-style numbered accordion with a step counter, progress bar, springy height and generated thumbnails.",
+    "usage": "import Accordionos from \"./accordionos\"\n\n<Accordionos />",
+    "tweakSchema": [
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Getting started"
+      },
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Step"
+          },
+          {
+            "key": "body",
+            "label": "Body",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "defaultOpen",
+        "label": "Default open",
+        "type": "number",
+        "default": 0,
+        "min": 0,
+        "max": 20,
+        "step": 1
+      },
+      {
+        "key": "allowMultiple",
+        "label": "Allow multiple",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "showThumbnails",
+        "label": "Thumbnails",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "corner-video",
+    "displayName": "Corner Video",
+    "description": "Floating mini video player that you drag and it springs to the nearest corner, with hover controls, expand and close.",
+    "usage": "import CornerVideo from \"./corner-video\"\n\n<CornerVideo />",
+    "tweakSchema": [
+      {
+        "key": "src",
+        "label": "Video URL",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "key": "corner",
+        "label": "Corner",
+        "type": "enum",
+        "default": "bottom-right",
+        "options": [
+          "top-left",
+          "top-right",
+          "bottom-left",
+          "bottom-right"
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 150,
+        "min": 100,
+        "max": 240,
+        "step": 2
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "dynamic-grid-gallery",
+    "displayName": "Dynamic Grid Gallery",
+    "description": "Tile gallery where the hovered tile's row and column grow on a spring while the rest shrink, and a click pins it.",
+    "usage": "import DynamicGridGallery from \"./dynamic-grid-gallery\"\n\n<DynamicGridGallery />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Tiles",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Untitled"
+          },
+          {
+            "key": "caption",
+            "label": "Caption",
+            "type": "string",
+            "default": ""
+          },
+          {
+            "key": "image",
+            "label": "Image URL",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "columns",
+        "label": "Columns",
+        "type": "number",
+        "default": 3,
+        "min": 1,
+        "max": 6,
+        "step": 1
+      },
+      {
+        "key": "gap",
+        "label": "Gap",
+        "type": "number",
+        "default": 6,
+        "min": 0,
+        "max": 24,
+        "step": 1
+      },
+      {
+        "key": "expand",
+        "label": "Expand",
+        "type": "number",
+        "default": 2.4,
+        "min": 1,
+        "max": 5,
+        "step": 0.1
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 320,
+        "min": 160,
+        "max": 720,
+        "step": 10
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "infinite-grid",
+    "displayName": "Infinite Grid",
+    "description": "Drag-to-pan infinite canvas of generated cards that tiles in every direction, with inertia and a centre falloff.",
+    "usage": "import InfiniteGrid from \"./infinite-grid\"\n\n<InfiniteGrid />",
+    "tweakSchema": [
+      {
+        "key": "items",
+        "label": "Cards",
+        "type": "array",
+        "default": [],
+        "items": [
+          {
+            "key": "title",
+            "label": "Title",
+            "type": "string",
+            "default": "Untitled"
+          },
+          {
+            "key": "tag",
+            "label": "Tag",
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "hidden": true
+      },
+      {
+        "key": "cellSize",
+        "label": "Cell size",
+        "type": "number",
+        "default": 112,
+        "min": 64,
+        "max": 240,
+        "step": 2
+      },
+      {
+        "key": "gap",
+        "label": "Gap",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 48,
+        "step": 1
+      },
+      {
+        "key": "falloff",
+        "label": "Falloff",
+        "type": "number",
+        "default": 0.6,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "height",
+        "label": "Height",
+        "type": "number",
+        "default": 320,
+        "min": 160,
+        "max": 720,
+        "step": 10
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
+  },
+  {
+    "name": "inline-edit",
+    "displayName": "Inline Edit",
+    "description": "Click-to-edit text with a spring-sized input, pencil hint, saved flash and an undo chip, single line or multiline.",
+    "usage": "import InlineEdit from \"./inline-edit\"\n\n<InlineEdit />",
+    "tweakSchema": [
+      {
+        "key": "value",
+        "label": "Value",
+        "type": "string",
+        "default": "Redesign the onboarding flow"
+      },
+      {
+        "key": "multiline",
+        "label": "Multiline",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "placeholder",
+        "label": "Placeholder",
+        "type": "string",
+        "default": "Add a title"
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Project"
+      },
+      {
+        "key": "showList",
+        "label": "Show rows",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#fa7319"
+      },
+      {
+        "key": "theme",
+        "label": "Theme",
+        "type": "enum",
+        "default": "dark",
+        "options": [
+          "dark",
+          "light"
+        ]
+      },
+      {
+        "key": "radius",
+        "label": "Radius",
+        "type": "number",
+        "default": 12,
+        "min": 0,
+        "max": 28
+      }
+    ]
   }
 ]
