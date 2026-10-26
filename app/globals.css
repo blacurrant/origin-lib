@@ -14,17 +14,17 @@ html, body { background: #0f0f10; color: #f7f7f7; font-family: Inter, ui-sans-se
 }
 .blocks-range::-webkit-slider-runnable-track {
   height: 4px;
-  border-radius: 999px;
+  border-radius: 2px;
   background: linear-gradient(to right, #f2f2f3 var(--pct, 50%), #2e2e33 var(--pct, 50%));
 }
 .blocks-range::-moz-range-track {
   height: 4px;
-  border-radius: 999px;
+  border-radius: 2px;
   background: #2e2e33;
 }
 .blocks-range::-moz-range-progress {
   height: 4px;
-  border-radius: 999px;
+  border-radius: 2px;
   background: #f2f2f3;
 }
 .blocks-range::-webkit-slider-thumb {
@@ -33,7 +33,7 @@ html, body { background: #0f0f10; color: #f7f7f7; font-family: Inter, ui-sans-se
   height: 16px;
   width: 16px;
   margin-top: -6px;
-  border-radius: 50%;
+  border-radius: 2px;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
@@ -41,7 +41,7 @@ html, body { background: #0f0f10; color: #f7f7f7; font-family: Inter, ui-sans-se
   height: 16px;
   width: 16px;
   border: 0;
-  border-radius: 50%;
+  border-radius: 2px;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }

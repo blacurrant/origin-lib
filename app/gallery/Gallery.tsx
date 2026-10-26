@@ -63,7 +63,7 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
   const [run, setRun] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const dark = theme === "dark";
-  const shared = { theme, accent };
+  const shared = { theme, accent, radius: 2 };
   const width = renderWidth(entry.name);
   const [copied, setCopied] = useState(false);
 
@@ -99,7 +99,7 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
   return (
     <li id={entry.name} className="group scroll-mt-40">
       <div
-        className={`relative aspect-[1.62/1] overflow-hidden rounded-[28px] border ${
+        className={`relative aspect-[1.62/1] overflow-hidden rounded-[2px] border ${
           dark ? "border-[#1f1f21] bg-black" : "border-[#e0ddd7] bg-[#f6f4f0]"
         }`}
       >
@@ -224,7 +224,7 @@ function Hero({ groups, theme, accent }: { groups: CoreGroup[]; theme: Theme; ac
         </div>
 
         <div onMouseEnter={() => setHeld(true)} onMouseLeave={() => setHeld(false)} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
-          <div className={`overflow-hidden rounded-[22px] border ${card}`}>
+          <div className={`overflow-hidden rounded-[2px] border ${card}`}>
             <div className={`flex items-center justify-between border-b px-5 py-3 ${line}`}>
               <span className={`${MONO} text-[11px] uppercase tracking-[0.14em] ${faint}`}>In your editor</span>
               <span className={`${MONO} text-[11px] tabular-nums ${faint}`}>

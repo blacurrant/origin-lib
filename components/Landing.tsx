@@ -94,7 +94,7 @@ type Tile = {
 };
 
 const ACCENT = "#fa7319";
-const S = { theme: "dark", accent: ACCENT } as const;
+const S = { theme: "dark", accent: ACCENT, radius: 2 } as const;
 const GAP = 16;
 const MIN_COL = 330;
 const CAPTION = 62;

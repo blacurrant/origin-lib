@@ -5,6 +5,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
 export const FOCUS =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
+/** Corner radius the app asks demos for, so previews match the near-square UI around them. */
+export const APP_RADIUS = 2;
+
 export const SITE = (process.env.NEXT_PUBLIC_ORIGINKIT_SITE_URL ?? "https://www.originkit.dev").replace(/\/$/, "");
 
 /** Copy to the clipboard and report it for a moment, so the button can confirm. */

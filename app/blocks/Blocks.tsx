@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { components } from "@/lib/originkit-library";
 import { ACCENTS, DEFAULT_ACCENT } from "@/app/core/types";
 import { Inspector, decodeProps } from "./Inspector";
-import { FOCUS, Fit, Icon, SITE, useCoarsePointer, useCopy, useNear, useSaved, useViewportWidth } from "./kit";
+import { APP_RADIUS, FOCUS, Fit, Icon, SITE, useCoarsePointer, useCopy, useNear, useSaved, useViewportWidth } from "./kit";
 import { BLOCKS, INTERACTIONS, TILE_ASPECT, type Block, type Interaction } from "./manifest";
 import type { Values } from "./controls";
 
@@ -101,13 +101,13 @@ function Tile({
         ref={ref}
         role="group"
         aria-label={`${block.title}, ${block.interaction.toLowerCase()} block`}
-        className={`group relative w-full overflow-hidden bg-[#131314] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-shadow duration-200 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] ${compact ? "rounded-[22px]" : "rounded-[32px]"}`}
+        className={`group relative w-full overflow-hidden bg-[#131314] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-shadow duration-200 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] ${compact ? "rounded-[2px]" : "rounded-[2px]"}`}
         style={{ aspectRatio: String(aspect) }}
       >
         <div ref={preview} className={`absolute inset-0 ${coarse ? "pointer-events-none" : ""}`}>
           {Comp && near && (
             <Fit designWidth={480} padX={compact ? 16 : 28} padTop={compact ? 16 : 28} padBottom={compact ? 68 : 92}>
-              <Comp accent={accent} theme="dark" />
+              <Comp accent={accent} theme="dark" radius={APP_RADIUS} />
             </Fit>
           )}
         </div>

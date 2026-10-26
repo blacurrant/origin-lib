@@ -7,7 +7,7 @@ import { components } from "@/lib/originkit-library";
 import registryJson from "@/lib/originkit-library/registry.json";
 import { PropsPanel, defaultOf, readControls, type Values } from "./controls";
 import { Integrate, changedProps, useSource } from "./Integrate";
-import { FOCUS, Fit, Icon, useCopy } from "./kit";
+import { APP_RADIUS, FOCUS, Fit, Icon, useCopy } from "./kit";
 import type { Block } from "./manifest";
 
 type RegistryEntry = { name: string; description?: string; usage?: string; tweakSchema?: unknown[] };
@@ -68,6 +68,8 @@ function Body({
   const [values, setValues] = useState<Values>(() => {
     const base: Values = { ...initialValues };
     const acc = controls.find(([k]) => k === "accent");
+    // Start from the app's near-square corners; "Reset" returns to the component's own default.
+    if (controls.some(([k]) => k === "radius") && !("radius" in base)) base.radius = APP_RADIUS;
     if (acc && !("accent" in base) && accent.toLowerCase() !== String(defaultOf(acc[1])).toLowerCase()) base.accent = accent;
     return base;
   });
@@ -376,7 +378,7 @@ export function Inspector({
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0, transition: { duration: 0.1 } } : { opacity: 0, scale: 0.985, y: 4, transition: { duration: 0.12 } }}
             transition={{ type: "spring", stiffness: 420, damping: 36 }}
-            className="relative flex h-full w-full flex-col overflow-hidden bg-[#0e0e10] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none lg:h-[min(860px,100%)] lg:max-w-[1380px] lg:rounded-[28px] lg:border lg:border-[#232326]"
+            className="relative flex h-full w-full flex-col overflow-hidden bg-[#0e0e10] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none lg:h-[min(860px,100%)] lg:max-w-[1380px] lg:rounded-[2px] lg:border lg:border-[#232326]"
           >
             <Body
               key={block.slug}
