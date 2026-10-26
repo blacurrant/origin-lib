@@ -25,6 +25,51 @@ export function useCopy() {
   return { copied, copy };
 }
 
+/** True on touch-first devices, where a drag on a tile should scroll the page, not play the demo. */
+export function useCoarsePointer() {
+  const [coarse, setCoarse] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const on = () => setCoarse(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return coarse;
+}
+
+const SAVED_KEY = "originkit.blocks.saved";
+
+/** Bookmarks kept in this browser. Other tabs stay in sync through the storage event. */
+export function useSaved() {
+  const [saved, setSaved] = useState<string[]>([]);
+  useEffect(() => {
+    const read = () => {
+      try {
+        const v = JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]");
+        setSaved(Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
+      } catch {
+        setSaved([]);
+      }
+    };
+    read();
+    const on = (e: StorageEvent) => e.key === SAVED_KEY && read();
+    window.addEventListener("storage", on);
+    return () => window.removeEventListener("storage", on);
+  }, []);
+  const write = useCallback((next: string[]) => {
+    setSaved(next);
+    try {
+      localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+    } catch {
+      /* private mode: the bookmark lasts for this visit only */
+    }
+  }, []);
+  const toggle = useCallback((slug: string) => write(saved.includes(slug) ? saved.filter((x) => x !== slug) : [...saved, slug]), [saved, write]);
+  const clear = useCallback(() => write([]), [write]);
+  return { saved, toggle, clear };
+}
+
 export function useViewportWidth() {
   const [w, setW] = useState(1440);
   useEffect(() => {
@@ -149,7 +194,7 @@ export function highlight(code: string): ReactNode[] {
   return out;
 }
 
-export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "download" | "prev" | "next" | "replay" | "sun" | "moon" | "link" | "reset" | "plus" | "trash" | "up" | "down" | "chevron" | "open" | "grid2" | "grid3" | "grid4" | "grid5" | "masonry" | "even"; size?: number }) {
+export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "download" | "prev" | "next" | "replay" | "sun" | "moon" | "link" | "reset" | "plus" | "trash" | "up" | "down" | "chevron" | "open" | "bookmark" | "bookmarkFilled" | "grid2" | "grid3" | "grid4" | "grid5" | "masonry" | "even"; size?: number }) {
   const p = { width: size, height: size, viewBox: "0 0 16 16", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   switch (name) {
     case "close":
@@ -186,6 +231,10 @@ export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "
       return <svg {...p}><path d="m6 3.8 4.2 4.2L6 12.2" /></svg>;
     case "open":
       return <svg {...p}><path d="M9.5 2.5h4v4M13.5 2.5 8 8M11.5 9v3.2a1.3 1.3 0 0 1-1.3 1.3H3.8a1.3 1.3 0 0 1-1.3-1.3V5.8a1.3 1.3 0 0 1 1.3-1.3H7" /></svg>;
+    case "bookmark":
+      return <svg {...p}><path d="M4.2 2.8h7.6a.7.7 0 0 1 .7.7v9.6a.4.4 0 0 1-.65.3L8 10.4l-3.85 3a.4.4 0 0 1-.65-.3V3.5a.7.7 0 0 1 .7-.7Z" /></svg>;
+    case "bookmarkFilled":
+      return <svg {...p} fill="currentColor"><path d="M4.2 2.8h7.6a.7.7 0 0 1 .7.7v9.6a.4.4 0 0 1-.65.3L8 10.4l-3.85 3a.4.4 0 0 1-.65-.3V3.5a.7.7 0 0 1 .7-.7Z" /></svg>;
     case "masonry":
       return <svg {...p}><rect x="2" y="2" width="5" height="7" rx="1.2" /><rect x="9" y="2" width="5" height="4" rx="1.2" /><rect x="2" y="11" width="5" height="3" rx="1.2" /><rect x="9" y="8" width="5" height="6" rx="1.2" /></svg>;
     case "even":

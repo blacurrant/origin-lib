@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { components } from "@/lib/originkit-library";
 import { ACCENTS, DEFAULT_ACCENT } from "@/app/core/types";
 import { Inspector, decodeProps } from "./Inspector";
-import { FOCUS, Fit, Icon, SITE, useNear, useViewportWidth } from "./kit";
+import { FOCUS, Fit, Icon, SITE, useCoarsePointer, useCopy, useNear, useSaved, useViewportWidth } from "./kit";
 import { BLOCKS, INTERACTIONS, TILE_ASPECT, type Block, type Interaction } from "./manifest";
 import type { Values } from "./controls";
 
@@ -23,34 +24,87 @@ function defaultCols(w: number) {
 
 /* -------------------------------------------------------------------------- */
 
-function Tile({ block, accent, cols, layout, onOpen }: { block: Block; accent: string; cols: number; layout: Layout; onOpen: (slug: string, el: HTMLElement) => void }) {
+const FOCUSABLE = 'a[href],button,input,select,textarea,[tabindex]';
+
+function BookmarkButton({ saved, title, onToggle, accent, size }: { saved: boolean; title: string; onToggle: () => void; accent: string; size: "sm" | "md" }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={saved}
+      aria-label={saved ? `Remove ${title} from saved` : `Save ${title}`}
+      title={saved ? "Saved" : "Save for later"}
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      className={`grid shrink-0 place-items-center rounded-full bg-[#232325] transition-colors hover:bg-[#2e2e31] ${FOCUS} ${size === "sm" ? "h-8 w-8" : "h-10 w-10"}`}
+      style={{ color: saved ? accent : "#c9c9cc" }}
+    >
+      <motion.span key={String(saved)} initial={saved ? { scale: 0.6 } : false} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 520, damping: 14 }} className="grid place-items-center">
+        <Icon name={saved ? "bookmarkFilled" : "bookmark"} size={size === "sm" ? 15 : 17} />
+      </motion.span>
+    </button>
+  );
+}
+
+function Tile({
+  block,
+  accent,
+  cols,
+  layout,
+  coarse,
+  saved,
+  onOpen,
+  onToggleSaved,
+}: {
+  block: Block;
+  accent: string;
+  cols: number;
+  layout: Layout;
+  coarse: boolean;
+  saved: boolean;
+  onOpen: (slug: string, el: HTMLElement) => void;
+  onToggleSaved: (slug: string) => void;
+}) {
   const Comp = components[block.slug];
   const { ref, near } = useNear<HTMLDivElement>();
+  const preview = useRef<HTMLDivElement | null>(null);
   const compact = cols >= 4;
   const aspect = layout === "even" ? 1.25 : TILE_ASPECT[block.size];
 
+  // On a pointer device the preview is live. Two guards keep that from fighting the page:
+  // wheel gestures scroll the page (a demo that pans on wheel would trap the scroll), and the
+  // demo's own controls are skipped by Tab so one tile is not dozens of tab stops. Keyboard
+  // users play with a block in the inspector, which the title button opens.
+  useEffect(() => {
+    const el = preview.current;
+    if (!el || coarse) return;
+    const stopWheel = (e: WheelEvent) => e.stopPropagation();
+    el.addEventListener("wheel", stopWheel, { capture: true });
+    const skipTab = () => {
+      el.querySelectorAll<HTMLElement>(FOCUSABLE).forEach((n) => {
+        if (n.getAttribute("tabindex") !== "-1") n.setAttribute("tabindex", "-1");
+      });
+    };
+    skipTab();
+    const mo = new MutationObserver(skipTab);
+    mo.observe(el, { childList: true, subtree: true, attributes: true, attributeFilter: ["tabindex"] });
+    return () => {
+      el.removeEventListener("wheel", stopWheel, { capture: true });
+      mo.disconnect();
+    };
+  }, [near, coarse]);
+
   return (
     <li className={layout === "masonry" ? "mb-[var(--gap)] break-inside-avoid" : ""}>
-      {/* A div, not a button: the preview inside can contain real buttons, and buttons cannot nest. */}
       <div
         ref={ref}
-        role="button"
-        tabIndex={0}
-        onClick={(e) => onOpen(block.slug, e.currentTarget)}
-        onKeyDown={(e) => {
-          if (e.target !== e.currentTarget) return;
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onOpen(block.slug, e.currentTarget);
-          }
-        }}
-        aria-label={`Open ${block.title}, ${block.interaction.toLowerCase()} block`}
-        className={`group relative block w-full cursor-pointer overflow-hidden bg-[#131314] text-left shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),0_24px_50px_-28px_rgba(0,0,0,0.9)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${FOCUS} ${compact ? "rounded-[22px]" : "rounded-[32px]"}`}
+        role="group"
+        aria-label={`${block.title}, ${block.interaction.toLowerCase()} block`}
+        className={`group relative w-full overflow-hidden bg-[#131314] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-shadow duration-200 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] ${compact ? "rounded-[22px]" : "rounded-[32px]"}`}
         style={{ aspectRatio: String(aspect) }}
       >
-        {/* The preview is for looking. It is inert so a click anywhere opens the inspector,
-            where the block can be played with, edited and copied. */}
-        <div aria-hidden ref={(el) => el?.setAttribute("inert", "")} className="pointer-events-none absolute inset-0">
+        <div ref={preview} className={`absolute inset-0 ${coarse ? "pointer-events-none" : ""}`}>
           {Comp && near && (
             <Fit designWidth={480} padX={compact ? 16 : 28} padTop={compact ? 16 : 28} padBottom={compact ? 68 : 92}>
               <Comp accent={accent} theme="dark" />
@@ -58,14 +112,34 @@ function Tile({ block, accent, cols, layout, onOpen }: { block: Block; accent: s
           )}
         </div>
 
-        <span className={`absolute right-3 top-3 grid place-items-center rounded-full bg-white text-black opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 ${compact ? "h-7 w-7" : "h-9 w-9"}`}>
-          <Icon name="open" size={compact ? 13 : 15} />
-        </span>
+        {/* Touch: a drag should scroll the page, so the preview is inert and a tap opens the inspector. */}
+        {coarse && (
+          <button type="button" onClick={(e) => onOpen(block.slug, e.currentTarget)} aria-label={`Open ${block.title}`} className={`absolute inset-0 z-[1] rounded-[inherit] ${FOCUS}`} />
+        )}
 
-        <span className={`absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 ${compact ? "p-3" : "p-5"}`}>
-          <span className={`truncate rounded-full bg-[#232325] text-[#ededee] ${compact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2 text-[15px]"}`}>{block.title}</span>
-          <span className={`shrink-0 text-[#6c6c72] transition-colors group-hover:text-[#a8a8ad] ${compact ? "text-[11px]" : "text-[12.5px]"}`}>{block.interaction}</span>
-        </span>
+        {!coarse && !compact && (
+          <span className="pointer-events-none absolute inset-x-0 bottom-[68px] flex justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <span className="rounded-full bg-black/70 px-3 py-1 text-[12px] text-[#c9c9cc] backdrop-blur">Try it: {block.hint.charAt(0).toLowerCase() + block.hint.slice(1)}</span>
+          </span>
+        )}
+
+        <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-[2] flex items-end justify-between gap-2 ${compact ? "p-3" : "p-5"}`}>
+          <button
+            type="button"
+            onClick={(e) => onOpen(block.slug, e.currentTarget)}
+            aria-label={`Open ${block.title} in the inspector`}
+            className={`pointer-events-auto flex min-w-0 items-center gap-2 rounded-full bg-[#232325] text-[#ededee] transition-colors hover:bg-[#2e2e31] ${FOCUS} ${compact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2.5 text-[15px]"}`}
+          >
+            <span className="truncate">{block.title}</span>
+            <span className="shrink-0 text-[#8b8b90]">
+              <Icon name="open" size={compact ? 12 : 14} />
+            </span>
+          </button>
+          <div className="pointer-events-auto flex shrink-0 items-center gap-2">
+            {!compact && <span className="text-[12.5px] text-[#6c6c72]">{block.interaction}</span>}
+            <BookmarkButton saved={saved} title={block.title} onToggle={() => onToggleSaved(block.slug)} accent={accent} size={compact ? "sm" : "md"} />
+          </div>
+        </div>
       </div>
     </li>
   );
@@ -75,7 +149,11 @@ function Tile({ block, accent, cols, layout, onOpen }: { block: Block; accent: s
 
 export function Blocks() {
   const vw = useViewportWidth();
-  const [type, setType] = useState<Interaction | "All">("All");
+  const coarse = useCoarsePointer();
+  const { saved, toggle: toggleSavedRaw, clear: clearSaved } = useSaved();
+  const { copied, copy } = useCopy();
+  const [announce, setAnnounce] = useState("");
+  const [type, setType] = useState<Interaction | "All" | "Saved">("All");
   const [query, setQuery] = useState("");
   const [colsPref, setColsPref] = useState<number | null>(null);
   const [layout, setLayout] = useState<Layout>("masonry");
@@ -105,8 +183,10 @@ export function Blocks() {
     } catch {
       /* ignore */
     }
-    const t = INTERACTIONS.find((i) => i.toLowerCase() === sp.get("type")?.toLowerCase());
+    const rawType = sp.get("type")?.toLowerCase();
+    const t = INTERACTIONS.find((i) => i.toLowerCase() === rawType);
     if (t) setType(t);
+    else if (rawType === "saved") setType("Saved");
     setQuery(sp.get("q") ?? "");
     const c = Number(sp.get("cols") ?? saved.cols);
     if (c >= 1 && c <= 5) setColsPref(c);
@@ -171,9 +251,9 @@ export function Blocks() {
 
   const q = query.trim().toLowerCase();
   const visible = useMemo(() => {
-    const list = BLOCKS.filter((b) => (type === "All" || b.interaction === type) && (!q || `${b.title} ${b.keywords} ${b.interaction}`.toLowerCase().includes(q)));
+    const list = BLOCKS.filter((b) => (type === "All" || (type === "Saved" ? saved.includes(b.slug) : b.interaction === type)) && (!q || `${b.title} ${b.keywords} ${b.interaction}`.toLowerCase().includes(q)));
     return sort === "az" ? [...list].sort((a, b) => a.title.localeCompare(b.title)) : list;
-  }, [type, q, sort]);
+  }, [type, q, sort, saved]);
 
   const counts = useMemo(() => {
     const m = new Map<string, number>();
@@ -209,7 +289,15 @@ export function Blocks() {
     setParam("p", null);
   };
 
-  const chooseType = (t: Interaction | "All") => {
+  const toggleSaved = (slug: string) => {
+    const b = BLOCKS.find((x) => x.slug === slug);
+    setAnnounce(`${saved.includes(slug) ? "Removed" : "Saved"} ${b?.title ?? slug}`);
+    toggleSavedRaw(slug);
+  };
+  const savedBlocks = BLOCKS.filter((b) => saved.includes(b.slug));
+  const savedPrompt = `Using originkit MCP, get me these components: ${savedBlocks.map((b) => b.slug).join(", ")}.`;
+
+  const chooseType = (t: Interaction | "All" | "Saved") => {
     setType(t);
     setParam("type", t === "All" ? null : t.toLowerCase());
   };
@@ -298,6 +386,10 @@ export function Blocks() {
               <button type="button" role="tab" aria-selected={type === "All"} onClick={() => chooseType("All")} className={pill(type === "All")}>
                 All <span className={`ml-1 text-[12.5px] ${type === "All" ? "text-black/50" : "text-[#5d5d60]"}`}>{BLOCKS.length}</span>
               </button>
+              <button type="button" role="tab" aria-selected={type === "Saved"} onClick={() => chooseType("Saved")} className={`${pill(type === "Saved")} inline-flex items-center gap-1.5`}>
+                <Icon name={saved.length ? "bookmarkFilled" : "bookmark"} size={14} />
+                Saved <span className={`text-[12.5px] ${type === "Saved" ? "text-black/50" : "text-[#5d5d60]"}`}>{saved.length}</span>
+              </button>
               {INTERACTIONS.map((t) => (
                 <button key={t} type="button" role="tab" aria-selected={type === t} onClick={() => chooseType(t)} className={pill(type === t)}>
                   {t} <span className={`ml-1 text-[12.5px] ${type === t ? "text-black/50" : "text-[#5d5d60]"}`}>{counts.get(t) ?? 0}</span>
@@ -368,9 +460,36 @@ export function Blocks() {
 
       <main className="mx-auto max-w-[1880px] px-4 pb-24 pt-2 sm:px-7" style={{ ["--gap" as string]: `${gap}px` }}>
         <p className="sr-only" role="status" aria-live="polite">
-          {visible.length} block{visible.length === 1 ? "" : "s"} shown
+          {announce || `${visible.length} block${visible.length === 1 ? "" : "s"} shown`}
         </p>
-        {visible.length === 0 ? (
+        {type === "Saved" && saved.length > 0 && (
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[#101011] px-5 py-3.5">
+            <p className="text-[14px] text-[#c9c9cb]">
+              {saved.length} saved <span className="text-[#6c6c72]">· kept in this browser</span>
+            </p>
+            <div className="flex gap-2">
+              <button type="button" onClick={() => copy(savedPrompt, "saved")} className={`inline-flex h-9 items-center gap-2 rounded-full bg-white px-4 text-[13.5px] font-medium text-black ${FOCUS}`}>
+                <Icon name={copied === "saved" ? "check" : "copy"} size={14} />
+                {copied === "saved" ? "Copied" : "Copy MCP prompt for all"}
+              </button>
+              <button type="button" onClick={clearSaved} className={`h-9 rounded-full bg-[#1a1a1a] px-4 text-[13.5px] text-[#c9c9cb] hover:text-white ${FOCUS}`}>
+                Clear all
+              </button>
+            </div>
+          </div>
+        )}
+        {visible.length === 0 && type === "Saved" && !q ? (
+          <div className="py-28 text-center">
+            <span className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-[#1a1a1a] text-[#8e8e91]">
+              <Icon name="bookmark" size={20} />
+            </span>
+            <p className="text-[18px] text-white">Nothing saved yet</p>
+            <p className="mx-auto mt-2 max-w-sm text-[14.5px] leading-[1.6] text-[#8e8e91]">Press the bookmark on any block to keep it here, then copy them all into your editor in one go.</p>
+            <button type="button" onClick={() => chooseType("All")} className={`mt-6 h-10 rounded-full bg-white px-5 text-[14px] font-medium text-black ${FOCUS}`}>
+              Browse blocks
+            </button>
+          </div>
+        ) : visible.length === 0 ? (
           <div className="py-28 text-center">
             <p className="text-[18px] text-white">Nothing matches “{query}”.</p>
             <button
@@ -388,13 +507,13 @@ export function Blocks() {
         ) : layout === "masonry" ? (
           <ul style={{ columnCount: cols, columnGap: gap }}>
             {visible.map((b) => (
-              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} onOpen={open} />
+              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
             ))}
           </ul>
         ) : (
           <ul className="grid" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap }}>
             {visible.map((b) => (
-              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} onOpen={open} />
+              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
             ))}
           </ul>
         )}
@@ -407,6 +526,8 @@ export function Blocks() {
         initialValues={initialValues}
         onClose={close}
         onNavigate={navigate}
+        saved={current ? saved.includes(current.slug) : false}
+        onToggleSaved={toggleSaved}
         onExited={() => trigger.current?.isConnected && trigger.current.focus()}
       />
     </div>

@@ -44,7 +44,11 @@ function Body({
   onNavigate,
   onClose,
   position,
+  saved,
+  onToggleSaved,
 }: {
+  saved: boolean;
+  onToggleSaved: (slug: string) => void;
   block: Block;
   siblings: Block[];
   accent: string;
@@ -161,6 +165,16 @@ function Body({
           <Icon name={copied === "link" ? "check" : "link"} size={14} />
           <span className="hidden sm:inline">{copied === "link" ? "Link copied" : "Share"}</span>
         </button>
+        <button
+          type="button"
+          aria-pressed={saved}
+          aria-label={saved ? `Remove ${block.title} from saved` : `Save ${block.title}`}
+          onClick={() => onToggleSaved(block.slug)}
+          className={`${chip} ${saved ? "bg-white text-black" : "bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a]"}`}
+        >
+          <Icon name={saved ? "bookmarkFilled" : "bookmark"} size={14} />
+          <span className="hidden sm:inline">{saved ? "Saved" : "Save"}</span>
+        </button>
         <button type="button" aria-label="Close" onClick={onClose} className={`grid h-9 w-9 place-items-center rounded-full bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a] ${FOCUS}`}>
           <Icon name="close" />
         </button>
@@ -269,7 +283,11 @@ export function Inspector({
   onClose,
   onNavigate,
   onExited,
+  saved,
+  onToggleSaved,
 }: {
+  saved: boolean;
+  onToggleSaved: (slug: string) => void;
   block: Block | null;
   siblings: Block[];
   accent: string;
@@ -368,6 +386,8 @@ export function Inspector({
               initialValues={initialValues}
               onNavigate={onNavigate}
               onClose={onClose}
+              saved={saved}
+              onToggleSaved={onToggleSaved}
               position={{ index: Math.max(index, 0), total: siblings.length }}
             />
           </motion.div>
