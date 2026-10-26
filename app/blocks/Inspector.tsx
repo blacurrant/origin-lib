@@ -7,7 +7,7 @@ import { components } from "@/lib/originkit-library";
 import registryJson from "@/lib/originkit-library/registry.json";
 import { PropsPanel, defaultOf, readControls, type Values } from "./controls";
 import { Integrate, changedProps, useSource } from "./Integrate";
-import { APP_RADIUS, FOCUS, Fit, Icon, useCopy } from "./kit";
+import { FOCUS, Fit, Icon, useCopy } from "./kit";
 import type { Block } from "./manifest";
 
 type RegistryEntry = { name: string; description?: string; usage?: string; tweakSchema?: unknown[] };
@@ -46,7 +46,9 @@ function Body({
   position,
   saved,
   onToggleSaved,
+  sound,
 }: {
+  sound: boolean;
   saved: boolean;
   onToggleSaved: (slug: string) => void;
   block: Block;
@@ -68,8 +70,8 @@ function Body({
   const [values, setValues] = useState<Values>(() => {
     const base: Values = { ...initialValues };
     const acc = controls.find(([k]) => k === "accent");
-    // Start from the app's near-square corners; "Reset" returns to the component's own default.
-    if (controls.some(([k]) => k === "radius") && !("radius" in base)) base.radius = APP_RADIUS;
+    // Carry the page's sound setting in, if this block has sound.
+    if (sound && controls.some(([k]) => k === "sound") && !("sound" in base)) base.sound = true;
     if (acc && !("accent" in base) && accent.toLowerCase() !== String(defaultOf(acc[1])).toLowerCase()) base.accent = accent;
     return base;
   });
@@ -122,7 +124,7 @@ function Body({
       className={`relative h-11 px-4 text-[13.5px] font-medium transition-colors ${FOCUS} ${tab === id ? "text-white" : "text-[#8b8b90] hover:text-white"}`}
     >
       {label}
-      {tab === id && <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-white" />}
+      {tab === id && <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-lg bg-white" />}
     </button>
   );
   const onTabKey = (e: React.KeyboardEvent) => {
@@ -135,7 +137,7 @@ function Body({
     document.getElementById(`${uid}-tab-${next}`)?.focus();
   };
 
-  const chip = `inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[12.5px] font-medium transition-colors ${FOCUS}`;
+  const chip = `inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[12.5px] font-medium transition-colors ${FOCUS}`;
   const stageBg = dark ? "#0b0b0c" : "#f1efea";
   const dot = dark ? "rgba(255,255,255,0.07)" : "rgba(20,20,19,0.09)";
 
@@ -153,13 +155,13 @@ function Body({
           </p>
         </div>
         <div className="hidden items-center gap-1 sm:flex" role="group" aria-label="Browse blocks">
-          <button type="button" aria-label="Previous block" onClick={() => onNavigate(siblings[(position.index - 1 + position.total) % position.total].slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-full text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
+          <button type="button" aria-label="Previous block" onClick={() => onNavigate(siblings[(position.index - 1 + position.total) % position.total].slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-lg text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
             <Icon name="prev" />
           </button>
           <span className="w-14 text-center text-[12.5px] tabular-nums text-[#8b8b90]">
             {position.index + 1} / {position.total}
           </span>
-          <button type="button" aria-label="Next block" onClick={() => onNavigate(siblings[(position.index + 1) % position.total].slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-full text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
+          <button type="button" aria-label="Next block" onClick={() => onNavigate(siblings[(position.index + 1) % position.total].slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-lg text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
             <Icon name="next" />
           </button>
         </div>
@@ -177,7 +179,7 @@ function Body({
           <Icon name={saved ? "bookmarkFilled" : "bookmark"} size={14} />
           <span className="hidden sm:inline">{saved ? "Saved" : "Save"}</span>
         </button>
-        <button type="button" aria-label="Close" onClick={onClose} className={`grid h-9 w-9 place-items-center rounded-full bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a] ${FOCUS}`}>
+        <button type="button" aria-label="Close" onClick={onClose} className={`grid h-9 w-9 place-items-center rounded-lg bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a] ${FOCUS}`}>
           <Icon name="close" />
         </button>
       </header>
@@ -193,16 +195,16 @@ function Body({
           ) : null}
 
           <div role="toolbar" aria-label="Preview options" className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
-            <div className={`flex rounded-full p-0.5 ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Preview theme">
+            <div className={`flex rounded-lg p-0.5 ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Preview theme">
               {(["dark", "light"] as const).map((t) => (
-                <button key={t} type="button" role="radio" aria-checked={theme === t} aria-label={`${t} preview`} onClick={() => { setTheme(t); setRun((n) => n + 1); }} className={`grid h-7 w-8 place-items-center rounded-full transition-colors ${FOCUS} ${theme === t ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black"}`}>
+                <button key={t} type="button" role="radio" aria-checked={theme === t} aria-label={`${t} preview`} onClick={() => { setTheme(t); setRun((n) => n + 1); }} className={`grid h-7 w-8 place-items-center rounded-lg transition-colors ${FOCUS} ${theme === t ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black"}`}>
                   <Icon name={t === "dark" ? "moon" : "sun"} size={14} />
                 </button>
               ))}
             </div>
-            <div className={`flex rounded-full p-0.5 ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Preview width">
+            <div className={`flex rounded-lg p-0.5 ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Preview width">
               {WIDTHS.map((w) => (
-                <button key={w} type="button" role="radio" aria-checked={width === w} onClick={() => setWidth(w)} className={`h-7 rounded-full px-2.5 text-[11.5px] font-medium tabular-nums transition-colors ${FOCUS} ${width === w ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black"}`}>
+                <button key={w} type="button" role="radio" aria-checked={width === w} onClick={() => setWidth(w)} className={`h-7 rounded-lg px-2.5 text-[11.5px] font-medium tabular-nums transition-colors ${FOCUS} ${width === w ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black"}`}>
                   {w}
                 </button>
               ))}
@@ -256,7 +258,7 @@ function Body({
                     <h3 className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-[#5f5f65]">More {block.interaction.toLowerCase()} blocks</h3>
                     <div className="flex flex-wrap gap-2">
                       {related.map((b) => (
-                        <button key={b.slug} type="button" onClick={() => onNavigate(b.slug)} className={`h-9 rounded-full bg-[#1c1c1f] px-4 text-[13px] text-[#e4e4e6] transition-colors hover:bg-[#26262a] ${FOCUS}`}>
+                        <button key={b.slug} type="button" onClick={() => onNavigate(b.slug)} className={`h-9 rounded-lg bg-[#1c1c1f] px-4 text-[13px] text-[#e4e4e6] transition-colors hover:bg-[#26262a] ${FOCUS}`}>
                           {b.title}
                         </button>
                       ))}
@@ -287,7 +289,9 @@ export function Inspector({
   onExited,
   saved,
   onToggleSaved,
+  sound,
 }: {
+  sound: boolean;
   saved: boolean;
   onToggleSaved: (slug: string) => void;
   block: Block | null;
@@ -378,7 +382,7 @@ export function Inspector({
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0, transition: { duration: 0.1 } } : { opacity: 0, scale: 0.985, y: 4, transition: { duration: 0.12 } }}
             transition={{ type: "spring", stiffness: 420, damping: 36 }}
-            className="relative flex h-full w-full flex-col overflow-hidden bg-[#0e0e10] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none lg:h-[min(860px,100%)] lg:max-w-[1380px] lg:rounded-[2px] lg:border lg:border-[#232326]"
+            className="relative flex h-full w-full flex-col overflow-hidden bg-[#0e0e10] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none lg:h-[min(860px,100%)] lg:max-w-[1380px] lg:rounded-[20px] lg:border lg:border-[#232326]"
           >
             <Body
               key={block.slug}
@@ -390,6 +394,7 @@ export function Inspector({
               onClose={onClose}
               saved={saved}
               onToggleSaved={onToggleSaved}
+              sound={sound}
               position={{ index: Math.max(index, 0), total: siblings.length }}
             />
           </motion.div>

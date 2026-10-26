@@ -127,7 +127,7 @@ function renderControl(slug: string, c: Control, value: unknown, onChange: (v: u
         role="switch"
         aria-checked={on}
         onClick={() => onChange(!on)}
-        className={`relative h-5 w-9 rounded-full transition-colors ${FOCUS} ${on ? "bg-[#fa7319]" : "bg-[#3e3f40]"}`}
+        className={`relative h-5 w-9 rounded-lg transition-colors ${FOCUS} ${on ? "bg-[#fa7319]" : "bg-[#3e3f40]"}`}
       >
         <span
           className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${

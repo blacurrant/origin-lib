@@ -5,9 +5,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNo
 export const FOCUS =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
 
-/** Corner radius the app asks demos for, so previews match the near-square UI around them. */
-export const APP_RADIUS = 2;
-
 export const SITE = (process.env.NEXT_PUBLIC_ORIGINKIT_SITE_URL ?? "https://www.originkit.dev").replace(/\/$/, "");
 
 /** Copy to the clipboard and report it for a moment, so the button can confirm. */
@@ -39,6 +36,59 @@ export function useCoarsePointer() {
     return () => mq.removeEventListener("change", on);
   }, []);
   return coarse;
+}
+
+const SOUND_KEY = "originkit.blocks.sound";
+
+/** The global sound-effects switch. Off until someone turns it on, and remembered. */
+export function useSoundPref() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    try {
+      setOn(localStorage.getItem(SOUND_KEY) === "1");
+    } catch {
+      /* ignore */
+    }
+  }, []);
+  const set = useCallback((next: boolean) => {
+    setOn(next);
+    try {
+      localStorage.setItem(SOUND_KEY, next ? "1" : "0");
+    } catch {
+      /* private mode */
+    }
+    if (next) confirmCue();
+  }, []);
+  return { soundOn: on, setSoundOn: set };
+}
+
+/** A short two-note chime so turning sound on is itself audible. Runs inside the click that enabled it. */
+function confirmCue() {
+  try {
+    const w = window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext; __okAudio?: AudioContext };
+    const AC = w.AudioContext ?? w.webkitAudioContext;
+    if (!AC) return;
+    const ctx = (w.__okAudio = w.__okAudio ?? new AC());
+    if (ctx.state === "suspended") void ctx.resume();
+    const out = ctx.createGain();
+    out.gain.value = 0.16;
+    out.connect(ctx.destination);
+    [[520, 0], [780, 0.08]].forEach(([f, d]) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const t = ctx.currentTime + d;
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(1, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
+      o.connect(g);
+      g.connect(out);
+      o.start(t);
+      o.stop(t + 0.16);
+    });
+  } catch {
+    /* audio blocked: stay silent */
+  }
 }
 
 const SAVED_KEY = "originkit.blocks.saved";
@@ -197,7 +247,7 @@ export function highlight(code: string): ReactNode[] {
   return out;
 }
 
-export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "download" | "prev" | "next" | "replay" | "sun" | "moon" | "link" | "reset" | "plus" | "trash" | "up" | "down" | "chevron" | "open" | "bookmark" | "bookmarkFilled" | "grid2" | "grid3" | "grid4" | "grid5" | "masonry" | "even"; size?: number }) {
+export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "download" | "prev" | "next" | "replay" | "sun" | "moon" | "link" | "reset" | "plus" | "trash" | "up" | "down" | "chevron" | "open" | "soundOn" | "soundOff" | "bookmark" | "bookmarkFilled" | "grid2" | "grid3" | "grid4" | "grid5" | "masonry" | "even"; size?: number }) {
   const p = { width: size, height: size, viewBox: "0 0 16 16", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   switch (name) {
     case "close":
@@ -234,6 +284,10 @@ export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "
       return <svg {...p}><path d="m6 3.8 4.2 4.2L6 12.2" /></svg>;
     case "open":
       return <svg {...p}><path d="M9.5 2.5h4v4M13.5 2.5 8 8M11.5 9v3.2a1.3 1.3 0 0 1-1.3 1.3H3.8a1.3 1.3 0 0 1-1.3-1.3V5.8a1.3 1.3 0 0 1 1.3-1.3H7" /></svg>;
+    case "soundOn":
+      return <svg {...p}><path d="M2.5 6.2v3.6h2.4L8.2 12.5v-9L4.9 6.2H2.5Z" /><path d="M10.6 5.6a3.4 3.4 0 0 1 0 4.8M12.2 3.8a6 6 0 0 1 0 8.4" /></svg>;
+    case "soundOff":
+      return <svg {...p}><path d="M2.5 6.2v3.6h2.4L8.2 12.5v-9L4.9 6.2H2.5Z" /><path d="m10.6 6 3 4M13.6 6l-3 4" /></svg>;
     case "bookmark":
       return <svg {...p}><path d="M4.2 2.8h7.6a.7.7 0 0 1 .7.7v9.6a.4.4 0 0 1-.65.3L8 10.4l-3.85 3a.4.4 0 0 1-.65-.3V3.5a.7.7 0 0 1 .7-.7Z" /></svg>;
     case "bookmarkFilled":

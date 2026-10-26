@@ -31,6 +31,8 @@ interface InfiniteGridProps {
     accent: string
     theme: Theme
     radius: number
+    sound: boolean
+    soundVolume: number
 }
 
 function palette(theme: Theme) {
@@ -161,6 +163,98 @@ function Cell({ col, row, pitch, size, card, index, px, py, vw, vh, falloff, acc
     )
 }
 
+/* ---- Sound ---------------------------------------------------------------
+ * Tiny synthesized cues, no files and no network. Silent unless the `sound`
+ * prop is on, and only ever played from a real user action (pointer or key),
+ * never from autoplay, timers or demo cursors. One shared AudioContext lives
+ * on window so many components do not each open their own. */
+type Cue = "tick" | "click" | "pop" | "on" | "off" | "whoosh" | "drop" | "success" | "error" | "type"
+const cueAt: Record<string, number> = {}
+
+function playCue(cue: Cue, volume = 0.5, minGap = 45, pitch = 1) {
+    if (typeof window === "undefined" || volume <= 0) return
+    const stamp = Date.now()
+    if (stamp - (cueAt[cue] || 0) < minGap) return
+    cueAt[cue] = stamp
+    try {
+        const w = window as any
+        const AC = w.AudioContext || w.webkitAudioContext
+        if (!AC) return
+        const ctx: AudioContext = (w.__okAudio = w.__okAudio || new AC())
+        if (ctx.state === "suspended") ctx.resume()
+        const t0 = ctx.currentTime
+        const out = ctx.createGain()
+        out.gain.value = Math.min(1, volume) * 0.4
+        out.connect(ctx.destination)
+        const tone = (type: OscillatorType, f0: number, f1: number, dur: number, gain = 1, delay = 0) => {
+            const o = ctx.createOscillator()
+            const g = ctx.createGain()
+            const s = t0 + delay
+            o.type = type
+            o.frequency.setValueAtTime(f0 * pitch, s)
+            o.frequency.exponentialRampToValueAtTime(Math.max(20, f1 * pitch), s + dur)
+            g.gain.setValueAtTime(0.0001, s)
+            g.gain.exponentialRampToValueAtTime(gain, s + 0.006)
+            g.gain.exponentialRampToValueAtTime(0.0001, s + dur)
+            o.connect(g)
+            g.connect(out)
+            o.start(s)
+            o.stop(s + dur + 0.02)
+        }
+        const noise = (dur: number, f0: number, f1: number, gain = 1, delay = 0) => {
+            const n = Math.max(1, Math.floor(ctx.sampleRate * dur))
+            const buf = ctx.createBuffer(1, n, ctx.sampleRate)
+            const d = buf.getChannelData(0)
+            for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1
+            const src = ctx.createBufferSource()
+            const f = ctx.createBiquadFilter()
+            const g = ctx.createGain()
+            const s = t0 + delay
+            src.buffer = buf
+            f.type = "bandpass"
+            f.Q.value = 0.9
+            f.frequency.setValueAtTime(f0 * pitch, s)
+            f.frequency.exponentialRampToValueAtTime(Math.max(40, f1 * pitch), s + dur)
+            g.gain.setValueAtTime(0.0001, s)
+            g.gain.exponentialRampToValueAtTime(gain, s + 0.01)
+            g.gain.exponentialRampToValueAtTime(0.0001, s + dur)
+            src.connect(f)
+            f.connect(g)
+            g.connect(out)
+            src.start(s)
+        }
+        if (cue === "tick") tone("triangle", 2300, 1900, 0.035, 0.55)
+        else if (cue === "click") {
+            noise(0.025, 3200, 2400, 0.7)
+            tone("sine", 190, 120, 0.04, 0.5)
+        } else if (cue === "pop") tone("sine", 540, 190, 0.12, 0.9)
+        else if (cue === "on") {
+            tone("sine", 520, 520, 0.09, 0.6)
+            tone("sine", 780, 780, 0.12, 0.6, 0.07)
+        } else if (cue === "off") {
+            tone("sine", 650, 650, 0.09, 0.5)
+            tone("sine", 420, 420, 0.12, 0.5, 0.07)
+        } else if (cue === "whoosh") noise(0.24, 500, 2600, 0.8)
+        else if (cue === "drop") {
+            tone("sine", 170, 55, 0.16, 0.95)
+            noise(0.05, 900, 400, 0.4)
+        } else if (cue === "success") {
+            tone("triangle", 523, 523, 0.11, 0.55)
+            tone("triangle", 659, 659, 0.11, 0.55, 0.075)
+            tone("triangle", 784, 784, 0.18, 0.6, 0.15)
+        } else if (cue === "error") {
+            tone("square", 160, 120, 0.13, 0.35)
+            tone("square", 150, 110, 0.15, 0.35, 0.16)
+        } else if (cue === "type") {
+            noise(0.014, 3800, 3000, 0.55)
+            tone("square", 1500 + Math.random() * 300, 1100, 0.02, 0.18)
+        }
+    } catch {
+        /* audio blocked or unsupported: stay silent */
+    }
+}
+/* ---- end Sound ---------------------------------------------------------- */
+
 export default function InfiniteGrid({
     items = SAMPLE,
     cellSize = 112,
@@ -170,7 +264,12 @@ export default function InfiniteGrid({
     accent = "#fa7319",
     theme = "dark",
     radius = 12,
+    sound = false,
+    soundVolume = 0.5,
 }: Partial<InfiniteGridProps>) {
+    const cue = (c: Cue, gap?: number, pitch?: number) => {
+        if (sound) playCue(c, soundVolume, gap, pitch)
+    }
     const p = palette(theme)
     const dark = theme !== "light"
     const reduce = useReducedMotion()
@@ -190,9 +289,12 @@ export default function InfiniteGrid({
     const inertia = React.useRef<AnimationPlaybackControls[]>([])
     const drag = React.useRef<{ id: number; x: number; y: number; t: number; vx: number; vy: number } | null>(null)
     const centered = React.useRef(false)
+    const settle = React.useRef<object | null>(null)
+    const travel = React.useRef(0)
     const [measured, setMeasured] = React.useState(false)
 
     const stopMotion = () => {
+        settle.current = null
         inertia.current.forEach((c) => c.stop())
         inertia.current = []
     }
@@ -266,6 +368,8 @@ export default function InfiniteGrid({
     const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
         if (e.button !== 0 && e.pointerType === "mouse") return
         stopMotion()
+        travel.current = 0
+        cue("click", 120)
         drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), vx: 0, vy: 0 }
         e.currentTarget.setPointerCapture(e.pointerId)
         setDragging(true)
@@ -280,6 +384,7 @@ export default function InfiniteGrid({
         const dy = e.clientY - d.y
         px.set(px.get() + dx)
         py.set(py.get() + dy)
+        travel.current += Math.abs(dx) + Math.abs(dy)
         // Smoothed velocity in px per second.
         d.vx = d.vx * 0.6 + ((dx / dt) * 1000) * 0.4
         d.vy = d.vy * 0.6 + ((dy / dt) * 1000) * 0.4
@@ -296,11 +401,21 @@ export default function InfiniteGrid({
         const idle = performance.now() - d.t
         const vx = idle > 80 ? 0 : d.vx
         const vy = idle > 80 ? 0 : d.vy
-        if (reduce) return
-        inertia.current = [
-            animate(px, px.get(), { type: "inertia", velocity: vx, power: 0.9, timeConstant: 420, restDelta: 0.5 }),
-            animate(py, py.get(), { type: "inertia", velocity: vy, power: 0.9, timeConstant: 420, restDelta: 0.5 }),
-        ]
+        const moved = travel.current > 6
+        if (reduce) {
+            if (moved) cue("drop", 200)
+            return
+        }
+        const token = {}
+        settle.current = token
+        const a = animate(px, px.get(), { type: "inertia", velocity: vx, power: 0.9, timeConstant: 420, restDelta: 0.5 })
+        const b = animate(py, py.get(), { type: "inertia", velocity: vy, power: 0.9, timeConstant: 420, restDelta: 0.5 })
+        inertia.current = [a, b]
+        if (moved) {
+            Promise.all([a, b]).then(() => {
+                if (settle.current === token) cue("drop", 200)
+            })
+        }
     }
 
     const onKeyDown = (e: React.KeyboardEvent) => {
@@ -455,4 +570,6 @@ addPropertyControls(InfiniteGrid, {
         defaultValue: "dark",
     },
     radius: { type: ControlType.Number, title: "Radius", defaultValue: 12, min: 0, max: 28 },
+    sound: { type: ControlType.Boolean, title: "Sound", defaultValue: false },
+    soundVolume: { type: ControlType.Number, title: "Sound volume", defaultValue: 0.5, min: 0, max: 1, step: 0.05 },
 })

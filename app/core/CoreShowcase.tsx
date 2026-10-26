@@ -160,7 +160,7 @@ function SettingsPanel({ s }: { s: Settings }) {
                 aria-label={a.name}
                 title={a.name}
                 onClick={() => s.setAccent(a.value)}
-                className={`h-[18px] w-[18px] rounded-full ${FOCUS} ${
+                className={`h-[18px] w-[18px] rounded-lg ${FOCUS} ${
                   on ? "ring-2 ring-[#f7f7f7] ring-offset-2 ring-offset-[#0f0f10]" : "ring-1 ring-white/15"
                 }`}
                 style={{ backgroundColor: a.value }}
@@ -497,11 +497,11 @@ export function CoreShowcase({ groups, planned }: { groups: CoreGroup[]; planned
       </div>
 
       <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center lg:hidden">
-        <div className="pointer-events-auto flex items-center gap-1 rounded-full border border-[#2d2d2f] bg-[#131415]/90 p-1.5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.8)] backdrop-blur-md">
+        <div className="pointer-events-auto flex items-center gap-1 rounded-lg border border-[#2d2d2f] bg-[#131415]/90 p-1.5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.8)] backdrop-blur-md">
           <button
             type="button"
             onClick={() => setPaletteOpen(true)}
-            className={`flex h-9 items-center gap-2 rounded-full px-3.5 text-[13px] font-medium text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}
+            className={`flex h-9 items-center gap-2 rounded-lg px-3.5 text-[13px] font-medium text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}
           >
             <Icon name="search" />
             Search
@@ -510,7 +510,7 @@ export function CoreShowcase({ groups, planned }: { groups: CoreGroup[]; planned
             type="button"
             aria-label={theme === "dark" ? "Switch preview to light" : "Switch preview to dark"}
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className={`flex h-9 w-9 items-center justify-center rounded-full text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}
+            className={`flex h-9 w-9 items-center justify-center rounded-lg text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}
           >
             <Icon name={theme === "dark" ? "sun" : "moon"} />
           </button>
@@ -518,7 +518,7 @@ export function CoreShowcase({ groups, planned }: { groups: CoreGroup[]; planned
             type="button"
             aria-haspopup="dialog"
             onClick={() => setSheetOpen(true)}
-            className={`flex h-9 items-center gap-2 rounded-full px-3.5 text-[13px] font-medium text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}
+            className={`flex h-9 items-center gap-2 rounded-lg px-3.5 text-[13px] font-medium text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}
           >
             <Icon name="sliders" />
             Customize

@@ -2251,6 +2251,21 @@
         "min": 0,
         "max": 32,
         "step": 1
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2337,6 +2352,21 @@
         "default": 12,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2400,6 +2430,21 @@
         "default": 999,
         "min": 0,
         "max": 999
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2484,6 +2529,21 @@
         "min": 0,
         "max": 4,
         "step": 1
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2564,6 +2624,21 @@
         "default": 999,
         "min": 0,
         "max": 999
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2645,6 +2720,21 @@
         "min": 0,
         "max": 40,
         "step": 1
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2714,6 +2804,21 @@
         "min": 0,
         "max": 40,
         "step": 1
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2767,6 +2872,21 @@
           "dark",
           "light"
         ]
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2866,6 +2986,21 @@
         "default": 14,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -2951,6 +3086,21 @@
         "default": 12,
         "min": 0,
         "max": 29
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3019,6 +3169,21 @@
         "default": 12,
         "min": 0,
         "max": 26
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3082,6 +3247,21 @@
         "min": 0,
         "max": 999,
         "step": 1
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3140,6 +3320,21 @@
         "default": 210,
         "min": 140,
         "max": 420
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       },
       {
         "key": "accent",
@@ -3215,6 +3410,21 @@
         "default": 16,
         "min": 0,
         "max": 64
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       },
       {
         "key": "accent",
@@ -3320,6 +3530,21 @@
         "default": 14,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3373,6 +3598,21 @@
         "label": "Ghost cursor",
         "type": "boolean",
         "default": true
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       },
       {
         "key": "accent",
@@ -3459,6 +3699,21 @@
         "step": 100
       },
       {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
         "key": "accent",
         "label": "Accent",
         "type": "color",
@@ -3525,6 +3780,21 @@
         "label": "Ghost cursor",
         "type": "boolean",
         "default": true
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       },
       {
         "key": "accent",
@@ -3619,6 +3889,21 @@
         "default": 16,
         "min": 0,
         "max": 32
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3678,6 +3963,21 @@
         "default": 14,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3758,6 +4058,21 @@
         "default": 12,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3823,6 +4138,21 @@
         "default": 12,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -3918,6 +4248,21 @@
         "default": 12,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -4007,6 +4352,21 @@
         "default": 12,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   },
@@ -4069,6 +4429,21 @@
         "default": 12,
         "min": 0,
         "max": 28
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
       }
     ]
   }

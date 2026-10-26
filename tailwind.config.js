@@ -2,18 +2,18 @@
 module.exports = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
   theme: {
-    // One almost-square corner everywhere in the app UI. Replaces the default scale, so
-    // rounded, rounded-lg, rounded-full and the rest all resolve to it.
+    // A small, deliberate radius scale. Controls sit at 8 to 10, panels at 12 to 16, big surfaces
+    // (tiles, the inspector) at 18 to 20, and only dots, switches and swatches stay round.
     borderRadius: {
       none: "0",
-      sm: "2px",
-      DEFAULT: "2px",
-      md: "2px",
-      lg: "2px",
-      xl: "2px",
-      "2xl": "2px",
-      "3xl": "2px",
-      full: "2px",
+      sm: "4px",
+      DEFAULT: "6px",
+      md: "8px",
+      lg: "10px",
+      xl: "12px",
+      "2xl": "16px",
+      "3xl": "20px",
+      full: "9999px",
     },
     extend: { fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] } },
   },

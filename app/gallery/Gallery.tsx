@@ -63,7 +63,7 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
   const [run, setRun] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const dark = theme === "dark";
-  const shared = { theme, accent, radius: 2 };
+  const shared = { theme, accent };
   const width = renderWidth(entry.name);
   const [copied, setCopied] = useState(false);
 
@@ -99,7 +99,7 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
   return (
     <li id={entry.name} className="group scroll-mt-40">
       <div
-        className={`relative aspect-[1.62/1] overflow-hidden rounded-[2px] border ${
+        className={`relative aspect-[1.62/1] overflow-hidden rounded-[18px] border ${
           dark ? "border-[#1f1f21] bg-black" : "border-[#e0ddd7] bg-[#f6f4f0]"
         }`}
       >
@@ -117,7 +117,7 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
             <button
               type="button"
               onClick={() => setRun((n) => n + 1)}
-              className={`h-8 rounded-full border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
+              className={`h-8 rounded-lg border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
             >
               {meta.replay}
             </button>
@@ -125,13 +125,13 @@ function Tile({ entry, group, theme, accent }: { entry: CoreEntry; group: CoreGr
           <button
             type="button"
             onClick={copyPrompt}
-            className={`h-8 rounded-full border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
+            className={`h-8 rounded-lg border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
           >
             {copied ? "Copied" : "Copy prompt"}
           </button>
           <Link
             href={`/core#${entry.name}`}
-            className={`inline-flex h-8 items-center rounded-full border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
+            className={`inline-flex h-8 items-center rounded-lg border px-3 text-[12px] font-medium ${ghost} ${FOCUS}`}
           >
             Details
           </Link>
@@ -206,7 +206,7 @@ function Hero({ groups, theme, accent }: { groups: CoreGroup[]; theme: Theme; ac
       <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
         <div>
           <p className={`${MONO} flex items-center gap-2 text-[12px] uppercase tracking-[0.14em] ${faint}`}>
-            <span aria-hidden className="h-2 w-2 rounded-[2px]" style={{ background: accent }} />
+            <span aria-hidden className="h-2 w-2 rounded-full" style={{ background: accent }} />
             Originkit / Gallery
           </p>
           <h1
@@ -224,7 +224,7 @@ function Hero({ groups, theme, accent }: { groups: CoreGroup[]; theme: Theme; ac
         </div>
 
         <div onMouseEnter={() => setHeld(true)} onMouseLeave={() => setHeld(false)} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
-          <div className={`overflow-hidden rounded-[2px] border ${card}`}>
+          <div className={`overflow-hidden rounded-[14px] border ${card}`}>
             <div className={`flex items-center justify-between border-b px-5 py-3 ${line}`}>
               <span className={`${MONO} text-[11px] uppercase tracking-[0.14em] ${faint}`}>In your editor</span>
               <span className={`${MONO} text-[11px] tabular-nums ${faint}`}>
@@ -262,7 +262,7 @@ function Hero({ groups, theme, accent }: { groups: CoreGroup[]; theme: Theme; ac
               <button
                 type="button"
                 onClick={copy}
-                className={`h-9 rounded-full px-4 text-[13.5px] font-medium transition-colors ${FOCUS} ${
+                className={`h-9 rounded-lg px-4 text-[13.5px] font-medium transition-colors ${FOCUS} ${
                   dark ? "bg-[#f7f7f7] text-[#141413] hover:bg-white" : "bg-[#141413] text-[#f7f7f7] hover:bg-black"
                 }`}
               >
@@ -342,14 +342,14 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
     <div className={`min-h-screen ${page}`}>
       <header className={`sticky top-0 z-30 px-4 pb-3 pt-4 sm:px-8 ${solid}`}>
         <div className="relative mx-auto flex max-w-[1760px] items-center justify-between gap-3">
-          <Link href="/" className={`flex items-center gap-2.5 rounded-full ${FOCUS}`}>
-            <span aria-hidden className="grid h-8 w-8 place-items-center rounded-full" style={{ background: accent }}>
+          <Link href="/" className={`flex items-center gap-2.5 rounded-lg ${FOCUS}`}>
+            <span aria-hidden className="grid h-8 w-8 place-items-center rounded-lg" style={{ background: accent }}>
               <span className="h-2.5 w-2.5 rounded-sm bg-[#0a0a0b]" />
             </span>
             <span className="text-[17px] font-semibold tracking-[-0.02em]">Originkit</span>
           </Link>
 
-          <nav aria-label="Primary" className={`absolute left-1/2 hidden -translate-x-1/2 rounded-full border p-1 md:flex ${pill}`}>
+          <nav aria-label="Primary" className={`absolute left-1/2 hidden -translate-x-1/2 rounded-lg border p-1 md:flex ${pill}`}>
             {[
               { label: "Components", href: "/gallery", current: true },
               { label: "Library", href: "/" },
@@ -360,7 +360,7 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
                 key={l.label}
                 href={l.href}
                 aria-current={l.current ? "page" : undefined}
-                className={`rounded-full px-3.5 py-1.5 text-[15px] font-medium transition-colors ${FOCUS} ${l.current ? on : muted}`}
+                className={`rounded-lg px-3.5 py-1.5 text-[15px] font-medium transition-colors ${FOCUS} ${l.current ? on : muted}`}
               >
                 {l.label}
               </Link>
@@ -373,12 +373,12 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
               aria-label="Accent colour"
               aria-expanded={swatches}
               onClick={() => setSwatches((s) => !s)}
-              className={`grid h-10 w-10 place-items-center rounded-full border ${pill} ${FOCUS}`}
+              className={`grid h-10 w-10 place-items-center rounded-lg border ${pill} ${FOCUS}`}
             >
               <span className="h-4 w-4 rounded-full" style={{ background: accent }} />
             </button>
             {swatches && (
-              <div role="radiogroup" aria-label="Accent colour" className={`absolute right-12 top-0 flex gap-2 rounded-full border p-2.5 ${pill}`}>
+              <div role="radiogroup" aria-label="Accent colour" className={`absolute right-12 top-0 flex gap-2 rounded-lg border p-2.5 ${pill}`}>
                 {ACCENTS.map((a) => (
                   <button
                     key={a.value}
@@ -400,7 +400,7 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
               type="button"
               aria-label={dark ? "Switch to light theme" : "Switch to dark theme"}
               onClick={() => setTheme(dark ? "light" : "dark")}
-              className={`grid h-10 w-10 place-items-center rounded-full border ${pill} ${FOCUS}`}
+              className={`grid h-10 w-10 place-items-center rounded-lg border ${pill} ${FOCUS}`}
             >
               <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                 {dark ? (
@@ -426,7 +426,7 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
             role="tablist"
             aria-label="Component type"
             onKeyDown={onTabKey}
-            className={`mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${pill}`}
+            className={`mx-auto flex w-fit max-w-full gap-1 overflow-x-auto rounded-lg border p-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${pill}`}
           >
             {tabs.map((t) => {
               const selected = t.id === active;
@@ -438,7 +438,7 @@ export function Gallery({ groups }: { groups: CoreGroup[] }) {
                   aria-selected={selected}
                   tabIndex={selected ? 0 : -1}
                   onClick={() => choose(t.id)}
-                  className={`shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-[15px] font-medium transition-colors ${FOCUS} ${selected ? on : muted}`}
+                  className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-2 text-[15px] font-medium transition-colors ${FOCUS} ${selected ? on : muted}`}
                 >
                   {t.title}
                 </button>

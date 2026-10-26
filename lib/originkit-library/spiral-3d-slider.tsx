@@ -24,6 +24,8 @@ interface SpiralItem {
 }
 
 interface Spiral3DSliderProps {
+    sound: boolean
+    soundVolume: number
     items: SpiralItem[]
     turns: number
     radius: number
@@ -197,6 +199,98 @@ function HelixItem({ item, index, base, height, width, radius, cornerRadius, rot
     )
 }
 
+/* ---- Sound ---------------------------------------------------------------
+ * Tiny synthesized cues, no files and no network. Silent unless the `sound`
+ * prop is on, and only ever played from a real user action (pointer or key),
+ * never from autoplay, timers or demo cursors. One shared AudioContext lives
+ * on window so many components do not each open their own. */
+type Cue = "tick" | "click" | "pop" | "on" | "off" | "whoosh" | "drop" | "success" | "error" | "type"
+const cueAt: Record<string, number> = {}
+
+function playCue(cue: Cue, volume = 0.5, minGap = 45, pitch = 1) {
+    if (typeof window === "undefined" || volume <= 0) return
+    const stamp = Date.now()
+    if (stamp - (cueAt[cue] || 0) < minGap) return
+    cueAt[cue] = stamp
+    try {
+        const w = window as any
+        const AC = w.AudioContext || w.webkitAudioContext
+        if (!AC) return
+        const ctx: AudioContext = (w.__okAudio = w.__okAudio || new AC())
+        if (ctx.state === "suspended") ctx.resume()
+        const t0 = ctx.currentTime
+        const out = ctx.createGain()
+        out.gain.value = Math.min(1, volume) * 0.4
+        out.connect(ctx.destination)
+        const tone = (type: OscillatorType, f0: number, f1: number, dur: number, gain = 1, delay = 0) => {
+            const o = ctx.createOscillator()
+            const g = ctx.createGain()
+            const s = t0 + delay
+            o.type = type
+            o.frequency.setValueAtTime(f0 * pitch, s)
+            o.frequency.exponentialRampToValueAtTime(Math.max(20, f1 * pitch), s + dur)
+            g.gain.setValueAtTime(0.0001, s)
+            g.gain.exponentialRampToValueAtTime(gain, s + 0.006)
+            g.gain.exponentialRampToValueAtTime(0.0001, s + dur)
+            o.connect(g)
+            g.connect(out)
+            o.start(s)
+            o.stop(s + dur + 0.02)
+        }
+        const noise = (dur: number, f0: number, f1: number, gain = 1, delay = 0) => {
+            const n = Math.max(1, Math.floor(ctx.sampleRate * dur))
+            const buf = ctx.createBuffer(1, n, ctx.sampleRate)
+            const d = buf.getChannelData(0)
+            for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1
+            const src = ctx.createBufferSource()
+            const f = ctx.createBiquadFilter()
+            const g = ctx.createGain()
+            const s = t0 + delay
+            src.buffer = buf
+            f.type = "bandpass"
+            f.Q.value = 0.9
+            f.frequency.setValueAtTime(f0 * pitch, s)
+            f.frequency.exponentialRampToValueAtTime(Math.max(40, f1 * pitch), s + dur)
+            g.gain.setValueAtTime(0.0001, s)
+            g.gain.exponentialRampToValueAtTime(gain, s + 0.01)
+            g.gain.exponentialRampToValueAtTime(0.0001, s + dur)
+            src.connect(f)
+            f.connect(g)
+            g.connect(out)
+            src.start(s)
+        }
+        if (cue === "tick") tone("triangle", 2300, 1900, 0.035, 0.55)
+        else if (cue === "click") {
+            noise(0.025, 3200, 2400, 0.7)
+            tone("sine", 190, 120, 0.04, 0.5)
+        } else if (cue === "pop") tone("sine", 540, 190, 0.12, 0.9)
+        else if (cue === "on") {
+            tone("sine", 520, 520, 0.09, 0.6)
+            tone("sine", 780, 780, 0.12, 0.6, 0.07)
+        } else if (cue === "off") {
+            tone("sine", 650, 650, 0.09, 0.5)
+            tone("sine", 420, 420, 0.12, 0.5, 0.07)
+        } else if (cue === "whoosh") noise(0.24, 500, 2600, 0.8)
+        else if (cue === "drop") {
+            tone("sine", 170, 55, 0.16, 0.95)
+            noise(0.05, 900, 400, 0.4)
+        } else if (cue === "success") {
+            tone("triangle", 523, 523, 0.11, 0.55)
+            tone("triangle", 659, 659, 0.11, 0.55, 0.075)
+            tone("triangle", 784, 784, 0.18, 0.6, 0.15)
+        } else if (cue === "error") {
+            tone("square", 160, 120, 0.13, 0.35)
+            tone("square", 150, 110, 0.15, 0.35, 0.16)
+        } else if (cue === "type") {
+            noise(0.014, 3800, 3000, 0.55)
+            tone("square", 1500 + Math.random() * 300, 1100, 0.02, 0.18)
+        }
+    } catch {
+        /* audio blocked or unsupported: stay silent */
+    }
+}
+/* ---- end Sound ---------------------------------------------------------- */
+
 export default function Spiral3DSlider({
     items = SAMPLE,
     turns = 1,
@@ -205,7 +299,12 @@ export default function Spiral3DSlider({
     accent = "#fa7319",
     theme = "dark",
     cornerRadius = 12,
+    sound = false,
+    soundVolume = 0.5,
 }: Partial<Spiral3DSliderProps>) {
+    const cue = (c: Cue, gap?: number, pitch?: number) => {
+        if (sound) playCue(c, soundVolume, gap, pitch)
+    }
     const p = palette(theme)
     const n = Math.max(1, items.length)
     const itemHeight = Math.round(itemWidth * 1.3)
@@ -221,6 +320,10 @@ export default function Spiral3DSlider({
     const [active, setActive] = React.useState(0)
     const [focusVisible, setFocusVisible] = React.useState(false)
     const activeRef = React.useRef(0)
+    // What the user is doing right now: only user input makes sound.
+    const mode = React.useRef<"" | "drag" | "wheel" | "key" | "click">("")
+    const cueRef = React.useRef(cue)
+    cueRef.current = cue
     const targetRef = React.useRef(0)
 
     const index = (r: number) => (stepAngle === 0 ? 0 : clamp(Math.round(-r / stepAngle), 0, n - 1))
@@ -229,6 +332,8 @@ export default function Spiral3DSlider({
         if (i !== activeRef.current) {
             activeRef.current = i
             setActive(i)
+            const m = mode.current
+            if (m === "drag" || m === "wheel" || m === "key") cue("tick", 50)
         }
     })
 
@@ -253,6 +358,9 @@ export default function Spiral3DSlider({
                 velocity,
                 onComplete: () => {
                     tween.current = null
+                    const m = mode.current
+                    mode.current = ""
+                    if (m === "drag" || m === "wheel" || m === "click") cueRef.current("drop", 120)
                 },
             })
         },
@@ -274,6 +382,7 @@ export default function Spiral3DSlider({
             e.preventDefault()
             tween.current?.stop()
             tween.current = null
+            mode.current = "wheel"
             const next = clamp(rot.get() - d * (stepAngle / 160), minRot, 0)
             rot.set(next)
             if (wheelTimer.current) clearTimeout(wheelTimer.current)
@@ -304,6 +413,7 @@ export default function Spiral3DSlider({
         if (!d.active && Math.abs(e.clientX - d.startX) > 5) {
             d.active = true
             d.moved = true
+            mode.current = "drag"
             try {
                 e.currentTarget.setPointerCapture(e.pointerId)
             } catch {
@@ -344,6 +454,7 @@ export default function Spiral3DSlider({
             drag.current.moved = false
             return
         }
+        mode.current = "click"
         snapTo(i)
     }
 
@@ -356,6 +467,7 @@ export default function Spiral3DSlider({
         else if (e.key === "End") next = n - 1
         else return
         e.preventDefault()
+        mode.current = "key"
         snapTo(next)
     }
 
@@ -507,4 +619,6 @@ addPropertyControls(Spiral3DSlider, {
         defaultValue: "dark",
     },
     cornerRadius: { type: ControlType.Number, title: "Radius", defaultValue: 12, min: 0, max: 28 },
+    sound: { type: ControlType.Boolean, title: "Sound", defaultValue: false },
+    soundVolume: { type: ControlType.Number, title: "Sound volume", defaultValue: 0.5, min: 0, max: 1, step: 0.05 },
 })

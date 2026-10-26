@@ -94,7 +94,7 @@ type Tile = {
 };
 
 const ACCENT = "#fa7319";
-const S = { theme: "dark", accent: ACCENT, radius: 2 } as const;
+const S = { theme: "dark", accent: ACCENT } as const;
 const GAP = 16;
 const MIN_COL = 330;
 const CAPTION = 62;
@@ -372,7 +372,7 @@ function CopyPrompt({ name, locked = false, onLocked, className = "" }: { name: 
       <button
         type="button"
         onClick={() => (locked ? onLocked?.() : copy(`Using originkit MCP, get me the ${name} component.`))}
-        className={`inline-flex h-8 items-center gap-1.5 rounded-full border border-white/15 bg-[#0f0f10]/85 px-3 text-[12px] font-medium text-[#f7f7f7] backdrop-blur-md transition-colors hover:bg-[#f7f7f7] hover:text-[#141413] ${FOCUS} ${className}`}
+        className={`inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/15 bg-[#0f0f10]/85 px-3 text-[12px] font-medium text-[#f7f7f7] backdrop-blur-md transition-colors hover:bg-[#f7f7f7] hover:text-[#141413] ${FOCUS} ${className}`}
       >
         <Icon name={locked ? "lock" : copied ? "check" : "copy"} className="h-3.5 w-3.5" />
         {locked ? "Unlock with Pro" : copied ? "Copied" : "Copy prompt"}
@@ -482,7 +482,7 @@ function Card({ item, colWidth }: { item: Item; colWidth: number }) {
         )}
 
         {item.trending && (
-          <span className="pointer-events-none absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full bg-[#fa7319] px-2.5 py-1 text-[11px] font-semibold text-[#141413]">
+          <span className="pointer-events-none absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-lg bg-[#fa7319] px-2.5 py-1 text-[11px] font-semibold text-[#141413]">
             <Icon name="flame" className="h-3 w-3" />
             Trending
           </span>
@@ -563,7 +563,7 @@ function Header({
             onKeyDown={(e) => e.key === "Escape" && setQuery("")}
             placeholder={`Search ${nf.format(total)} components`}
             autoComplete="off"
-            className={`h-12 w-full rounded-full border border-[#2d2d2f] bg-[#131415] pl-12 pr-16 text-[16px] text-[#f7f7f7] placeholder:text-[#6f7173] focus:border-[#fa7319] ${FOCUS}`}
+            className={`h-12 w-full rounded-lg border border-[#2d2d2f] bg-[#131415] pl-12 pr-16 text-[16px] text-[#f7f7f7] placeholder:text-[#6f7173] focus:border-[#fa7319] ${FOCUS}`}
           />
           <kbd className={`${MONO} pointer-events-none absolute right-4 top-1/2 hidden -translate-y-1/2 rounded border border-[#2d2d2f] px-1.5 py-0.5 text-[11px] text-[#6f7173] sm:block`}>/</kbd>
         </form>
@@ -575,7 +575,7 @@ function Header({
               key={s}
               type="button"
               onClick={() => setQuery(s)}
-              className={`h-8 rounded-full border border-[#2d2d2f] px-3.5 text-[13px] text-[#c9cacb] transition-colors hover:border-[#4a4c4e] hover:bg-[#1a1b1c] hover:text-white ${FOCUS}`}
+              className={`h-8 rounded-lg border border-[#2d2d2f] px-3.5 text-[13px] text-[#c9cacb] transition-colors hover:border-[#4a4c4e] hover:bg-[#1a1b1c] hover:text-white ${FOCUS}`}
             >
               {s}
             </button>
@@ -738,7 +738,7 @@ function Explorer({
               type="button"
               aria-pressed={chip === c.id}
               onClick={() => setChip(chip === c.id ? null : c.id)}
-              className={`h-8 shrink-0 rounded-full border px-3.5 text-[13px] transition-colors ${FOCUS} ${
+              className={`h-8 shrink-0 rounded-lg border px-3.5 text-[13px] transition-colors ${FOCUS} ${
                 chip === c.id
                   ? "border-[#f7f7f7] bg-[#f7f7f7] text-[#141413]"
                   : "border-[#2d2d2f] text-[#c9cacb] hover:border-[#4a4c4e] hover:bg-[#1a1b1c]"
@@ -768,10 +768,10 @@ function Explorer({
             the full gallery has all {animation.total ? nf.format(animation.total) : "of them"}.
           </p>
           <div className="mt-6 flex justify-center gap-3">
-            <button type="button" onClick={() => setQuery("")} className={`h-10 rounded-full border border-[#3e3f40] px-5 text-[14px] font-medium text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}>
+            <button type="button" onClick={() => setQuery("")} className={`h-10 rounded-lg border border-[#3e3f40] px-5 text-[14px] font-medium text-[#f7f7f7] hover:bg-[#1f2021] ${FOCUS}`}>
               Clear search
             </button>
-            <Link href={site("/")} className={`inline-flex h-10 items-center rounded-full bg-[#f7f7f7] px-5 text-[14px] font-medium text-[#141413] ${FOCUS}`}>
+            <Link href={site("/")} className={`inline-flex h-10 items-center rounded-lg bg-[#f7f7f7] px-5 text-[14px] font-medium text-[#141413] ${FOCUS}`}>
               Browse the gallery
             </Link>
           </div>
@@ -789,7 +789,7 @@ function Explorer({
               Code you have already copied stays yours if you ever cancel.
             </p>
           </div>
-          <Link href={site("/pricing")} className={`inline-flex h-11 shrink-0 items-center gap-2.5 self-start rounded-full bg-[#f7f7f7] px-5 text-[14.5px] font-medium text-[#141413] transition-colors hover:bg-white sm:self-center ${FOCUS}`}>
+          <Link href={site("/pricing")} className={`inline-flex h-11 shrink-0 items-center gap-2.5 self-start rounded-lg bg-[#f7f7f7] px-5 text-[14.5px] font-medium text-[#141413] transition-colors hover:bg-white sm:self-center ${FOCUS}`}>
             See plans
             <Icon name="arrow" />
           </Link>
@@ -801,7 +801,7 @@ function Explorer({
           <button
             type="button"
             onClick={() => setShown((n) => n + MORE)}
-            className={`h-11 rounded-full border border-[#3e3f40] px-6 text-[14px] font-medium text-[#f7f7f7] transition-colors hover:bg-[#1f2021] ${FOCUS}`}
+            className={`h-11 rounded-lg border border-[#3e3f40] px-6 text-[14px] font-medium text-[#f7f7f7] transition-colors hover:bg-[#1f2021] ${FOCUS}`}
           >
             Show {Math.min(MORE, remaining)} more
           </button>
@@ -809,7 +809,7 @@ function Explorer({
         {showAllCard && (
           <Link
             href={site("/")}
-            className={`group inline-flex items-center gap-3 rounded-full bg-[#fa7319] px-6 py-3 text-[15px] font-semibold text-[#141413] transition-colors hover:bg-[#ff8a3d] ${FOCUS}`}
+            className={`group inline-flex items-center gap-3 rounded-lg bg-[#fa7319] px-6 py-3 text-[15px] font-semibold text-[#141413] transition-colors hover:bg-[#ff8a3d] ${FOCUS}`}
           >
             Browse all {nf.format(animation.total)} animation components
             <Icon name="arrow" className="transition-transform group-hover:translate-x-0.5" />
@@ -857,11 +857,11 @@ function Libraries({ data }: { data: LandingData }) {
                 <span>{foundation.total} of {foundation.planned} planned components built</span>
                 <span className="tabular-nums">{pct}%</span>
               </div>
-              <div role="progressbar" aria-label="Foundation components built" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#232526]">
-                <div className="h-full rounded-full bg-[#9aa0ff]" style={{ width: `${pct}%` }} />
+              <div role="progressbar" aria-label="Foundation components built" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} className="mt-2 h-1.5 overflow-hidden rounded-lg bg-[#232526]">
+                <div className="h-full rounded-lg bg-[#9aa0ff]" style={{ width: `${pct}%` }} />
               </div>
             </div>
-            <Link href="/core" className={`mt-8 inline-flex h-11 items-center gap-2.5 self-start rounded-full bg-[#f7f7f7] px-5 text-[14.5px] font-medium text-[#141413] transition-colors hover:bg-white ${FOCUS}`}>
+            <Link href="/core" className={`mt-8 inline-flex h-11 items-center gap-2.5 self-start rounded-lg bg-[#f7f7f7] px-5 text-[14.5px] font-medium text-[#141413] transition-colors hover:bg-white ${FOCUS}`}>
               Explore Foundation
               <Icon name="arrow" />
             </Link>
@@ -878,12 +878,12 @@ function Libraries({ data }: { data: LandingData }) {
             </ul>
             <div className="mt-8 flex flex-wrap gap-2">
               {animation.categories.slice(0, 5).map((c) => (
-                <Link key={c.id} href={site(`/category/${encodeURIComponent(c.id)}`)} className={`rounded-full border border-[#2d2d2f] px-3 py-1.5 text-[12.5px] text-[#c9cacb] transition-colors hover:border-[#4a4c4e] hover:bg-[#1a1b1c] ${FOCUS}`}>
+                <Link key={c.id} href={site(`/category/${encodeURIComponent(c.id)}`)} className={`rounded-lg border border-[#2d2d2f] px-3 py-1.5 text-[12.5px] text-[#c9cacb] transition-colors hover:border-[#4a4c4e] hover:bg-[#1a1b1c] ${FOCUS}`}>
                   {c.label} <span className="text-[#7a7c7f]">{nf.format(c.count)}</span>
                 </Link>
               ))}
             </div>
-            <Link href={site("/")} className={`mt-8 inline-flex h-11 items-center gap-2.5 self-start rounded-full bg-[#fa7319] px-5 text-[14.5px] font-semibold text-[#141413] transition-colors hover:bg-[#ff8a3d] ${FOCUS}`}>
+            <Link href={site("/")} className={`mt-8 inline-flex h-11 items-center gap-2.5 self-start rounded-lg bg-[#fa7319] px-5 text-[14.5px] font-semibold text-[#141413] transition-colors hover:bg-[#ff8a3d] ${FOCUS}`}>
               Browse Animation
               <Icon name="arrow" />
             </Link>
@@ -923,7 +923,7 @@ function TemplateCard({ t }: { t: LandingData["pages"]["templates"]["items"][num
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={t.image} alt="" loading="lazy" draggable={false} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]" />
           {t.paid && (
-            <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full bg-[#0f0f10]/85 px-2.5 py-1 text-[11px] font-semibold text-[#f7f7f7] backdrop-blur-md">
+            <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-lg bg-[#0f0f10]/85 px-2.5 py-1 text-[11px] font-semibold text-[#f7f7f7] backdrop-blur-md">
               <Icon name="lock" className="h-3 w-3" />
               Pro
             </span>
@@ -962,12 +962,12 @@ function WholePages({ data }: { data: LandingData["pages"] }) {
         </div>
         <div className="flex flex-wrap gap-3">
           {templates.total > 0 && (
-            <Link href={site("/templates")} className={`inline-flex h-11 items-center gap-2.5 rounded-full bg-[#f7f7f7] px-5 text-[14.5px] font-medium text-[#141413] transition-colors hover:bg-white ${FOCUS}`}>
+            <Link href={site("/templates")} className={`inline-flex h-11 items-center gap-2.5 rounded-lg bg-[#f7f7f7] px-5 text-[14.5px] font-medium text-[#141413] transition-colors hover:bg-white ${FOCUS}`}>
               Browse templates <Icon name="arrow" />
             </Link>
           )}
           {sections.total > 0 && (
-            <Link href={site("/sections")} className={`inline-flex h-11 items-center rounded-full border border-[#3e3f40] px-5 text-[14.5px] font-medium text-[#f7f7f7] transition-colors hover:bg-[#1f2021] ${FOCUS}`}>
+            <Link href={site("/sections")} className={`inline-flex h-11 items-center rounded-lg border border-[#3e3f40] px-5 text-[14.5px] font-medium text-[#f7f7f7] transition-colors hover:bg-[#1f2021] ${FOCUS}`}>
               Browse sections
             </Link>
           )}
@@ -991,7 +991,7 @@ function WholePages({ data }: { data: LandingData["pages"] }) {
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <span className="mr-1 text-[13px] text-[#7a7c7f]">Sections by type</span>
           {sections.categories.map((c) => (
-            <Link key={c.id} href={site(`/sections/category/${encodeURIComponent(c.id)}`)} className={`rounded-full border border-[#2d2d2f] px-3.5 py-1.5 text-[13px] text-[#c9cacb] transition-colors hover:border-[#4a4c4e] hover:bg-[#1a1b1c] ${FOCUS}`}>
+            <Link key={c.id} href={site(`/sections/category/${encodeURIComponent(c.id)}`)} className={`rounded-lg border border-[#2d2d2f] px-3.5 py-1.5 text-[13px] text-[#c9cacb] transition-colors hover:border-[#4a4c4e] hover:bg-[#1a1b1c] ${FOCUS}`}>
               {c.label} <span className="text-[#7a7c7f]">{nf.format(c.count)}</span>
             </Link>
           ))}
@@ -1017,7 +1017,7 @@ function HowItWorks() {
         <ol className="mt-12 grid gap-5 md:grid-cols-3">
           {STEPS.map((s) => (
             <li key={s.n} className="rounded-2xl border border-[#2d2d2f] p-7">
-              <span className={`${MONO} flex h-8 w-8 items-center justify-center rounded-full border border-[#3e3f40] text-[13px] text-[#f7f7f7]`}>{s.n}</span>
+              <span className={`${MONO} flex h-8 w-8 items-center justify-center rounded-lg border border-[#3e3f40] text-[13px] text-[#f7f7f7]`}>{s.n}</span>
               <h3 className="mt-5 text-[18px] font-semibold tracking-[-0.02em] text-[#f7f7f7]">{s.title}</h3>
               <p className="mt-2 text-[14.5px] leading-[1.6] text-[#a5a7a9]">{s.body}</p>
             </li>
@@ -1091,11 +1091,11 @@ function Cta() {
           </button>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href={site("/connect")} className={`inline-flex h-12 items-center gap-2.5 rounded-full bg-[#f7f7f7] px-6 text-[15px] font-medium text-[#141413] transition-colors hover:bg-white ${FOCUS}`}>
+          <Link href={site("/connect")} className={`inline-flex h-12 items-center gap-2.5 rounded-lg bg-[#f7f7f7] px-6 text-[15px] font-medium text-[#141413] transition-colors hover:bg-white ${FOCUS}`}>
             Connect your editor
             <Icon name="arrow" />
           </Link>
-          <Link href={site("/intro")} className={`inline-flex h-12 items-center rounded-full border border-[#3e3f40] px-6 text-[15px] font-medium text-[#f7f7f7] transition-colors hover:bg-[#1f2021] ${FOCUS}`}>
+          <Link href={site("/intro")} className={`inline-flex h-12 items-center rounded-lg border border-[#3e3f40] px-6 text-[15px] font-medium text-[#f7f7f7] transition-colors hover:bg-[#1f2021] ${FOCUS}`}>
             Read the docs
           </Link>
         </div>

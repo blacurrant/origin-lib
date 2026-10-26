@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { components } from "@/lib/originkit-library";
 import { ACCENTS, DEFAULT_ACCENT } from "@/app/core/types";
 import { Inspector, decodeProps } from "./Inspector";
-import { APP_RADIUS, FOCUS, Fit, Icon, SITE, useCoarsePointer, useCopy, useNear, useSaved, useViewportWidth } from "./kit";
+import { FOCUS, Fit, Icon, SITE, useCoarsePointer, useCopy, useNear, useSaved, useSoundPref, useViewportWidth } from "./kit";
 import { BLOCKS, INTERACTIONS, TILE_ASPECT, type Block, type Interaction } from "./manifest";
 import type { Values } from "./controls";
 
@@ -37,7 +37,7 @@ function BookmarkButton({ saved, title, onToggle, accent, size }: { saved: boole
         e.stopPropagation();
         onToggle();
       }}
-      className={`grid shrink-0 place-items-center rounded-full bg-[#232325] transition-colors hover:bg-[#2e2e31] ${FOCUS} ${size === "sm" ? "h-8 w-8" : "h-10 w-10"}`}
+      className={`grid shrink-0 place-items-center rounded-lg bg-[#232325] transition-colors hover:bg-[#2e2e31] ${FOCUS} ${size === "sm" ? "h-8 w-8" : "h-10 w-10"}`}
       style={{ color: saved ? accent : "#c9c9cc" }}
     >
       <motion.span key={String(saved)} initial={saved ? { scale: 0.6 } : false} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 520, damping: 14 }} className="grid place-items-center">
@@ -54,9 +54,11 @@ function Tile({
   layout,
   coarse,
   saved,
+  sound,
   onOpen,
   onToggleSaved,
 }: {
+  sound: boolean;
   block: Block;
   accent: string;
   cols: number;
@@ -101,13 +103,13 @@ function Tile({
         ref={ref}
         role="group"
         aria-label={`${block.title}, ${block.interaction.toLowerCase()} block`}
-        className={`group relative w-full overflow-hidden bg-[#131314] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-shadow duration-200 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] ${compact ? "rounded-[2px]" : "rounded-[2px]"}`}
+        className={`group relative w-full overflow-hidden bg-[#131314] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-shadow duration-200 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14)] ${compact ? "rounded-[12px]" : "rounded-[18px]"}`}
         style={{ aspectRatio: String(aspect) }}
       >
         <div ref={preview} className={`absolute inset-0 ${coarse ? "pointer-events-none" : ""}`}>
           {Comp && near && (
             <Fit designWidth={480} padX={compact ? 16 : 28} padTop={compact ? 16 : 28} padBottom={compact ? 68 : 92}>
-              <Comp accent={accent} theme="dark" radius={APP_RADIUS} />
+              <Comp accent={accent} theme="dark" sound={sound} />
             </Fit>
           )}
         </div>
@@ -119,7 +121,7 @@ function Tile({
 
         {!coarse && !compact && (
           <span className="pointer-events-none absolute inset-x-0 bottom-[68px] flex justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-            <span className="rounded-full bg-black/70 px-3 py-1 text-[12px] text-[#c9c9cc] backdrop-blur">Try it: {block.hint.charAt(0).toLowerCase() + block.hint.slice(1)}</span>
+            <span className="rounded-lg bg-black/70 px-3 py-1 text-[12px] text-[#c9c9cc] backdrop-blur">Try it: {block.hint.charAt(0).toLowerCase() + block.hint.slice(1)}</span>
           </span>
         )}
 
@@ -128,7 +130,7 @@ function Tile({
             type="button"
             onClick={(e) => onOpen(block.slug, e.currentTarget)}
             aria-label={`Open ${block.title} in the inspector`}
-            className={`pointer-events-auto flex min-w-0 items-center gap-2 rounded-full bg-[#232325] text-[#ededee] transition-colors hover:bg-[#2e2e31] ${FOCUS} ${compact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2.5 text-[15px]"}`}
+            className={`pointer-events-auto flex min-w-0 items-center gap-2 rounded-lg bg-[#232325] text-[#ededee] transition-colors hover:bg-[#2e2e31] ${FOCUS} ${compact ? "px-3 py-1.5 text-[13px]" : "px-4 py-2.5 text-[15px]"}`}
           >
             <span className="truncate">{block.title}</span>
             <span className="shrink-0 text-[#8b8b90]">
@@ -150,6 +152,7 @@ function Tile({
 export function Blocks() {
   const vw = useViewportWidth();
   const coarse = useCoarsePointer();
+  const { soundOn, setSoundOn } = useSoundPref();
   const { saved, toggle: toggleSavedRaw, clear: clearSaved } = useSaved();
   const { copied, copy } = useCopy();
   const [announce, setAnnounce] = useState("");
@@ -303,10 +306,10 @@ export function Blocks() {
   };
 
   const pill = (on: boolean) =>
-    `shrink-0 rounded-full px-4 py-2 text-[15px] transition-colors ${FOCUS} ${on ? "bg-white text-black" : "bg-[#1a1a1a] text-[#c9c9cb] hover:bg-[#242424] hover:text-white"}`;
+    `shrink-0 rounded-lg px-4 py-2 text-[15px] transition-colors ${FOCUS} ${on ? "bg-white text-black" : "bg-[#1a1a1a] text-[#c9c9cb] hover:bg-[#242424] hover:text-white"}`;
 
   const searchBox = (cls: string) => (
-    <label className={`items-center gap-3 rounded-full bg-[#141414] px-5 py-3 text-[#8e8e91] focus-within:bg-[#1a1a1a] ${cls}`}>
+    <label className={`items-center gap-3 rounded-lg bg-[#141414] px-5 py-3 text-[#8e8e91] focus-within:bg-[#1a1a1a] ${cls}`}>
       <svg width="17" height="17" viewBox="0 0 18 18" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
         <circle cx="8" cy="8" r="5.2" />
         <path d="m12 12 3.4 3.4" />
@@ -331,7 +334,7 @@ export function Blocks() {
       <header className="sticky top-0 z-30 bg-black px-4 pb-3 pt-4 sm:px-7">
         <div className="relative mx-auto flex max-w-[1880px] items-center justify-between gap-4">
           <div className="flex items-center gap-6">
-            <Link href="/" aria-label="Originkit home" className={`grid h-9 w-9 place-items-center rounded-full ${FOCUS}`} style={{ background: accent }}>
+            <Link href="/" aria-label="Originkit home" className={`grid h-9 w-9 place-items-center rounded-lg ${FOCUS}`} style={{ background: accent }}>
               <span className="h-3 w-3 rounded-[3px] bg-black" />
             </Link>
             <nav aria-label="Primary" className="hidden items-center gap-1 text-[16px] md:flex">
@@ -341,7 +344,7 @@ export function Blocks() {
                 { label: "Core", href: "/core" },
                 { label: "Library", href: "/" },
               ].map((l) => (
-                <Link key={l.label} href={l.href} aria-current={l.current ? "page" : undefined} className={`rounded-full px-3.5 py-1.5 ${FOCUS} ${l.current ? "text-white" : "text-[#9a9a9d] hover:text-white"}`}>
+                <Link key={l.label} href={l.href} aria-current={l.current ? "page" : undefined} className={`rounded-lg px-3.5 py-1.5 ${FOCUS} ${l.current ? "text-white" : "text-[#9a9a9d] hover:text-white"}`}>
                   {l.label}
                 </Link>
               ))}
@@ -351,11 +354,24 @@ export function Blocks() {
           {searchBox("absolute left-1/2 hidden w-[min(400px,32vw)] -translate-x-1/2 lg:flex")}
 
           <div className="relative flex items-center gap-2">
-            <button type="button" aria-label="Accent colour" aria-expanded={swatches} onClick={() => setSwatches((s) => !s)} className={`grid h-10 w-10 place-items-center rounded-full bg-[#141414] ${FOCUS}`}>
+            <button
+              type="button"
+              aria-pressed={soundOn}
+              aria-label="Sound effects"
+              title={soundOn ? "Sound effects on" : "Sound effects off"}
+              onClick={() => {
+                setSoundOn(!soundOn);
+                setAnnounce(soundOn ? "Sound effects off" : "Sound effects on");
+              }}
+              className={`grid h-10 w-10 place-items-center rounded-lg transition-colors ${FOCUS} ${soundOn ? "bg-white text-black" : "bg-[#141414] text-[#8e8e91] hover:text-white"}`}
+            >
+              <Icon name={soundOn ? "soundOn" : "soundOff"} size={17} />
+            </button>
+            <button type="button" aria-label="Accent colour" aria-expanded={swatches} onClick={() => setSwatches((s) => !s)} className={`grid h-10 w-10 place-items-center rounded-lg bg-[#141414] ${FOCUS}`}>
               <span className="h-4 w-4 rounded-full" style={{ background: accent }} />
             </button>
             {swatches && (
-              <div role="radiogroup" aria-label="Accent colour" className="absolute right-0 top-13 z-40 flex gap-2.5 rounded-full bg-[#1a1a1a] p-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]" style={{ top: 52 }}>
+              <div role="radiogroup" aria-label="Accent colour" className="absolute right-0 top-13 z-40 flex gap-2.5 rounded-lg bg-[#1a1a1a] p-3 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]" style={{ top: 52 }}>
                 {ACCENTS.map((a) => (
                   <button
                     key={a.value}
@@ -373,7 +389,7 @@ export function Blocks() {
                 ))}
               </div>
             )}
-            <a href={`${SITE}/pricing`} className={`hidden h-10 items-center rounded-full bg-white px-5 text-[15px] font-medium text-black sm:inline-flex ${FOCUS}`}>
+            <a href={`${SITE}/pricing`} className={`hidden h-10 items-center rounded-lg bg-white px-5 text-[15px] font-medium text-black sm:inline-flex ${FOCUS}`}>
               Get Originkit
             </a>
           </div>
@@ -398,7 +414,7 @@ export function Blocks() {
             </div>
 
             <div className="hidden shrink-0 items-center gap-2 md:flex" role="group" aria-label="View options">
-              <div role="radiogroup" aria-label="Columns" className="flex rounded-full bg-[#141414] p-1">
+              <div role="radiogroup" aria-label="Columns" className="flex rounded-lg bg-[#141414] p-1">
                 {colOptions.map((n) => (
                   <button
                     key={n}
@@ -411,13 +427,13 @@ export function Blocks() {
                       setColsPref(n);
                       setParam("cols", String(n));
                     }}
-                    className={`grid h-8 w-10 place-items-center rounded-full transition-colors ${FOCUS} ${cols === n ? "bg-white text-black" : "text-[#8e8e91] hover:text-white"}`}
+                    className={`grid h-8 w-10 place-items-center rounded-lg transition-colors ${FOCUS} ${cols === n ? "bg-white text-black" : "text-[#8e8e91] hover:text-white"}`}
                   >
                     <Icon name={`grid${Math.max(n, 2)}` as "grid2"} size={18} />
                   </button>
                 ))}
               </div>
-              <div role="radiogroup" aria-label="Layout" className="flex rounded-full bg-[#141414] p-1">
+              <div role="radiogroup" aria-label="Layout" className="flex rounded-lg bg-[#141414] p-1">
                 {([["masonry", "Masonry"], ["even", "Even grid"]] as const).map(([id, label]) => (
                   <button
                     key={id}
@@ -430,7 +446,7 @@ export function Blocks() {
                       setLayout(id);
                       setParam("layout", id === "masonry" ? null : id);
                     }}
-                    className={`grid h-8 w-10 place-items-center rounded-full transition-colors ${FOCUS} ${layout === id ? "bg-white text-black" : "text-[#8e8e91] hover:text-white"}`}
+                    className={`grid h-8 w-10 place-items-center rounded-lg transition-colors ${FOCUS} ${layout === id ? "bg-white text-black" : "text-[#8e8e91] hover:text-white"}`}
                   >
                     <Icon name={id} size={17} />
                   </button>
@@ -444,7 +460,7 @@ export function Blocks() {
                     setSort(e.target.value as Sort);
                     setParam("sort", e.target.value === "featured" ? null : e.target.value);
                   }}
-                  className={`h-10 appearance-none rounded-full bg-[#141414] pl-4 pr-9 text-[14px] text-[#c9c9cb] hover:text-white ${FOCUS}`}
+                  className={`h-10 appearance-none rounded-lg bg-[#141414] pl-4 pr-9 text-[14px] text-[#c9c9cb] hover:text-white ${FOCUS}`}
                 >
                   <option value="featured">Featured</option>
                   <option value="az">A to Z</option>
@@ -468,11 +484,11 @@ export function Blocks() {
               {saved.length} saved <span className="text-[#6c6c72]">· kept in this browser</span>
             </p>
             <div className="flex gap-2">
-              <button type="button" onClick={() => copy(savedPrompt, "saved")} className={`inline-flex h-9 items-center gap-2 rounded-full bg-white px-4 text-[13.5px] font-medium text-black ${FOCUS}`}>
+              <button type="button" onClick={() => copy(savedPrompt, "saved")} className={`inline-flex h-9 items-center gap-2 rounded-lg bg-white px-4 text-[13.5px] font-medium text-black ${FOCUS}`}>
                 <Icon name={copied === "saved" ? "check" : "copy"} size={14} />
                 {copied === "saved" ? "Copied" : "Copy MCP prompt for all"}
               </button>
-              <button type="button" onClick={clearSaved} className={`h-9 rounded-full bg-[#1a1a1a] px-4 text-[13.5px] text-[#c9c9cb] hover:text-white ${FOCUS}`}>
+              <button type="button" onClick={clearSaved} className={`h-9 rounded-lg bg-[#1a1a1a] px-4 text-[13.5px] text-[#c9c9cb] hover:text-white ${FOCUS}`}>
                 Clear all
               </button>
             </div>
@@ -480,12 +496,12 @@ export function Blocks() {
         )}
         {visible.length === 0 && type === "Saved" && !q ? (
           <div className="py-28 text-center">
-            <span className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-[#1a1a1a] text-[#8e8e91]">
+            <span className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-lg bg-[#1a1a1a] text-[#8e8e91]">
               <Icon name="bookmark" size={20} />
             </span>
             <p className="text-[18px] text-white">Nothing saved yet</p>
             <p className="mx-auto mt-2 max-w-sm text-[14.5px] leading-[1.6] text-[#8e8e91]">Press the bookmark on any block to keep it here, then copy them all into your editor in one go.</p>
-            <button type="button" onClick={() => chooseType("All")} className={`mt-6 h-10 rounded-full bg-white px-5 text-[14px] font-medium text-black ${FOCUS}`}>
+            <button type="button" onClick={() => chooseType("All")} className={`mt-6 h-10 rounded-lg bg-white px-5 text-[14px] font-medium text-black ${FOCUS}`}>
               Browse blocks
             </button>
           </div>
@@ -499,7 +515,7 @@ export function Blocks() {
                 setParam("q", null);
                 chooseType("All");
               }}
-              className={`mt-5 h-10 rounded-full bg-[#1a1a1a] px-5 text-[14px] text-white hover:bg-[#242424] ${FOCUS}`}
+              className={`mt-5 h-10 rounded-lg bg-[#1a1a1a] px-5 text-[14px] text-white hover:bg-[#242424] ${FOCUS}`}
             >
               Clear filters
             </button>
@@ -507,13 +523,13 @@ export function Blocks() {
         ) : layout === "masonry" ? (
           <ul style={{ columnCount: cols, columnGap: gap }}>
             {visible.map((b) => (
-              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
+              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} sound={soundOn} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
             ))}
           </ul>
         ) : (
           <ul className="grid" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap }}>
             {visible.map((b) => (
-              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
+              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} sound={soundOn} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
             ))}
           </ul>
         )}
@@ -526,6 +542,7 @@ export function Blocks() {
         initialValues={initialValues}
         onClose={close}
         onNavigate={navigate}
+        sound={soundOn}
         saved={current ? saved.includes(current.slug) : false}
         onToggleSaved={toggleSaved}
         onExited={() => trigger.current?.isConnected && trigger.current.focus()}

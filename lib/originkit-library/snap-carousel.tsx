@@ -32,6 +32,8 @@ interface SnapCarouselProps {
     accent: string
     theme: Theme
     radius: number
+    sound: boolean
+    soundVolume: number
 }
 
 function palette(theme: Theme) {
@@ -151,6 +153,98 @@ function SlideView({ slide, index, count, pos, loop, active, width, radius, acce
     )
 }
 
+/* ---- Sound ---------------------------------------------------------------
+ * Tiny synthesized cues, no files and no network. Silent unless the `sound`
+ * prop is on, and only ever played from a real user action (pointer or key),
+ * never from autoplay, timers or demo cursors. One shared AudioContext lives
+ * on window so many components do not each open their own. */
+type Cue = "tick" | "click" | "pop" | "on" | "off" | "whoosh" | "drop" | "success" | "error" | "type"
+const cueAt: Record<string, number> = {}
+
+function playCue(cue: Cue, volume = 0.5, minGap = 45, pitch = 1) {
+    if (typeof window === "undefined" || volume <= 0) return
+    const stamp = Date.now()
+    if (stamp - (cueAt[cue] || 0) < minGap) return
+    cueAt[cue] = stamp
+    try {
+        const w = window as any
+        const AC = w.AudioContext || w.webkitAudioContext
+        if (!AC) return
+        const ctx: AudioContext = (w.__okAudio = w.__okAudio || new AC())
+        if (ctx.state === "suspended") ctx.resume()
+        const t0 = ctx.currentTime
+        const out = ctx.createGain()
+        out.gain.value = Math.min(1, volume) * 0.4
+        out.connect(ctx.destination)
+        const tone = (type: OscillatorType, f0: number, f1: number, dur: number, gain = 1, delay = 0) => {
+            const o = ctx.createOscillator()
+            const g = ctx.createGain()
+            const s = t0 + delay
+            o.type = type
+            o.frequency.setValueAtTime(f0 * pitch, s)
+            o.frequency.exponentialRampToValueAtTime(Math.max(20, f1 * pitch), s + dur)
+            g.gain.setValueAtTime(0.0001, s)
+            g.gain.exponentialRampToValueAtTime(gain, s + 0.006)
+            g.gain.exponentialRampToValueAtTime(0.0001, s + dur)
+            o.connect(g)
+            g.connect(out)
+            o.start(s)
+            o.stop(s + dur + 0.02)
+        }
+        const noise = (dur: number, f0: number, f1: number, gain = 1, delay = 0) => {
+            const n = Math.max(1, Math.floor(ctx.sampleRate * dur))
+            const buf = ctx.createBuffer(1, n, ctx.sampleRate)
+            const d = buf.getChannelData(0)
+            for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1
+            const src = ctx.createBufferSource()
+            const f = ctx.createBiquadFilter()
+            const g = ctx.createGain()
+            const s = t0 + delay
+            src.buffer = buf
+            f.type = "bandpass"
+            f.Q.value = 0.9
+            f.frequency.setValueAtTime(f0 * pitch, s)
+            f.frequency.exponentialRampToValueAtTime(Math.max(40, f1 * pitch), s + dur)
+            g.gain.setValueAtTime(0.0001, s)
+            g.gain.exponentialRampToValueAtTime(gain, s + 0.01)
+            g.gain.exponentialRampToValueAtTime(0.0001, s + dur)
+            src.connect(f)
+            f.connect(g)
+            g.connect(out)
+            src.start(s)
+        }
+        if (cue === "tick") tone("triangle", 2300, 1900, 0.035, 0.55)
+        else if (cue === "click") {
+            noise(0.025, 3200, 2400, 0.7)
+            tone("sine", 190, 120, 0.04, 0.5)
+        } else if (cue === "pop") tone("sine", 540, 190, 0.12, 0.9)
+        else if (cue === "on") {
+            tone("sine", 520, 520, 0.09, 0.6)
+            tone("sine", 780, 780, 0.12, 0.6, 0.07)
+        } else if (cue === "off") {
+            tone("sine", 650, 650, 0.09, 0.5)
+            tone("sine", 420, 420, 0.12, 0.5, 0.07)
+        } else if (cue === "whoosh") noise(0.24, 500, 2600, 0.8)
+        else if (cue === "drop") {
+            tone("sine", 170, 55, 0.16, 0.95)
+            noise(0.05, 900, 400, 0.4)
+        } else if (cue === "success") {
+            tone("triangle", 523, 523, 0.11, 0.55)
+            tone("triangle", 659, 659, 0.11, 0.55, 0.075)
+            tone("triangle", 784, 784, 0.18, 0.6, 0.15)
+        } else if (cue === "error") {
+            tone("square", 160, 120, 0.13, 0.35)
+            tone("square", 150, 110, 0.15, 0.35, 0.16)
+        } else if (cue === "type") {
+            noise(0.014, 3800, 3000, 0.55)
+            tone("square", 1500 + Math.random() * 300, 1100, 0.02, 0.18)
+        }
+    } catch {
+        /* audio blocked or unsupported: stay silent */
+    }
+}
+/* ---- end Sound ---------------------------------------------------------- */
+
 export default function SnapCarousel({
     slides = SAMPLE,
     loop = true,
@@ -160,8 +254,16 @@ export default function SnapCarousel({
     accent = "#fa7319",
     theme = "dark",
     radius = 16,
+    sound = false,
+    soundVolume = 0.5,
 }: Partial<SnapCarouselProps>) {
     const p = palette(theme)
+    const cueRef = React.useRef<(c: Cue, gap?: number, pitch?: number) => void>(() => {})
+    const cue = (c: Cue, gap?: number, pitch?: number) => {
+        if (sound) playCue(c, soundVolume, gap, pitch)
+    }
+    cueRef.current = cue
+    const lastIdx = React.useRef(0)
     const items = slides.length > 0 ? slides : SAMPLE
     const n = items.length
     const reduce = useReducedMotion()
@@ -182,6 +284,10 @@ export default function SnapCarousel({
     React.useEffect(() => {
         const unsub = pos.on("change", (v) => {
             const idx = mod(Math.round(v), n)
+            if (idx !== lastIdx.current) {
+                lastIdx.current = idx
+                cueRef.current("tick", 50)
+            }
             setActive((a) => (a === idx ? a : idx))
         })
         return unsub
@@ -299,6 +405,7 @@ export default function SnapCarousel({
             if (dt > 0) vPx = ((s[s.length - 1][1] - s[0][1]) / dt) * 1000
         }
         const vIdx = -vPx / stepPx()
+        if (Math.abs(vPx) > 700) cue("whoosh", 200)
         const cur = pos.get()
         const start = Math.round(d.startPos)
         let k = Math.round(cur + vIdx * 0.16)
@@ -325,11 +432,12 @@ export default function SnapCarousel({
         fontFamily: "inherit",
     })
 
-    const Arrow = ({ dir }: { dir: -1 | 1 }) => {
+    const arrow = (dir: -1 | 1) => {
         const id = dir < 0 ? "prev" : "next"
         const disabled = !loop && (dir < 0 ? active === 0 : active === n - 1)
         return (
             <motion.button
+                key={id}
                 type="button"
                 aria-label={dir < 0 ? "Previous slide" : "Next slide"}
                 disabled={disabled}
@@ -399,7 +507,7 @@ export default function SnapCarousel({
                     ))}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginTop: 16 }}>
-                    {showArrows && <Arrow dir={-1} />}
+                    {showArrows && arrow(-1)}
                     <div
                         role="tablist"
                         aria-label="Choose slide"
@@ -445,7 +553,7 @@ export default function SnapCarousel({
                             }}
                         />
                     </div>
-                    {showArrows && <Arrow dir={1} />}
+                    {showArrows && arrow(1)}
                 </div>
             </div>
         </MotionConfig>
@@ -469,6 +577,8 @@ addPropertyControls(SnapCarousel, {
     showArrows: { type: ControlType.Boolean, title: "Arrows", defaultValue: true },
     slideWidth: { type: ControlType.Number, title: "Slide width", defaultValue: 64, min: 40, max: 90, unit: "%" },
     height: { type: ControlType.Number, title: "Height", defaultValue: 210, min: 140, max: 420 },
+    sound: { type: ControlType.Boolean, title: "Sound", defaultValue: false },
+    soundVolume: { type: ControlType.Number, title: "Sound volume", defaultValue: 0.5, min: 0, max: 1, step: 0.05 },
     accent: { type: ControlType.Color, title: "Accent", defaultValue: "#fa7319" },
     theme: {
         type: ControlType.Enum,
