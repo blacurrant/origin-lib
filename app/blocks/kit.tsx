@@ -1,9 +1,126 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Component, useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 export const FOCUS =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+
+/**
+ * State kept in localStorage under `key`. Renders with `initial` first (so server and client
+ * agree), then adopts the stored value. Storage that throws just means it lasts for this visit.
+ */
+export function usePersisted<T>(key: string, initial: T, valid?: (v: unknown) => v is T) {
+  const [value, setValue] = useState<T>(initial);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw === null) return;
+      const v = JSON.parse(raw);
+      if (!valid || valid(v)) setValue(v as T);
+    } catch {
+      /* ignore */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  const set = useCallback(
+    (next: T | ((prev: T) => T)) => {
+      setValue((prev) => {
+        const v = typeof next === "function" ? (next as (p: T) => T)(prev) : next;
+        try {
+          localStorage.setItem(key, JSON.stringify(v));
+        } catch {
+          /* private mode */
+        }
+        return v;
+      });
+    },
+    [key],
+  );
+  return [value, set] as const;
+}
+
+/** Close `onClose` when a press lands outside `ref`, or Escape is pressed. */
+export function useDismiss(ref: React.RefObject<HTMLElement | null>, active: boolean, onClose: () => void) {
+  useEffect(() => {
+    if (!active) return;
+    const down = (e: PointerEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    };
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    document.addEventListener("pointerdown", down);
+    document.addEventListener("keydown", key);
+    return () => {
+      document.removeEventListener("pointerdown", down);
+      document.removeEventListener("keydown", key);
+    };
+  }, [ref, active, onClose]);
+}
+
+/** True once the page has scrolled, so the sticky header can show an edge. */
+export function useScrolled(threshold = 4) {
+  const [s, setS] = useState(false);
+  useEffect(() => {
+    const on = () => setS(window.scrollY > threshold);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, [threshold]);
+  return s;
+}
+
+/** A demo that throws should lose its own tile, not the page. */
+export class DemoBoundary extends Component<{ children: ReactNode; label: string }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <div role="img" aria-label={`${this.props.label} could not be shown`} className="grid h-full w-full place-items-center px-6 text-center text-[13px] text-[#84848a]">
+        This preview couldn’t load.
+      </div>
+    );
+  }
+}
+
+/** A short message at the bottom of the screen, with an optional action. Lives on `body` so it shows over the inspector too. */
+export function Toast({ toast, onDone }: { toast: { id: number; message: string; action?: { label: string; run: () => void } } | null; onDone: () => void }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    if (!toast) return;
+    const t = window.setTimeout(onDone, toast.action ? 4200 : 2200);
+    return () => window.clearTimeout(t);
+  }, [toast, onDone]);
+  if (!mounted || !toast) return null;
+  return createPortal(
+    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[60] flex justify-center px-4">
+      <div key={toast.id} role="status" className="pointer-events-auto flex items-center gap-3 rounded-lg bg-[#232325] py-2.5 pl-4 pr-2.5 text-[14px] text-[#ededee] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)] ring-1 ring-white/10">
+        <span>{toast.message}</span>
+        {toast.action && (
+          <button
+            type="button"
+            onClick={() => {
+              toast.action!.run();
+              onDone();
+            }}
+            className={`h-8 rounded-md bg-white px-3 text-[13px] font-medium text-black ${FOCUS}`}
+          >
+            {toast.action.label}
+          </button>
+        )}
+      </div>
+    </div>,
+    document.body,
+  );
+}
 
 export const SITE = (process.env.NEXT_PUBLIC_ORIGINKIT_SITE_URL ?? "https://www.originkit.dev").replace(/\/$/, "");
 
@@ -110,7 +227,11 @@ export function useSaved() {
     window.addEventListener("storage", on);
     return () => window.removeEventListener("storage", on);
   }, []);
+  // Callers may run later (an Undo on a toast), so work from the latest list, not the one they closed over.
+  const latest = useRef<string[]>(saved);
+  latest.current = saved;
   const write = useCallback((next: string[]) => {
+    latest.current = next;
     setSaved(next);
     try {
       localStorage.setItem(SAVED_KEY, JSON.stringify(next));
@@ -118,9 +239,10 @@ export function useSaved() {
       /* private mode: the bookmark lasts for this visit only */
     }
   }, []);
-  const toggle = useCallback((slug: string) => write(saved.includes(slug) ? saved.filter((x) => x !== slug) : [...saved, slug]), [saved, write]);
+  const toggle = useCallback((slug: string) => write(latest.current.includes(slug) ? latest.current.filter((x) => x !== slug) : [...latest.current, slug]), [write]);
+  const addAll = useCallback((slugs: string[]) => write([...latest.current, ...slugs.filter((x) => !latest.current.includes(x))]), [write]);
   const clear = useCallback(() => write([]), [write]);
-  return { saved, toggle, clear };
+  return { saved, toggle, addAll, clear };
 }
 
 export function useViewportWidth() {
@@ -171,12 +293,15 @@ export function Fit({
   padX = 28,
   padTop = 28,
   padBottom = 28,
+  grow = 1,
 }: {
   children: ReactNode;
   designWidth?: number;
   padX?: number;
   padTop?: number;
   padBottom?: number;
+  /** Most it may scale up. 1 means never larger than its design size. */
+  grow?: number;
 }) {
   const box = useRef<HTMLDivElement | null>(null);
   const inner = useRef<HTMLDivElement | null>(null);
@@ -189,9 +314,9 @@ export function Fit({
     const w = Math.max(i.offsetWidth, i.scrollWidth);
     const h = Math.max(i.offsetHeight, i.scrollHeight);
     if (!w || !h) return;
-    const next = Math.min(1, b.clientWidth / w, b.clientHeight / h);
+    const next = Math.min(grow, b.clientWidth / w, b.clientHeight / h);
     setScale((s) => (Math.abs(s - next) < 0.005 ? s : Math.max(next, 0.2)));
-  }, []);
+  }, [grow]);
 
   useLayoutEffect(() => {
     measure();
@@ -257,7 +382,7 @@ export function highlight(code: string): ReactNode[] {
   return out;
 }
 
-export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "download" | "prev" | "next" | "replay" | "sun" | "moon" | "link" | "reset" | "plus" | "trash" | "up" | "down" | "chevron" | "open" | "soundOn" | "soundOff" | "bookmark" | "bookmarkFilled" | "grid2" | "grid3" | "grid4" | "grid5" | "masonry" | "even"; size?: number }) {
+export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "download" | "prev" | "next" | "replay" | "sun" | "moon" | "link" | "reset" | "plus" | "trash" | "up" | "down" | "chevron" | "open" | "soundOn" | "soundOff" | "bookmark" | "bookmarkFilled" | "menu" | "play" | "pause" | "view" | "expand" | "grid2" | "grid3" | "grid4" | "grid5" | "masonry" | "even"; size?: number }) {
   const p = { width: size, height: size, viewBox: "0 0 16 16", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   switch (name) {
     case "close":
@@ -302,6 +427,16 @@ export function Icon({ name, size = 16 }: { name: "close" | "copy" | "check" | "
       return <svg {...p}><path d="M4.2 2.8h7.6a.7.7 0 0 1 .7.7v9.6a.4.4 0 0 1-.65.3L8 10.4l-3.85 3a.4.4 0 0 1-.65-.3V3.5a.7.7 0 0 1 .7-.7Z" /></svg>;
     case "bookmarkFilled":
       return <svg {...p} fill="currentColor"><path d="M4.2 2.8h7.6a.7.7 0 0 1 .7.7v9.6a.4.4 0 0 1-.65.3L8 10.4l-3.85 3a.4.4 0 0 1-.65-.3V3.5a.7.7 0 0 1 .7-.7Z" /></svg>;
+    case "menu":
+      return <svg {...p}><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" /></svg>;
+    case "play":
+      return <svg {...p} fill="currentColor"><path d="M5 3.4v9.2a.5.5 0 0 0 .76.42l7.4-4.6a.5.5 0 0 0 0-.85l-7.4-4.6A.5.5 0 0 0 5 3.4Z" /></svg>;
+    case "pause":
+      return <svg {...p} fill="currentColor"><rect x="4" y="3" width="2.8" height="10" rx="0.8" /><rect x="9.2" y="3" width="2.8" height="10" rx="0.8" /></svg>;
+    case "view":
+      return <svg {...p}><path d="M2.5 4.5h6M11.5 4.5h2M2.5 11.5h2M7.5 11.5h6" /><circle cx="10" cy="4.5" r="1.5" /><circle cx="6" cy="11.5" r="1.5" /></svg>;
+    case "expand":
+      return <svg {...p}><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9" /></svg>;
     case "masonry":
       return <svg {...p}><rect x="2" y="2" width="5" height="7" rx="1.2" /><rect x="9" y="2" width="5" height="4" rx="1.2" /><rect x="2" y="11" width="5" height="3" rx="1.2" /><rect x="9" y="8" width="5" height="6" rx="1.2" /></svg>;
     case "even":

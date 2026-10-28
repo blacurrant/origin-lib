@@ -6,18 +6,22 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { components } from "@/lib/originkit-library";
 import registryJson from "@/lib/originkit-library/registry.json";
 import { PropsPanel, defaultOf, readControls, type Values } from "./controls";
-import { Integrate, changedProps, useSource } from "./Integrate";
-import { FOCUS, Fit, Icon, useCopy } from "./kit";
-import type { Block } from "./manifest";
+import { Integrate, aiPrompts, changedProps, framerCode, isMethod, useSource, type Method } from "./Integrate";
+import { DemoBoundary, FOCUS, Fit, Icon, useCopy, usePersisted } from "./kit";
+import { NEW_SLUGS, type Block } from "./manifest";
 
 type RegistryEntry = { name: string; description?: string; usage?: string; tweakSchema?: unknown[] };
 const REGISTRY = new Map((registryJson as unknown as RegistryEntry[]).map((e) => [e.name, e]));
 
 type Tab = "props" | "code" | "about";
-type Width = 320 | 480 | 720 | 960;
-const WIDTHS: Width[] = [320, 480, 720, 960];
+const isTab = (v: unknown): v is Tab => v === "props" || v === "code" || v === "about";
+const WIDTHS = [320, 480, 720, 960];
+const MIN_WIDTH = 280;
+const MAX_WIDTH = 1100;
 /** Props that need the component to start over when they change, rather than animate. */
 const REMOUNT = new Set(["enum", "boolean", "string", "array", "object"]);
+/** Typing in a text field restarts the demo only once the typing pauses. */
+const TYPING_PAUSE = 500;
 
 export function encodeProps(values: Values): string {
   return btoa(unescape(encodeURIComponent(JSON.stringify(values)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -34,6 +38,24 @@ export function decodeProps(p: string | null): Values {
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
+/** How the reader likes to look at a block. Kept above the block so it survives moving to the next one, and across visits. */
+type Prefs = {
+  theme: "dark" | "light";
+  setTheme: (t: "dark" | "light") => void;
+  dots: boolean;
+  setDots: (d: boolean) => void;
+  width: number;
+  setWidth: (w: number) => void;
+  fill: boolean;
+  setFill: (f: boolean) => void;
+  tab: Tab;
+  setTab: (t: Tab) => void;
+  method: Method;
+  setMethod: (m: Method) => void;
+  bake: boolean;
+  setBake: (b: boolean) => void;
+};
+
 /* -------------------------------------------------------------------------- */
 
 function Body({
@@ -46,11 +68,14 @@ function Body({
   position,
   saved,
   onToggleSaved,
+  onToast,
   sound,
+  prefs,
 }: {
   sound: boolean;
   saved: boolean;
   onToggleSaved: (slug: string) => void;
+  onToast: (message: string) => void;
   block: Block;
   siblings: Block[];
   accent: string;
@@ -58,6 +83,7 @@ function Body({
   onNavigate: (slug: string) => void;
   onClose: () => void;
   position: { index: number; total: number };
+  prefs: Prefs;
 }) {
   const uid = useId();
   const Comp = components[block.slug];
@@ -66,6 +92,7 @@ function Body({
   const importName = /^import\s+(\w+)\s+from/m.exec(entry?.usage ?? "")?.[1] ?? "Component";
   const { src } = useSource(block.slug);
   const { copied, copy } = useCopy();
+  const { theme, setTheme, dots, setDots, width, setWidth, fill, setFill, tab, setTab, method, setMethod, bake, setBake } = prefs;
 
   const [values, setValues] = useState<Values>(() => {
     const base: Values = { ...initialValues };
@@ -75,17 +102,19 @@ function Body({
     if (acc && !("accent" in base) && !(block.props && "accent" in block.props) && accent.toLowerCase() !== String(defaultOf(acc[1])).toLowerCase()) base.accent = accent;
     return base;
   });
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [dots, setDots] = useState(true);
-  const [width, setWidth] = useState<Width>(480);
-  const [tab, setTab] = useState<Tab>("props");
   const [run, setRun] = useState(0);
+  const typing = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(typing.current), []);
 
   const change = useCallback(
     (key: string, v: unknown) => {
       setValues((s) => ({ ...s, [key]: v }));
       const c = controls.find(([k]) => k === key)?.[1];
-      if (c && REMOUNT.has(c.type)) setRun((n) => n + 1);
+      if (!c || !REMOUNT.has(c.type)) return;
+      // A remount on every keystroke would restart the demo under the reader's fingers.
+      window.clearTimeout(typing.current);
+      if (c.type === "string") typing.current = window.setTimeout(() => setRun((n) => n + 1), TYPING_PAUSE);
+      else setRun((n) => n + 1);
     },
     [controls],
   );
@@ -100,15 +129,35 @@ function Body({
 
   const props = useMemo(() => changedProps(controls, values, theme), [controls, values, theme]);
   const dark = theme === "dark";
+  const hasSound = controls.some(([k]) => k === "sound");
+  const soundOn = !!(values.sound ?? defaultOf(controls.find(([k]) => k === "sound")?.[1] ?? { type: "boolean" }));
 
-  const share = () => {
+  const share = async () => {
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("c", block.slug);
     const only = Object.fromEntries(props.filter(([k]) => k !== "theme"));
     if (Object.keys(only).length) url.searchParams.set("p", encodeProps(only));
+    // On a phone the share sheet is the natural place to send a link.
+    if (window.matchMedia("(pointer: coarse)").matches && typeof navigator.share === "function") {
+      try {
+        await navigator.share({ title: block.title, url: url.toString() });
+        return;
+      } catch {
+        /* dismissed: fall through to copying */
+      }
+    }
     copy(url.toString(), "link");
   };
+
+  // The one action most people came for, in the method they used last.
+  const ai = aiPrompts(block.slug, props);
+  const primary =
+    method === "react"
+      ? { label: "Copy component", text: src?.react ?? "", done: "Component copied" }
+      : method === "framer"
+        ? { label: "Copy for Framer", text: src ? framerCode(src.framer, importName, props, bake) : "", done: "Copied for Framer" }
+        : { label: "Copy MCP prompt", text: props.length ? ai.configured : ai.quick, done: "Prompt copied" };
 
   const related = siblings.filter((b) => b.interaction === block.interaction && b.slug !== block.slug).slice(0, 5);
   const tabBtn = (id: Tab, label: string) => (
@@ -121,7 +170,7 @@ function Body({
       aria-controls={`${uid}-panel`}
       tabIndex={tab === id ? 0 : -1}
       onClick={() => setTab(id)}
-      className={`relative h-11 px-4 text-[13.5px] font-medium transition-colors ${FOCUS} ${tab === id ? "text-white" : "text-[#8b8b90] hover:text-white"}`}
+      className={`relative h-11 px-4 text-[13px] font-medium transition-colors ${FOCUS} ${tab === id ? "text-white" : "text-[#8b8b90] hover:text-white"}`}
     >
       {label}
       {tab === id && <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-lg bg-white" />}
@@ -137,35 +186,53 @@ function Body({
     document.getElementById(`${uid}-tab-${next}`)?.focus();
   };
 
-  const chip = `inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[12.5px] font-medium transition-colors ${FOCUS}`;
+  const chip = `inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[12px] font-medium transition-colors ${FOCUS}`;
+  const stageChip = dark ? "bg-[#18181a]/90 text-[#c9c9cc] hover:text-white" : "bg-white/80 text-[#3a3935]";
   const stageBg = dark ? "#0b0b0c" : "#f1efea";
   const dot = dark ? "rgba(255,255,255,0.07)" : "rgba(20,20,19,0.09)";
+  const segOn = dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white";
+  const segOff = dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black";
+  const prev = siblings[(position.index - 1 + position.total) % position.total];
+  const next = siblings[(position.index + 1) % position.total];
+
+  const details: [string, string][] = [
+    ["Interaction", block.interaction],
+    ["Properties", String(controls.length)],
+    ["Sound", hasSound ? "Optional" : "None"],
+    ["Accent colour", controls.some(([k]) => k === "accent") ? "Adjustable" : "Fixed"],
+    ["Source", src ? `${(src.react.length / 1024).toFixed(1)} KB, ${src.react.split("\n").length} lines` : "…"],
+  ];
 
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-3 border-b border-[#1f1f22] pl-5 pr-3 sm:pl-6">
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b border-[#1f1f22] pl-5 pr-3 sm:gap-3 sm:pl-6">
         <div className="min-w-0 flex-1">
-          <h2 id={`${uid}-title`} className="truncate text-[17px] font-medium tracking-[-0.01em] text-white">
-            {block.title}
+          <h2 id={`${uid}-title`} className="flex items-center gap-2 truncate text-[16px] font-medium tracking-[-0.01em] text-white sm:text-[17px]">
+            <span className="truncate">{block.title}</span>
+            {NEW_SLUGS.has(block.slug) && (
+              <span className="hidden shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-medium text-black sm:inline" style={{ background: accent }}>
+                New
+              </span>
+            )}
           </h2>
-          <p className="truncate text-[12.5px] text-[#8b8b90]">
+          <p className="truncate text-[12px] text-[#8b8b90]">
             {block.interaction}
             <span aria-hidden> · </span>
-            {block.hint}
+            {controls.length} propert{controls.length === 1 ? "y" : "ies"}
           </p>
         </div>
-        <div className="hidden items-center gap-1 sm:flex" role="group" aria-label="Browse blocks">
-          <button type="button" aria-label="Previous block" onClick={() => onNavigate(siblings[(position.index - 1 + position.total) % position.total].slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-lg text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
+        <div className="flex items-center gap-0.5 sm:gap-1" role="group" aria-label="Browse blocks">
+          <button type="button" aria-label="Previous block" title={`Previous: ${prev?.title ?? ""}  ( [ )`} onClick={() => onNavigate(prev.slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-lg text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
             <Icon name="prev" />
           </button>
-          <span className="w-14 text-center text-[12.5px] tabular-nums text-[#8b8b90]">
+          <span className="hidden w-14 text-center text-[12px] tabular-nums text-[#8b8b90] sm:block">
             {position.index + 1} / {position.total}
           </span>
-          <button type="button" aria-label="Next block" onClick={() => onNavigate(siblings[(position.index + 1) % position.total].slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-lg text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
+          <button type="button" aria-label="Next block" title={`Next: ${next?.title ?? ""}  ( ] )`} onClick={() => onNavigate(next.slug)} disabled={position.total < 2} className={`grid h-9 w-9 place-items-center rounded-lg text-[#c9c9cc] hover:bg-[#1c1c1f] hover:text-white disabled:opacity-30 ${FOCUS}`}>
             <Icon name="next" />
           </button>
         </div>
-        <button type="button" onClick={share} className={`${chip} bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a]`}>
+        <button type="button" onClick={share} aria-label="Share link" className={`${chip} bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a]`}>
           <Icon name={copied === "link" ? "check" : "link"} size={14} />
           <span className="hidden sm:inline">{copied === "link" ? "Link copied" : "Share"}</span>
         </button>
@@ -179,7 +246,7 @@ function Body({
           <Icon name={saved ? "bookmarkFilled" : "bookmark"} size={14} />
           <span className="hidden sm:inline">{saved ? "Saved" : "Save"}</span>
         </button>
-        <button type="button" aria-label="Close" onClick={onClose} className={`grid h-9 w-9 place-items-center rounded-lg bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a] ${FOCUS}`}>
+        <button type="button" aria-label="Close" onClick={onClose} className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#1c1c1f] text-[#e4e4e6] hover:bg-[#26262a] ${FOCUS}`}>
           <Icon name="close" />
         </button>
       </header>
@@ -189,36 +256,60 @@ function Body({
         <div className="relative h-[46vh] shrink-0 overflow-hidden lg:h-auto lg:min-w-0 lg:flex-1" style={{ background: stageBg }}>
           {dots && <div aria-hidden className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, ${dot} 1px, transparent 0)`, backgroundSize: "20px 20px" }} />}
           {Comp ? (
-            <Fit designWidth={width} padX={40} padTop={72} padBottom={64}>
-              <Comp key={`${block.slug}-${run}`} {...block.props} {...values} theme={theme} />
+            <Fit designWidth={width} padX={40} padTop={72} padBottom={64} grow={fill ? 2 : 1}>
+              <DemoBoundary label={block.title}>
+                <Comp key={`${block.slug}-${run}`} {...block.props} {...values} theme={theme} />
+              </DemoBoundary>
             </Fit>
           ) : null}
 
-          <div role="toolbar" aria-label="Preview options" className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
+          <div role="toolbar" aria-label="Preview options" className="absolute left-3 right-3 top-3 flex flex-wrap items-center gap-1.5">
             <div className={`flex rounded-lg p-0.5 ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Preview theme">
               {(["dark", "light"] as const).map((t) => (
-                <button key={t} type="button" role="radio" aria-checked={theme === t} aria-label={`${t} preview`} onClick={() => { setTheme(t); setRun((n) => n + 1); }} className={`grid h-7 w-8 place-items-center rounded-lg transition-colors ${FOCUS} ${theme === t ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black"}`}>
+                <button key={t} type="button" role="radio" aria-checked={theme === t} aria-label={`${t} preview`} title={`${t[0].toUpperCase()}${t.slice(1)} preview`} onClick={() => { setTheme(t); setRun((n) => n + 1); }} className={`grid h-7 w-8 place-items-center rounded-lg transition-colors ${FOCUS} ${theme === t ? segOn : segOff}`}>
                   <Icon name={t === "dark" ? "moon" : "sun"} size={14} />
                 </button>
               ))}
             </div>
-            <div className={`flex rounded-lg p-0.5 ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Preview width">
+            <div className={`hidden items-center rounded-lg p-0.5 sm:flex ${dark ? "bg-[#18181a]/90" : "bg-white/80"} backdrop-blur`} role="radiogroup" aria-label="Frame width">
               {WIDTHS.map((w) => (
-                <button key={w} type="button" role="radio" aria-checked={width === w} onClick={() => setWidth(w)} className={`h-7 rounded-lg px-2.5 text-[11.5px] font-medium tabular-nums transition-colors ${FOCUS} ${width === w ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : dark ? "text-[#8b8b90] hover:text-white" : "text-[#6b6862] hover:text-black"}`}>
+                <button key={w} type="button" role="radio" aria-checked={width === w} title={`Lay the block out at ${w}px wide`} onClick={() => setWidth(w)} className={`h-7 rounded-lg px-2.5 text-[11px] font-medium tabular-nums transition-colors ${FOCUS} ${width === w ? segOn : segOff}`}>
                   {w}
                 </button>
               ))}
+              <input
+                type="range"
+                aria-label="Frame width in pixels"
+                title={`Frame width: ${width}px. The block is laid out this wide, then scaled to fit.`}
+                min={MIN_WIDTH}
+                max={MAX_WIDTH}
+                step={10}
+                value={width}
+                onChange={(e) => setWidth(Number(e.target.value))}
+                className={`blocks-range mx-2 h-5 w-20 cursor-pointer ${FOCUS}`}
+                style={{ ["--pct" as string]: `${((width - MIN_WIDTH) / (MAX_WIDTH - MIN_WIDTH)) * 100}%` }}
+              />
+              <span className={`w-10 pr-1.5 text-right text-[11px] tabular-nums ${dark ? "text-[#8b8b90]" : "text-[#6b6862]"}`}>{width}</span>
             </div>
-            <button type="button" aria-pressed={dots} onClick={() => setDots((d) => !d)} className={`${chip} h-8 ${dark ? "bg-[#18181a]/90 text-[#c9c9cc] hover:text-white" : "bg-white/80 text-[#3a3935]"} backdrop-blur`}>
-              Dot grid
+            <button type="button" aria-pressed={fill} title="Scale small blocks up to fill the stage" onClick={() => setFill(!fill)} className={`${chip} h-8 ${fill ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : stageChip} backdrop-blur`}>
+              <Icon name="expand" size={13} />
+              <span className="hidden sm:inline">Fill</span>
             </button>
-            <button type="button" onClick={() => setRun((n) => n + 1)} className={`${chip} ${dark ? "bg-[#18181a]/90 text-[#c9c9cc] hover:text-white" : "bg-white/80 text-[#3a3935]"} backdrop-blur`}>
+            <button type="button" aria-pressed={dots} onClick={() => setDots(!dots)} className={`${chip} hidden sm:inline-flex ${stageChip} backdrop-blur`}>
+              Dots
+            </button>
+            {hasSound && (
+              <button type="button" aria-pressed={soundOn} aria-label="Sound effects" title={soundOn ? "Sound effects on" : "Sound effects off"} onClick={() => change("sound", !soundOn)} className={`${chip} ${soundOn ? (dark ? "bg-[#33333a] text-white" : "bg-[#141413] text-white") : stageChip} backdrop-blur`}>
+                <Icon name={soundOn ? "soundOn" : "soundOff"} size={14} />
+              </button>
+            )}
+            <button type="button" onClick={() => setRun((n) => n + 1)} className={`${chip} ${stageChip} backdrop-blur`}>
               <Icon name="replay" size={14} />
               Replay
             </button>
           </div>
 
-          <p className={`pointer-events-none absolute inset-x-0 bottom-4 text-center text-[12.5px] ${dark ? "text-[#6c6c72]" : "text-[#85827b]"}`}>Try it: {block.hint.charAt(0).toLowerCase() + block.hint.slice(1)}</p>
+          <p className={`pointer-events-none absolute inset-x-0 bottom-4 px-4 text-center text-[12px] ${dark ? "text-[#84848a]" : "text-[#6b6862]"}`}>Try it: {block.hint.charAt(0).toLowerCase() + block.hint.slice(1)}</p>
         </div>
 
         {/* Panel */}
@@ -235,27 +326,26 @@ function Body({
               ) : (
                 <p className="text-[13px] text-[#8b8b90]">This block has no editable properties.</p>
               ))}
-            {tab === "code" && <Integrate slug={block.slug} importName={importName} props={props} />}
+            {tab === "code" && <Integrate slug={block.slug} importName={importName} props={props} method={method} onMethod={setMethod} bake={bake} onBake={setBake} />}
             {tab === "about" && (
               <div className="space-y-6">
                 <p className="text-[14px] leading-[1.65] text-[#c9c9cc]">{entry?.description}</p>
+                <div className="rounded-xl bg-[#131315] px-4 py-3 text-[13px] leading-[1.6] text-[#c9c9cc]">
+                  <span className="text-[#8b8b90]">How to try it · </span>
+                  {block.hint}
+                </div>
                 <dl className="divide-y divide-[#1f1f22] rounded-xl border border-[#26262a] text-[13px]">
-                  {[
-                    ["Interaction", block.interaction],
-                    ["Properties", String(controls.length)],
-                    ["Dependency", "framer-motion"],
-                    ["Works in", "Framer, React, Next.js"],
-                    ["Source", src ? `${(src.react.length / 1024).toFixed(1)} KB, ${src.react.split("\n").length} lines` : "…"],
-                  ].map(([k, v]) => (
+                  {details.map(([k, v]) => (
                     <div key={k} className="flex items-center justify-between gap-4 px-4 py-2.5">
                       <dt className="text-[#8b8b90]">{k}</dt>
                       <dd className="text-right text-[#ededee]">{v}</dd>
                     </div>
                   ))}
                 </dl>
+                <p className="text-[12px] leading-[1.6] text-[#84848a]">Needs framer-motion. Works in Framer, React and Next.js.</p>
                 {related.length > 0 && (
                   <div>
-                    <h3 className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-[#5f5f65]">More {block.interaction.toLowerCase()} blocks</h3>
+                    <h3 className="mb-2 text-[11px] font-medium uppercase tracking-[0.1em] text-[#84848a]">More {block.interaction.toLowerCase()} blocks</h3>
                     <div className="flex flex-wrap gap-2">
                       {related.map((b) => (
                         <button key={b.slug} type="button" onClick={() => onNavigate(b.slug)} className={`h-9 rounded-lg bg-[#1c1c1f] px-4 text-[13px] text-[#e4e4e6] transition-colors hover:bg-[#26262a] ${FOCUS}`}>
@@ -268,9 +358,30 @@ function Body({
               </div>
             )}
           </div>
-          <p className="hidden shrink-0 border-t border-[#1f1f22] px-5 py-2.5 text-[11.5px] text-[#5f5f65] lg:block">
-            <kbd className="font-mono text-[#8b8b90]">Esc</kbd> close <span aria-hidden>·</span> <kbd className="font-mono text-[#8b8b90]">[</kbd> <kbd className="font-mono text-[#8b8b90]">]</kbd> previous / next
-          </p>
+          <div className="flex shrink-0 items-center justify-between gap-3 border-t border-[#1f1f22] px-4 py-3 sm:px-5">
+            <p className="hidden text-[11px] text-[#84848a] xl:block">
+              <kbd className="font-mono text-[#8b8b90]">Esc</kbd> close <span aria-hidden>·</span> <kbd className="font-mono text-[#8b8b90]">[</kbd> <kbd className="font-mono text-[#8b8b90]">]</kbd> prev / next
+            </p>
+            <div className="flex min-w-0 flex-1 items-center justify-end gap-2 xl:flex-none">
+              {tab !== "code" && (
+                <button type="button" onClick={() => setTab("code")} className={`h-10 shrink-0 rounded-lg px-3 text-[13px] text-[#a0a0a5] hover:text-white ${FOCUS}`}>
+                  Other ways
+                </button>
+              )}
+              <button
+                type="button"
+                disabled={!primary.text}
+                onClick={async () => {
+                  await copy(primary.text, "primary");
+                  onToast(primary.done);
+                }}
+                className={`inline-flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-white px-5 text-[14px] font-medium text-black transition-opacity disabled:opacity-40 sm:flex-none ${FOCUS}`}
+              >
+                <Icon name={copied === "primary" ? "check" : "copy"} size={14} />
+                <span className="truncate">{copied === "primary" ? "Copied" : primary.label}</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>
@@ -289,11 +400,13 @@ export function Inspector({
   onExited,
   saved,
   onToggleSaved,
+  onToast,
   sound,
 }: {
   sound: boolean;
   saved: boolean;
   onToggleSaved: (slug: string) => void;
+  onToast: (message: string) => void;
   block: Block | null;
   siblings: Block[];
   accent: string;
@@ -306,6 +419,15 @@ export function Inspector({
   const dialog = useRef<HTMLDivElement | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  const [theme, setTheme] = usePersisted<"dark" | "light">("originkit.blocks.theme", "dark", (v): v is "dark" | "light" => v === "dark" || v === "light");
+  const [dots, setDots] = usePersisted<boolean>("originkit.blocks.dots", true, (v): v is boolean => typeof v === "boolean");
+  const [width, setWidth] = usePersisted<number>("originkit.blocks.width", 480, (v): v is number => typeof v === "number" && v >= MIN_WIDTH && v <= MAX_WIDTH);
+  const [fill, setFill] = usePersisted<boolean>("originkit.blocks.fill", true, (v): v is boolean => typeof v === "boolean");
+  const [tab, setTab] = usePersisted<Tab>("originkit.blocks.tab", "props", isTab);
+  const [method, setMethod] = usePersisted<Method>("originkit.blocks.method", "react", isMethod);
+  const [bake, setBake] = usePersisted<boolean>("originkit.blocks.bake", true, (v): v is boolean => typeof v === "boolean");
+  const prefs: Prefs = { theme, setTheme, dots, setDots, width, setWidth, fill, setFill, tab, setTab, method, setMethod, bake, setBake };
 
   // Lock page scroll while open.
   useEffect(() => {
@@ -361,7 +483,7 @@ export function Inspector({
   return createPortal(
     <AnimatePresence onExitComplete={onExited}>
       {block && (
-        <div className="fixed inset-0 z-50 flex items-stretch justify-center lg:items-center lg:p-6" key="blocks-inspector">
+        <div className="fixed inset-0 z-50 flex items-stretch justify-center lg:items-center lg:p-6" key="blocks-inspector" style={{ ["--ok-accent" as string]: accent }}>
           <motion.div
             aria-hidden
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
@@ -394,7 +516,9 @@ export function Inspector({
               onClose={onClose}
               saved={saved}
               onToggleSaved={onToggleSaved}
+              onToast={onToast}
               sound={sound}
+              prefs={prefs}
               position={{ index: Math.max(index, 0), total: siblings.length }}
             />
           </motion.div>

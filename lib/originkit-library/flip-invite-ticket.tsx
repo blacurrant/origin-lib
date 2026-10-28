@@ -15,7 +15,7 @@ const ADVANCED_DEFAULTS = {
     headerTextColor: "#868686",
     headerWidth: 100,
     headerHeight: 100,
-    headerGap: 20,
+    headerGap: 0,
     headerRim: 22,
     headerTextSize: 66,
     headerTilt: 180,
@@ -82,13 +82,13 @@ const GRAIN_URL =
 export default function FlipInviteTicket(props: any) {
     props = withMovedControls(props)
     const {
-        background = "#000000",
-        accentColor = "#25BF47",
-        pillColor = "#FDFDFD",
-        textColor = "#2B2B2B",
-        readyText = "Your Invite Is Ready",
-        codeLabel = "Your Invite Code",
-        codeText = "LoveSwiftUI",
+        background = "#0B1020",
+        accentColor = "#5B5BF0",
+        pillColor = "#F7F5FF",
+        textColor = "#1E1B3A",
+        readyText = "You're On The List",
+        codeLabel = "Your Access Code",
+        codeText = "ORIGIN-2026",
         copyText = "COPY",
         font,
         size = 912,
@@ -238,8 +238,6 @@ export default function FlipInviteTicket(props: any) {
                 s.phase = "spring"
                 s.thetaV = 0
                 s.settled = false
-                s.hs = 0
-                s.hsV = 0
             }
 
             if (reduced) {
@@ -252,7 +250,7 @@ export default function FlipInviteTicket(props: any) {
                 const kt = a.tiltStiffness
                 const ct = a.tiltDamping
                 const kh = Math.max(1, a.hingeStiffness)
-                const zeta = Math.max(0.05, 0.75 - (0.6 * bnc) / 100)
+                const zeta = Math.max(0.3, 0.95 - (0.6 * bnc) / 100)
                 const ch = 2 * zeta * Math.sqrt(kh)
                 const n = 6
                 const h = sdt / n
@@ -317,7 +315,8 @@ export default function FlipInviteTicket(props: any) {
                 // spring overshoot (hs > 1) swings it just past upright and back.
                 const ang = -a.headerTilt * (1 - s.hs)
                 headerRef.current.style.transform = `translateZ(4px) rotateX(${ang}deg)`
-                headerRef.current.style.opacity = String(clamp01(s.hs * 4))
+                const fade = clamp01(s.hs * 2.5)
+                headerRef.current.style.opacity = String(fade * fade * (3 - 2 * fade))
             }
             const bright = `brightness(${1 + 0.08 * s.over * hk})`
             if (btnRef.current) btnRef.current.style.filter = bright
@@ -619,7 +618,7 @@ export default function FlipInviteTicket(props: any) {
                                     style={{
                                         fontSize: adv.copySize,
                                         fontWeight: 700,
-                                        color: "#FDFDFD",
+                                        color: "#F7F5FF",
                                         letterSpacing: "0.01em",
                                         whiteSpace: "nowrap",
                                         lineHeight: 1,
@@ -662,19 +661,19 @@ export default function FlipInviteTicket(props: any) {
 }
 
 addPropertyControls(FlipInviteTicket, {
-    background: { type: ControlType.Color, title: "Background", defaultValue: "#000000" },
-    accentColor: { type: ControlType.Color, title: "Accent", defaultValue: "#25BF47" },
-    pillColor: { type: ControlType.Color, title: "Pill", defaultValue: "#FDFDFD" },
-    textColor: { type: ControlType.Color, title: "Text", defaultValue: "#2B2B2B" },
+    background: { type: ControlType.Color, title: "Background", defaultValue: "#0B1020" },
+    accentColor: { type: ControlType.Color, title: "Accent", defaultValue: "#5B5BF0" },
+    pillColor: { type: ControlType.Color, title: "Pill", defaultValue: "#F7F5FF" },
+    textColor: { type: ControlType.Color, title: "Text", defaultValue: "#1E1B3A" },
     font: {
         type: ControlType.Font,
         title: "Font",
         controls: "extended",
         defaultFontType: "sans-serif",
     },
-    readyText: { type: ControlType.String, title: "Ready Text", defaultValue: "Your Invite Is Ready" },
-    codeLabel: { type: ControlType.String, title: "Label", defaultValue: "Your Invite Code" },
-    codeText: { type: ControlType.String, title: "Code", defaultValue: "LoveSwiftUI" },
+    readyText: { type: ControlType.String, title: "Ready Text", defaultValue: "You're On The List" },
+    codeLabel: { type: ControlType.String, title: "Label", defaultValue: "Your Access Code" },
+    codeText: { type: ControlType.String, title: "Code", defaultValue: "ORIGIN-2026" },
     copyText: { type: ControlType.String, title: "Copy Text", defaultValue: "COPY" },
     size: {
         type: ControlType.Number,
@@ -723,7 +722,7 @@ addPropertyControls(FlipInviteTicket, {
             headerTextColor: { type: ControlType.Color, title: "Header Text", defaultValue: "#868686" },
             headerWidth: { type: ControlType.Number, title: "Header W", defaultValue: 100, min: 20, max: 100, step: 1, unit: "%" },
             headerHeight: { type: ControlType.Number, title: "Header H", defaultValue: 100, min: 10, max: 100, step: 1, unit: "%" },
-            headerGap: { type: ControlType.Number, title: "Header Gap", defaultValue: 20, min: 0, max: 100, step: 1 },
+            headerGap: { type: ControlType.Number, title: "Header Gap", defaultValue: 0, min: 0, max: 100, step: 1 },
             headerRim: { type: ControlType.Number, title: "Header Rim", defaultValue: 22, min: 0, max: 60, step: 1 },
             headerTextSize: { type: ControlType.Number, title: "Header Size", defaultValue: 66, min: 10, max: 140, step: 1 },
             headerTilt: { type: ControlType.Number, title: "Header Tilt", defaultValue: 180, min: 0, max: 180, step: 1, unit: "°" },

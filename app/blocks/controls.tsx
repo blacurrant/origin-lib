@@ -55,7 +55,7 @@ function section(key: string, c: PC): "Content" | "Behavior" | "Style" {
 /* Inputs                                                                     */
 /* -------------------------------------------------------------------------- */
 
-const FIELD = `h-9 w-full rounded-lg border border-[#2a2a2e] bg-[#161618] px-3 text-[13px] text-[#ededee] placeholder:text-[#5f5f65] transition-colors hover:border-[#3a3a40] focus:border-[#6a6a72] ${FOCUS}`;
+const FIELD = `h-9 w-full rounded-lg border border-[#2a2a2e] bg-[#161618] px-3 text-[13px] text-[#ededee] placeholder:text-[#84848a] transition-colors hover:border-[#3a3a40] focus:border-[#6a6a72] ${FOCUS}`;
 
 function Slider({ c, value, onChange, id }: { c: PC; value: number; onChange: (v: number) => void; id: string }) {
   const min = c.min ?? 0;
@@ -82,7 +82,7 @@ function Slider({ c, value, onChange, id }: { c: PC; value: number; onChange: (v
         step={c.step ?? 1}
         value={Number.isFinite(value) ? value : 0}
         onChange={(e) => e.target.value !== "" && onChange(Number(e.target.value))}
-        className={`h-8 w-[64px] rounded-lg border border-[#2a2a2e] bg-[#161618] px-2 text-right text-[12.5px] tabular-nums text-[#ededee] ${FOCUS}`}
+        className={`h-8 w-[64px] rounded-lg border border-[#2a2a2e] bg-[#161618] px-2 text-right text-[12px] tabular-nums text-[#ededee] ${FOCUS}`}
       />
     </div>
   );
@@ -100,7 +100,7 @@ function Segmented({ options, titles, value, onChange, label }: { options: strin
             role="radio"
             aria-checked={on}
             onClick={() => onChange(o)}
-            className={`h-8 min-w-0 flex-1 truncate rounded-md px-2 text-[12.5px] font-medium transition-colors ${FOCUS} ${on ? "bg-[#2c2c31] text-white shadow-sm" : "text-[#8b8b90] hover:text-white"}`}
+            className={`h-8 min-w-0 flex-1 truncate rounded-md px-2 text-[12px] font-medium transition-colors ${FOCUS} ${on ? "bg-[#2c2c31] text-white shadow-sm" : "text-[#8b8b90] hover:text-white"}`}
           >
             {titles?.[i] ?? o}
           </button>
@@ -140,7 +140,7 @@ function ColorField({ value, onChange, label, presets }: { value: string; onChan
           value={value}
           onChange={(e) => onChange(e.target.value)}
           spellCheck={false}
-          className={`${FIELD} font-mono text-[12.5px] uppercase`}
+          className={`${FIELD} font-mono text-[12px] uppercase`}
         />
       </div>
       {presets && (
@@ -275,7 +275,7 @@ function ArrayField({ id, k, c, value, onChange }: { id: string; k: string; c: P
                   <span className={`transition-transform ${expanded ? "rotate-90" : ""}`}>
                     <Icon name="chevron" size={13} />
                   </span>
-                  <span className="w-5 text-[11px] tabular-nums text-[#5f5f65]">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="w-5 text-[11px] tabular-nums text-[#84848a]">{String(i + 1).padStart(2, "0")}</span>
                   <span className="truncate">{summary(it, i)}</span>
                 </button>
                 <button type="button" aria-label={`Move item ${i + 1} up`} disabled={i === 0} onClick={() => move(i, -1)} className={iconBtn}>
@@ -318,7 +318,7 @@ function ArrayField({ id, k, c, value, onChange }: { id: string; k: string; c: P
           onChange([...value, base]);
           setOpen(value.length);
         }}
-        className={`flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-[#34343a] text-[12.5px] text-[#8b8b90] transition-colors hover:border-[#55555c] hover:text-white disabled:opacity-40 ${FOCUS}`}
+        className={`flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-[#34343a] text-[12px] text-[#8b8b90] transition-colors hover:border-[#55555c] hover:text-white disabled:opacity-40 ${FOCUS}`}
       >
         <Icon name="plus" size={13} />
         Add item{value.length >= max ? ` (max ${max})` : ""}
@@ -344,8 +344,14 @@ export function PropsPanel({
   onReset: (key?: string) => void;
   uid: string;
 }) {
+  const [filter, setFilter] = useState("");
+  const needle = filter.trim().toLowerCase();
   const groups: Record<string, [string, PC][]> = { Content: [], Behavior: [], Style: [] };
-  for (const entry of controls) groups[section(entry[0], entry[1])].push(entry);
+  for (const entry of controls) {
+    if (needle && !`${entry[0]} ${entry[1].title ?? ""}`.toLowerCase().includes(needle)) continue;
+    groups[section(entry[0], entry[1])].push(entry);
+  }
+  const shown = groups.Content.length + groups.Behavior.length + groups.Style.length;
   const changed = controls.filter(([k, c]) => k in values && !same(values[k], defaultOf(c))).length;
   // An Advanced group holds the fine tuning, so it starts closed.
   const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set());
@@ -366,10 +372,22 @@ export function PropsPanel({
         </button>
       </div>
 
+      {controls.length > 10 && (
+        <input
+          type="search"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          placeholder={`Filter ${controls.length} properties`}
+          aria-label="Filter properties"
+          className={`${FIELD} mb-2 mt-2`}
+        />
+      )}
+      {needle && shown === 0 && <p className="py-6 text-center text-[13px] text-[#84848a]">No property matches “{filter.trim()}”.</p>}
+
       {(Object.keys(groups) as (keyof typeof groups)[]).map((name) =>
         groups[name].length === 0 ? null : (
           <fieldset key={name} className="border-t border-[#1f1f22] py-4 first-of-type:border-t-0">
-            <legend className="mb-3 float-left w-full text-[11px] font-medium uppercase tracking-[0.1em] text-[#5f5f65]">{name}</legend>
+            <legend className="mb-3 float-left w-full text-[11px] font-medium uppercase tracking-[0.1em] text-[#84848a]">{name}</legend>
             <div className="clear-both space-y-4">
               {groups[name].map(([key, c]) => {
                 const def = defaultOf(c);
@@ -394,16 +412,16 @@ export function PropsPanel({
                             return next;
                           })
                         }
-                        className={`-ml-1 flex items-center gap-1.5 rounded-md px-1 py-0.5 text-[12.5px] font-medium text-[#c9c9cc] transition-colors hover:text-white ${FOCUS}`}
+                        className={`-ml-1 flex items-center gap-1.5 rounded-md px-1 py-0.5 text-[12px] font-medium text-[#c9c9cc] transition-colors hover:text-white ${FOCUS}`}
                       >
                         <span className={`text-[#8b8b90] transition-transform ${open ? "rotate-90" : ""}`}>
                           <Icon name="chevron" size={12} />
                         </span>
                         {c.title ?? key}
-                        <span className="text-[11.5px] font-normal text-[#5f5f65]">{Object.keys(c.controls ?? {}).length}</span>
+                        <span className="text-[11px] font-normal text-[#84848a]">{Object.keys(c.controls ?? {}).length}</span>
                       </button>
                     ) : (
-                      <label htmlFor={id} className="text-[12.5px] font-medium text-[#c9c9cc]">
+                      <label htmlFor={id} className="text-[12px] font-medium text-[#c9c9cc]">
                         {c.title ?? key}
                       </label>
                     )}
@@ -413,12 +431,10 @@ export function PropsPanel({
                         aria-label={`Reset ${c.title ?? key}`}
                         title="Reset to default"
                         onClick={() => onReset(key)}
-                        className={`group grid h-5 w-5 place-items-center rounded-full ${FOCUS}`}
+                        className={`flex h-6 items-center gap-1.5 rounded-md px-1.5 text-[12px] text-[#a0a0a5] transition-colors hover:bg-[#1c1c1f] hover:text-white ${FOCUS}`}
                       >
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#fa7319] group-hover:hidden" />
-                        <span className="hidden text-white group-hover:block">
-                          <Icon name="reset" size={11} />
-                        </span>
+                        <span className="h-1.5 w-1.5 rounded-full bg-[var(--ok-accent)]" />
+                        Reset
                       </button>
                     )}
                   </div>

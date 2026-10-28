@@ -533,6 +533,7 @@ export default function CrumplePaperCarousel(props: any) {
         itemHeight = 344,
         spacing = 30,
         autoplay = true,
+        arrows = false,
         style,
     } = props
     const adv = { ...ADVANCED_DEFAULTS, ...(props.advanced ?? {}) }
@@ -542,6 +543,7 @@ export default function CrumplePaperCarousel(props: any) {
     const live = useRef<any>(null)
     live.current = { images, speed, crumple, scale, itemWidth, itemHeight, spacing, autoplay, adv }
     const redrawRef = useRef<(() => void) | null>(null)
+    const stepRef = useRef<((dir: number) => void) | null>(null)
 
     const grainUrl = useMemo(() => {
         if (typeof document === "undefined") return ""
@@ -697,6 +699,7 @@ export default function CrumplePaperCarousel(props: any) {
             } else st.tweening = true
             if (user) st.lastUser = st.clock
         }
+        stepRef.current = (dir) => step(dir, true)
 
         const draw = () => {
             if (!W || !H) return
@@ -831,6 +834,7 @@ export default function CrumplePaperCarousel(props: any) {
             st.tover = 0
         }
         const onDown = (e: PointerEvent) => {
+            if ((e.target as HTMLElement | null)?.closest?.("[data-arrow]")) return
             st.dragging = true
             st.lastX = e.clientX
             st.tpress = 1
@@ -909,6 +913,7 @@ export default function CrumplePaperCarousel(props: any) {
             cancelAnimationFrame(raf)
             ro.disconnect()
             redrawRef.current = null
+            stepRef.current = null
             root.removeEventListener("wheel", onWheel)
             root.removeEventListener("pointermove", onMove)
             root.removeEventListener("pointerleave", onLeave)
@@ -927,6 +932,34 @@ export default function CrumplePaperCarousel(props: any) {
 
     const grainA = Math.max(0, Math.min(100, adv.grain)) / 100
     const vigA = Math.max(0, Math.min(100, adv.vignette)) / 100
+
+    const btnStyle: React.CSSProperties = {
+        width: 44,
+        height: 44,
+        borderRadius: "50%",
+        border: "1px solid rgba(255,255,255,0.18)",
+        background: "rgba(255,255,255,0.08)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        color: "#FFFFFF",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        padding: 0,
+        outline: "none",
+    }
+    const chevron = (dir: number) => (
+        <svg width={18} height={18} viewBox="0 0 16 16" fill="none">
+            <path
+                d={dir < 0 ? "M10 3 L5 8 L10 13" : "M6 3 L11 8 L6 13"}
+                stroke="currentColor"
+                strokeWidth={1.6}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    )
 
     return (
         <div
@@ -973,6 +1006,27 @@ export default function CrumplePaperCarousel(props: any) {
                     }}
                 />
             )}
+            {arrows && (
+                <div
+                    style={{
+                        position: "absolute",
+                        left: "50%",
+                        bottom: "5%",
+                        transform: "translateX(-50%)",
+                        display: "flex",
+                        gap: 12,
+                        zIndex: 2,
+                        cursor: "default",
+                    }}
+                >
+                    <button data-arrow="prev" aria-label="Previous poster" style={btnStyle} onClick={() => stepRef.current?.(-1)}>
+                        {chevron(-1)}
+                    </button>
+                    <button data-arrow="next" aria-label="Next poster" style={btnStyle} onClick={() => stepRef.current?.(1)}>
+                        {chevron(1)}
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
@@ -1009,7 +1063,7 @@ addPropertyControls(CrumplePaperCarousel, {
         step: 1,
         unit: "%",
         defaultValue: 70,
-        description: "How tightly posters away from the centre crumple into paper balls.",
+        description: "How crumpled the posters away from the centre get. 0 leaves them flat, 70 is a full paper ball, above 70 adds deeper creases.",
     },
     scale: {
         type: ControlType.Number,
@@ -1056,6 +1110,12 @@ addPropertyControls(CrumplePaperCarousel, {
         title: "Autoplay",
         defaultValue: true,
         description: "Step on its own when nobody scrolls or swipes.",
+    },
+    arrows: {
+        type: ControlType.Boolean,
+        title: "Arrows",
+        defaultValue: false,
+        description: "Show previous / next buttons at the bottom. Swiping and scrolling always work.",
     },
     hover: { type: ControlType.Number, title: "Hover", min: 0, max: 100, step: 1, unit: "%", defaultValue: 50, description: "Pointer response: tilt, uncrumple near the pointer, squeeze on press." },
     advanced: {

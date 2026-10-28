@@ -45,3 +45,22 @@ html, body { background: #0f0f10; color: #f7f7f7; font-family: Inter, ui-sans-se
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
+
+/* Blocks: tile loading shimmer and the reduced-motion fallback. */
+@keyframes blocks-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.blocks-skeleton {
+  background: linear-gradient(100deg, #131314 30%, #1b1b1d 50%, #131314 70%);
+  background-size: 200% 100%;
+  animation: blocks-shimmer 2.4s linear infinite;
+}
+@keyframes blocks-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.blocks-fade-in { animation: blocks-fade-in 0.35s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  .blocks-skeleton, .blocks-fade-in { animation: none; }
+}

@@ -39,6 +39,16 @@ export const BLOCKS: Block[] = [
     props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 460 } },
   },
   {
+    slug: "licorice-glide",
+    title: "Licorice toolbar",
+    interaction: "Hover",
+    size: "m",
+    keywords: "toolbar tooltip icons dock bar glide label inbox comment menu shortcut keys",
+    hint: "Hover the icons; one tooltip glides between them.",
+    // The toolbar fits itself to its frame; 480 × 300 matches its 728 × 442 shape inside the 1200 × 800 Framer frame.
+    props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 300 } },
+  },
+  {
     slug: "flip-invite-ticket",
     title: "Flip invite ticket",
     interaction: "Press",
@@ -225,6 +235,26 @@ export const BLOCKS: Block[] = [
     props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 440 } },
   },
   {
+    slug: "periwinkle-fanfare",
+    title: "Fanfare submit",
+    interaction: "Press",
+    size: "m",
+    keywords: "submit button loading success confetti celebrate check dots pill form",
+    hint: "Tap Submit to see it load, then burst into confetti.",
+    // The pill and its confetti fit the frame; 480 × 320 keeps the tile landscape inside the 1200 × 800 Framer frame.
+    props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 320 } },
+  },
+  {
+    slug: "range-switch-stat-card",
+    title: "Range stat card",
+    interaction: "Press",
+    size: "m",
+    keywords: "stats analytics card chart range switch toggle 7d 12d 30d revenue orders refund dashboard",
+    hint: "Pick 7d, 12d or 30d, or hover the chart.",
+    // The card fits itself to its frame; 480 × 520 keeps it from shrinking inside the 1200 × 800 Framer frame.
+    props: { accent: "#8B7CFF", background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 520 } },
+  },
+  {
     slug: "peel-sticker",
     title: "Peel sticker",
     interaction: "Drag",
@@ -330,3 +360,37 @@ export const BLOCKS: Block[] = [
   { slug: "infinite-grid", title: "Infinite grid", interaction: "Drag", size: "l", keywords: "canvas pan", hint: "Drag or scroll to pan." },
   { slug: "inline-edit", title: "Inline edit", interaction: "Type", size: "m", keywords: "editable text", hint: "Click any text to edit it." },
 ]
+
+/** Blocks added in the latest batch. Drives the "New" badge and the Newest sort. */
+export const NEW_SLUGS: ReadonlySet<string> = new Set([
+  "app-icon-paddle-wheel",
+  "bloom-wave-text",
+  "bookshelf-cover-flip",
+  "bouncing-dot-tabs",
+  "button-morph-card",
+  "crumple-paper-carousel",
+  "draggable-cloth-print",
+  "flip-invite-ticket",
+  "garden-progress-slider",
+  "gooey-delete-confirm",
+  "holo-card-dispenser",
+  "holo-flip-badge",
+  "licorice-glide",
+  "liquid-glass-clock",
+  "mirror-flip-carousel",
+  "page-flip-book",
+  "periwinkle-fanfare",
+  "peel-sticker",
+  "photo-card-globe",
+  "photo-stack-lightbox",
+  "pixel-swarm-dropdown",
+  "qr-code-assemble",
+  "radial-action-menu",
+  "range-switch-stat-card",
+  "scribble-loop-nav",
+  "scroll-progress-outline",
+  "status-dot-picker",
+  "stretch-pill-toggle",
+  "swinging-lanyard-badge",
+  "water-ripple-refraction",
+])

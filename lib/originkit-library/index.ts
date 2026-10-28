@@ -51,6 +51,9 @@ import OneTimeCode from "./one-time-code";
 import OrbitCardStack from "./orbit-card-stack";
 import PhotoCardGlobe from "./photo-card-globe";
 import RadialActionMenu from "./radial-action-menu";
+import LicoriceGlide from "./licorice-glide";
+import PeriwinkleFanfare from "./periwinkle-fanfare";
+import RangeSwitchStatCard from "./range-switch-stat-card";
 import StatusDotPicker from "./status-dot-picker";
 import WaterRippleRefraction from "./water-ripple-refraction";
 import PageFlipBook from "./page-flip-book";
@@ -143,6 +146,9 @@ export const components: Record<string, ComponentType<any>> = {
   "orbit-card-stack": OrbitCardStack,
   "photo-card-globe": PhotoCardGlobe,
   "radial-action-menu": RadialActionMenu,
+  "licorice-glide": LicoriceGlide,
+  "periwinkle-fanfare": PeriwinkleFanfare,
+  "range-switch-stat-card": RangeSwitchStatCard,
   "status-dot-picker": StatusDotPicker,
   "water-ripple-refraction": WaterRippleRefraction,
   "page-flip-book": PageFlipBook,

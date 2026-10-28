@@ -6080,6 +6080,12 @@
         "default": true
       },
       {
+        "key": "arrows",
+        "label": "Arrows",
+        "type": "boolean",
+        "default": false
+      },
+      {
         "key": "hover",
         "label": "Hover",
         "type": "number",
@@ -6828,6 +6834,153 @@
         "min": 0,
         "max": 100,
         "step": 1
+      }
+    ]
+  },
+  {
+    "name": "range-switch-stat-card",
+    "displayName": "Range Switch Stat Card",
+    "description": "A stat card with a 7d / 12d / 30d range switch: the thumb glides, the line chart morphs left to right, and the numbers count to their new values. Hover the chart for a day tooltip and a gentle tilt.",
+    "usage": "import RangeSwitchStatCard from \"./range-switch-stat-card\"\n\n<RangeSwitchStatCard />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#5CD6A0"
+      },
+      {
+        "key": "cardColor",
+        "label": "Card",
+        "type": "color",
+        "default": "#F7F7F7"
+      },
+      {
+        "key": "inkColor",
+        "label": "Ink",
+        "type": "color",
+        "default": "#2A2A2A"
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Users"
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 100,
+        "min": 30,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "autoCycle",
+        "label": "Auto Cycle",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "licorice-glide",
+    "displayName": "Licorice Glide",
+    "description": "A liquorice-black toolbar of line icons with one tooltip that glides between them: the tag's width eases to each label while the words scroll through it, then fades out where it stopped.",
+    "usage": "import LicoriceGlide from \"./licorice-glide\"\n\n<LicoriceGlide />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "textColor",
+        "label": "Text",
+        "type": "color",
+        "default": "#0A0A0A"
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 180,
+        "min": 25,
+        "max": 200,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "periwinkle-fanfare",
+    "displayName": "Periwinkle Fanfare",
+    "description": "A dark Submit pill that turns to loading dots, then springs back with a burst of tumbling paper confetti and a drawn-in Success check. Tap to run it.",
+    "usage": "import PeriwinkleFanfare from \"./periwinkle-fanfare\"\n\n<PeriwinkleFanfare />",
+    "tweakSchema": [
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Submit"
+      },
+      {
+        "key": "successLabel",
+        "label": "Success",
+        "type": "string",
+        "default": "Success"
+      },
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "textColor",
+        "label": "Text",
+        "type": "color",
+        "default": "#FFFFFF"
       }
     ]
   }
