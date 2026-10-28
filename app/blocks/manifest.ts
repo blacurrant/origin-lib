@@ -49,16 +49,6 @@ export const BLOCKS: Block[] = [
     props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 300 } },
   },
   {
-    slug: "flip-invite-ticket",
-    title: "Flip invite ticket",
-    interaction: "Press",
-    size: "m",
-    keywords: "invite code copy ticket pill flip hinge button reveal",
-    hint: "Click the pill to flip it between the invite and its code.",
-    // It scales its capsule and the label above it to the frame, so 480 × 300 keeps both inside the preview.
-    props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 300 } },
-  },
-  {
     slug: "button-morph-card",
     title: "Button morph card",
     interaction: "Press",
@@ -172,6 +162,16 @@ export const BLOCKS: Block[] = [
     hint: "Move the pointer near the hands and the needle; press to brighten the liquid.",
     // The clock is drawn at its own pixel size (670 by default), so size it to fit the 480px preview.
     props: { background: "transparent", size: 440, style: { minWidth: 0, minHeight: 0, width: 480, height: 480 } },
+  },
+  {
+    slug: "flip-invite-ticket",
+    title: "Flip invite ticket",
+    interaction: "Press",
+    size: "m",
+    keywords: "invite code copy ticket pill flip hinge button reveal",
+    hint: "Click the pill to flip it between the invite and its code.",
+    // It scales its capsule and the label above it to the frame, so 480 × 300 keeps both inside the preview.
+    props: { background: "transparent", style: { minWidth: 0, minHeight: 0, width: 480, height: 300 } },
   },
   {
     slug: "stretch-pill-toggle",
