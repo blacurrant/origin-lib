@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ComponentType } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { components } from "@/lib/originkit-library";
+import { useComponent } from "@/lib/originkit-library/lazy";
 import registryJson from "@/lib/originkit-library/registry.json";
 import { PropsPanel, defaultOf, readControls, type Values } from "./controls";
 import { Integrate, aiPrompts, changedProps, framerCode, isMethod, useSource, type Method } from "./Integrate";
@@ -59,6 +59,7 @@ type Prefs = {
 /* -------------------------------------------------------------------------- */
 
 function Body({
+  Comp,
   block,
   siblings,
   accent,
@@ -72,6 +73,7 @@ function Body({
   sound,
   prefs,
 }: {
+  Comp: ComponentType<any>;
   sound: boolean;
   saved: boolean;
   onToggleSaved: (slug: string) => void;
@@ -86,7 +88,6 @@ function Body({
   prefs: Prefs;
 }) {
   const uid = useId();
-  const Comp = components[block.slug];
   const controls = useMemo(() => readControls(Comp), [Comp]);
   const entry = REGISTRY.get(block.slug);
   const importName = /^import\s+(\w+)\s+from/m.exec(entry?.usage ?? "")?.[1] ?? "Component";
@@ -390,6 +391,13 @@ function Body({
 
 /* -------------------------------------------------------------------------- */
 
+/** Waits for the block's chunk: the controls come from the component itself, so Body needs it loaded. */
+function BodyLoader(props: Omit<Parameters<typeof Body>[0], "Comp">) {
+  const Comp = useComponent(props.block.slug);
+  if (!Comp) return <div className="grid min-h-0 flex-1 place-items-center text-[13px] text-[#84848a]">Loading…</div>;
+  return <Body {...props} Comp={Comp} />;
+}
+
 export function Inspector({
   block,
   siblings,
@@ -506,7 +514,7 @@ export function Inspector({
             transition={{ type: "spring", stiffness: 420, damping: 36 }}
             className="relative flex h-full w-full flex-col overflow-hidden bg-[#0e0e10] shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] outline-none lg:h-[min(860px,100%)] lg:max-w-[1380px] lg:rounded-[20px] lg:border lg:border-[#232326]"
           >
-            <Body
+            <BodyLoader
               key={block.slug}
               block={block}
               siblings={siblings}

@@ -283,6 +283,82 @@ export function useNear<T extends HTMLElement>(margin = 500, release = 1800) {
   return { ref, near };
 }
 
+/** Most demos a touch device runs at once. Each can own a WebGL context, a canvas and timers. */
+export const TOUCH_LIVE_CAP = 4;
+
+const liveHolders = new Map<HTMLElement, () => void>();
+const liveWaiting = new Set<() => void>();
+
+/** How far an element's centre is from the middle of the viewport. */
+function centreGap(el: HTMLElement) {
+  const r = el.getBoundingClientRect();
+  return Math.abs(r.top + r.height / 2 - window.innerHeight / 2);
+}
+
+function claimLive(el: HTMLElement, onLose: () => void) {
+  if (liveHolders.has(el)) return true;
+  if (liveHolders.size >= TOUCH_LIVE_CAP) {
+    // Full: take the slot of whichever holder is furthest from the middle, if it is further than us.
+    let worst: HTMLElement | undefined;
+    let worstGap = centreGap(el);
+    for (const h of Array.from(liveHolders.keys())) {
+      const g = centreGap(h);
+      if (g > worstGap) {
+        worst = h;
+        worstGap = g;
+      }
+    }
+    if (!worst) return false;
+    const lose = liveHolders.get(worst);
+    liveHolders.delete(worst);
+    lose?.();
+  }
+  liveHolders.set(el, onLose);
+  return true;
+}
+
+/**
+ * Lets only the `TOUCH_LIVE_CAP` nearest wanting elements run at once. An element that wants
+ * a slot and is full waits, and is retried when a slot frees or the page scrolls.
+ */
+export function useLiveSlot(ref: { current: HTMLElement | null }, want: boolean) {
+  const [live, setLive] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !want) return;
+    let timer: number | undefined;
+    const retry = () => {
+      if (claimLive(el, lose)) {
+        liveWaiting.delete(retry);
+        setLive(true);
+      }
+    };
+    const lose = () => {
+      setLive(false);
+      liveWaiting.add(retry);
+    };
+    const onScroll = () => {
+      if (timer !== undefined) return;
+      timer = window.setTimeout(() => {
+        timer = undefined;
+        if (!liveHolders.has(el)) retry();
+      }, 120);
+    };
+    if (!claimLive(el, lose)) liveWaiting.add(retry);
+    else setLive(true);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(timer);
+      liveWaiting.delete(retry);
+      const had = liveHolders.delete(el);
+      setLive(false);
+      if (had) [...liveWaiting].forEach((f) => f());
+    };
+  }, [ref, want]);
+  return want && live;
+}
+
 /**
  * Lay a demo out at a fixed design width and scale it down (never up) to fit its box.
  * Fluid components (width: 100%) need a width to fill, which is what `designWidth` gives them.

@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { components } from "@/lib/originkit-library";
+import { useComponent } from "@/lib/originkit-library/lazy";
 import { ACCENTS, DEFAULT_ACCENT } from "@/app/core/types";
 import { Inspector, decodeProps } from "./Inspector";
-import { DemoBoundary, FOCUS, Fit, Icon, SITE, Toast, useCoarsePointer, useCopy, useDismiss, useNear, usePersisted, useSaved, useScrolled, useSoundPref, useViewportWidth } from "./kit";
+import { DemoBoundary, FOCUS, Fit, Icon, SITE, Toast, useCoarsePointer, useCopy, useDismiss, useLiveSlot, useNear, usePersisted, useSaved, useScrolled, useSoundPref, useViewportWidth } from "./kit";
 import { BLOCKS, INTERACTIONS, NEW_SLUGS, tileAspect, type Block, type Interaction } from "./manifest";
 import type { Values } from "./controls";
 
@@ -95,14 +95,17 @@ function Tile({
   onOpen: (slug: string, el: HTMLElement) => void;
   onToggleSaved: (slug: string) => void;
 }) {
-  const Comp = components[block.slug];
-  const { ref, near } = useNear<HTMLDivElement>();
+  // Touch devices keep fewer demos alive: they mount closer to the screen, and only the nearest few at a time.
+  const { ref, near } = useNear<HTMLDivElement>(coarse ? 100 : 500, coarse ? 600 : 1800);
+  const slot = useLiveSlot(ref, coarse && near);
   const preview = useRef<HTMLDivElement | null>(null);
   const [armed, setArmed] = useState(false);
   const compact = cols >= 4;
   const aspect = layout === "even" ? 1.25 : tileAspect(block);
   const gated = hoverOnly && !coarse;
-  const mounted = !!Comp && near && (!gated || armed);
+  const wanted = near && (!coarse || slot) && (!gated || armed);
+  const Comp = useComponent(wanted ? block.slug : undefined);
+  const mounted = !!Comp && wanted;
   const isNew = NEW_SLUGS.has(block.slug);
   const hint = `Try it: ${block.hint.charAt(0).toLowerCase() + block.hint.slice(1)}`;
 
