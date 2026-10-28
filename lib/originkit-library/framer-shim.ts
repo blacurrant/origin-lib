@@ -53,7 +53,7 @@ export function addPropertyControls(
 }
 
 export const RenderTarget = {
-  current: () => "preview" as const,
+  current: (): "canvas" | "export" | "preview" | "thumbnail" => "preview",
   canvas: "canvas" as const,
   export: "export" as const,
   preview: "preview" as const,

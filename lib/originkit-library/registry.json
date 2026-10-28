@@ -1,5 +1,781 @@
 [
   {
+    "name": "qr-code-assemble",
+    "displayName": "QR Code Assemble",
+    "description": "Every module of a QR code flies out of a button on its own curved path and settles into its cell, as thin bars (Fan) or fine dust (Dust). Click to rebuild.",
+    "usage": "import QrCodeAssemble from \"./qr-code-assemble\"\n\n<QrCodeAssemble />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "color",
+        "label": "Code",
+        "type": "color",
+        "default": "#F2F2F2"
+      },
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "https://originkit.dev"
+      },
+      {
+        "key": "variant",
+        "label": "Variant",
+        "type": "enum",
+        "default": "fan",
+        "options": [
+          "fan",
+          "dust"
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 380,
+        "min": 160,
+        "max": 760,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "spread",
+        "label": "Spread",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "showButton",
+        "label": "Button",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "loop",
+        "label": "Replay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "tint",
+        "label": "Tint",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "play",
+        "label": "Play",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "photo-stack-lightbox",
+    "displayName": "Photo Stack Lightbox",
+    "description": "A stack of photo cards spreads into a scattered, tilted gallery; a card flies to a centred lightbox with its caption while the rest blur and fade.",
+    "usage": "import PhotoStackLightbox from \"./photo-stack-lightbox\"\n\n<PhotoStackLightbox />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "images",
+        "label": "Images",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "autoPlay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 100,
+        "min": 30,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "tilt",
+        "label": "Tilt",
+        "type": "number",
+        "default": 4,
+        "min": 0,
+        "max": 10,
+        "step": 1
+      },
+      {
+        "key": "blur",
+        "label": "Blur",
+        "type": "number",
+        "default": 14,
+        "min": 0,
+        "max": 30,
+        "step": 1
+      },
+      {
+        "key": "rounded",
+        "label": "Rounded",
+        "type": "number",
+        "default": 20,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "garden-progress-slider",
+    "displayName": "Garden Progress Slider",
+    "description": "Progress slider where a garden grows along the track: flowers sprout and bloom as the value rises, drop their petals as it falls, and a bee follows the head.",
+    "usage": "import GardenProgressSlider from \"./garden-progress-slider\"\n\n<GardenProgressSlider />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "color",
+        "label": "Color",
+        "type": "color",
+        "default": "#C2B8B8"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#6C8462"
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Garden"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 800,
+        "min": 20,
+        "max": 800,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "value",
+        "label": "Value",
+        "type": "number",
+        "default": 30,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "demo",
+        "label": "Demo",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "holo-flip-badge",
+    "displayName": "Holo Flip Badge",
+    "description": "Lanyard ID badge that hangs from a cord, sways, tilts toward the pointer and flips on click to a holographic profile on the back.",
+    "usage": "import HoloFlipBadge from \"./holo-flip-badge\"\n\n<HoloFlipBadge />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "cardColor",
+        "label": "Card",
+        "type": "color",
+        "default": "#F2F2F3"
+      },
+      {
+        "key": "holoTint",
+        "label": "Holo Tint",
+        "type": "color",
+        "default": "#D8CBF3"
+      },
+      {
+        "key": "personName",
+        "label": "Name",
+        "type": "string",
+        "default": "Leo Carter"
+      },
+      {
+        "key": "personRole",
+        "label": "Role",
+        "type": "string",
+        "default": "Motion Designer"
+      },
+      {
+        "key": "imageFit",
+        "label": "Fit",
+        "type": "enum",
+        "default": "cover",
+        "options": [
+          "contain",
+          "cover"
+        ]
+      },
+      {
+        "key": "offsetX",
+        "label": "Offset X",
+        "type": "number",
+        "default": 0,
+        "min": -50,
+        "max": 50,
+        "step": 1
+      },
+      {
+        "key": "offsetY",
+        "label": "Offset Y",
+        "type": "number",
+        "default": -31,
+        "min": -50,
+        "max": 50,
+        "step": 1
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 220,
+        "min": 120,
+        "max": 480,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "swing",
+        "label": "Swing",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "bookshelf-cover-flip",
+    "displayName": "Bookshelf Cover Flip",
+    "description": "A row of book spines on a shelf; the hovered book turns out to show its cover, and the shelf cycles through them when left alone.",
+    "usage": "import BookshelfCoverFlip from \"./bookshelf-cover-flip\"\n\n<BookshelfCoverFlip />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Grokipedia"
+      },
+      {
+        "key": "monogram",
+        "label": "Monogram",
+        "type": "string",
+        "default": "G"
+      },
+      {
+        "key": "books",
+        "label": "Books",
+        "type": "array",
+        "default": [
+          {
+            "title": "United States",
+            "subtitle": "18M reads",
+            "spineColor": "#181924",
+            "textColor": "#FFFFFF",
+            "coverColor": "#1C2538"
+          },
+          {
+            "title": "J. Robert Oppenheimer",
+            "subtitle": "9.4M reads",
+            "spineColor": "#EDE3CF",
+            "textColor": "#2A2A2A",
+            "coverColor": "#E4D9C2"
+          },
+          {
+            "title": "Wikipedia",
+            "subtitle": "12M reads",
+            "spineColor": "#E6DABE",
+            "textColor": "#2A2A2A",
+            "coverColor": "#E9DFC6"
+          },
+          {
+            "title": "Elon Musk",
+            "subtitle": "21M reads",
+            "spineColor": "#A9482A",
+            "textColor": "#FFFFFF",
+            "coverColor": "#A9482A"
+          }
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 440,
+        "min": 200,
+        "max": 800,
+        "step": 1
+      },
+      {
+        "key": "spineWidth",
+        "label": "Spine Width",
+        "type": "number",
+        "default": 14,
+        "min": 6,
+        "max": 24,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "app-icon-paddle-wheel",
+    "displayName": "App Icon Paddle Wheel",
+    "description": "A paddle wheel of thick app-icon tiles turning about a vertical axis; drag to spin it, press to speed it up, and it leans toward the pointer.",
+    "usage": "import AppIconPaddleWheel from \"./app-icon-paddle-wheel\"\n\n<AppIconPaddleWheel />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 29,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "direction",
+        "label": "Direction",
+        "type": "enum",
+        "default": "left",
+        "options": [
+          "left",
+          "right"
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 186,
+        "min": 60,
+        "max": 400,
+        "step": 1
+      },
+      {
+        "key": "ringRadius",
+        "label": "Radius",
+        "type": "number",
+        "default": 240,
+        "min": 100,
+        "max": 480,
+        "step": 1
+      },
+      {
+        "key": "count",
+        "label": "Tiles",
+        "type": "number",
+        "default": 24,
+        "min": 8,
+        "max": 36,
+        "step": 1
+      },
+      {
+        "key": "thickness",
+        "label": "Thickness",
+        "type": "number",
+        "default": 7,
+        "min": 0,
+        "max": 20,
+        "step": 1
+      },
+      {
+        "key": "images",
+        "label": "Images",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "dragSensitivity",
+        "label": "Drag",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "bloom-wave-text",
+    "displayName": "Bloom Wave Text",
+    "description": "A word that a wave of tiny flowers sweeps across, left to right: the ink gives way to blooms and comes back behind them. Hover blooms the flowers near the pointer; click replays the sweep.",
+    "usage": "import BloomWaveText from \"./bloom-wave-text\"\n\n<BloomWaveText />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "ink",
+        "label": "Text Color",
+        "type": "color",
+        "default": "#FFFFFF"
+      },
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "Thinking..."
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 19,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hold",
+        "label": "Hold",
+        "type": "number",
+        "default": 0,
+        "min": 0,
+        "max": 10,
+        "step": 1
+      },
+      {
+        "key": "autoPlay",
+        "label": "Auto Play",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "density",
+        "label": "Density",
+        "type": "number",
+        "default": 80,
+        "min": 10,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "flowerSize",
+        "label": "Flower Size",
+        "type": "number",
+        "default": 71,
+        "min": 40,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "swinging-lanyard-badge",
+    "displayName": "Swinging Lanyard Badge",
+    "description": "An ID badge on a lanyard: elastic straps meet in a sewn end, and a split ring hooks through the sleeve's slot. Grab the card to swing, pull or throw it; it leans toward the pointer and stays still until touched.",
+    "usage": "import SwingingLanyardBadge from \"./swinging-lanyard-badge\"\n\n<SwingingLanyardBadge />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "strapColor",
+        "label": "Strap",
+        "type": "color",
+        "default": "#5A5D63"
+      },
+      {
+        "key": "cardColor",
+        "label": "Card",
+        "type": "color",
+        "default": "#F2F2F2"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 400,
+        "min": 200,
+        "max": 600,
+        "step": 1
+      },
+      {
+        "key": "ropeLength",
+        "label": "Strap Length",
+        "type": "number",
+        "default": 24,
+        "min": 10,
+        "max": 60,
+        "step": 1
+      },
+      {
+        "key": "gravity",
+        "label": "Gravity",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "damping",
+        "label": "Damping",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "draggable-cloth-print",
+    "displayName": "Draggable Cloth Print",
+    "description": "A paper print simulated as Verlet cloth: a ghost hand picks it up, folds, carries, twists and drops it, and you can grab it yourself.",
+    "usage": "import DraggableClothPrint from \"./draggable-cloth-print\"\n\n<DraggableClothPrint />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "paperColor",
+        "label": "Paper",
+        "type": "color",
+        "default": "#F4F2EE"
+      },
+      {
+        "key": "inkColor",
+        "label": "Ink",
+        "type": "color",
+        "default": "#0F0E0C"
+      },
+      {
+        "key": "caption",
+        "label": "Caption",
+        "type": "string",
+        "default": "Turn"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 600,
+        "min": 300,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 23,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "stiffness",
+        "label": "Stiffness",
+        "type": "number",
+        "default": 40,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "weight",
+        "label": "Weight",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
     "name": "agent-status",
     "displayName": "Agent Status",
     "description": "What an agent is doing now: idle, working, needs input, or failed. Active states pulse.",
@@ -210,6 +986,92 @@
         "default": 5,
         "min": 0,
         "max": 12
+      }
+    ]
+  },
+  {
+    "name": "bouncing-dot-tabs",
+    "displayName": "Bouncing Dot Tabs",
+    "description": "A row of filter tabs where a dot is thrown in an arc to the tab you pick, stretching in the air and squashing on landing while the gap it sits in moves with it. A demo pointer clicks the tabs until you take over.",
+    "usage": "import BouncingDotTabs from \"./bouncing-dot-tabs\"\n\n<BouncingDotTabs />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "activeColor",
+        "label": "Active",
+        "type": "color",
+        "default": "#FFFFFF"
+      },
+      {
+        "key": "inactiveColor",
+        "label": "Inactive",
+        "type": "color",
+        "default": "#767676"
+      },
+      {
+        "key": "dotColor",
+        "label": "Dot",
+        "type": "color",
+        "default": "#FFFFFF"
+      },
+      {
+        "key": "labels",
+        "label": "Tabs",
+        "type": "array",
+        "default": [
+          "All",
+          "Design",
+          "Engineering",
+          "Product",
+          "Research"
+        ]
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 19,
+        "min": 4,
+        "max": 80,
+        "step": 1
+      },
+      {
+        "key": "arc",
+        "label": "Arc",
+        "type": "number",
+        "default": 42,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 83,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "demo",
+        "label": "Demo",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
       }
     ]
   },
@@ -904,6 +1766,106 @@
     ]
   },
   {
+    "name": "liquid-glass-clock",
+    "displayName": "Liquid Glass Clock",
+    "description": "A clock built from glass tubes: glowing liquid runs along the hands and markers while a needle sweeps. Runs as a loader, the device time, or a set time; the liquid leans toward the pointer.",
+    "usage": "import LiquidGlassClock from \"./liquid-glass-clock\"\n\n<LiquidGlassClock />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "color",
+        "label": "Color",
+        "type": "color",
+        "default": "#1C2B36"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#46C8FF"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 670,
+        "min": 20,
+        "max": 800,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "timeMode",
+        "label": "Time",
+        "type": "enum",
+        "default": "loader",
+        "options": [
+          "loader",
+          "current",
+          "set"
+        ]
+      },
+      {
+        "key": "hour",
+        "label": "Hour",
+        "type": "number",
+        "default": 10,
+        "min": 0,
+        "max": 23,
+        "step": 1
+      },
+      {
+        "key": "minute",
+        "label": "Minute",
+        "type": "number",
+        "default": 10,
+        "min": 0,
+        "max": 59,
+        "step": 1
+      },
+      {
+        "key": "liquid",
+        "label": "Liquid",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "markers",
+        "label": "Markers",
+        "type": "number",
+        "default": 12,
+        "min": 4,
+        "max": 24,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
     "name": "message-bubble",
     "displayName": "Message Bubble",
     "description": "One chat message. The user's sits in a raised bubble, the assistant's reads as plain text. Copy confirms in place.",
@@ -958,6 +1920,307 @@
           "dark",
           "light"
         ]
+      }
+    ]
+  },
+  {
+    "name": "photo-card-globe",
+    "displayName": "Photo Card Globe",
+    "description": "A sphere of product photo cards turns around a fixed 3D word, with cards passing in front of it. Drag to spin it, hover to lean it toward the pointer.",
+    "usage": "import PhotoCardGlobe from \"./photo-card-globe\"\n\n<PhotoCardGlobe />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "textColor",
+        "label": "Text Color",
+        "type": "color",
+        "default": "#A8A8A9"
+      },
+      {
+        "key": "text",
+        "label": "Text",
+        "type": "string",
+        "default": "OBJECTS®"
+      },
+      {
+        "key": "images",
+        "label": "Images",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 100,
+        "min": 40,
+        "max": 160,
+        "step": 1
+      },
+      {
+        "key": "count",
+        "label": "Cards",
+        "type": "number",
+        "default": 72,
+        "min": 20,
+        "max": 120,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "status-dot-picker",
+    "displayName": "Status Dot Picker",
+    "description": "An avatar's status dot grows into a three-button pill on hover, a tooltip names the hovered status, and a pick squeezes the pill back into a dot of that colour.",
+    "usage": "import StatusDotPicker from \"./status-dot-picker\"\n\n<StatusDotPicker />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "onlineColor",
+        "label": "Online",
+        "type": "color",
+        "default": "#28C840"
+      },
+      {
+        "key": "focusColor",
+        "label": "Focus",
+        "type": "color",
+        "default": "#FFC300"
+      },
+      {
+        "key": "dndColor",
+        "label": "Do Not Disturb",
+        "type": "color",
+        "default": "#FF7A1A"
+      },
+      {
+        "key": "onlineLabel",
+        "label": "Online Label",
+        "type": "string",
+        "default": "Online"
+      },
+      {
+        "key": "focusLabel",
+        "label": "Focus Label",
+        "type": "string",
+        "default": "Focus"
+      },
+      {
+        "key": "dndLabel",
+        "label": "Busy Label",
+        "type": "string",
+        "default": "Do Not Disturb"
+      },
+      {
+        "key": "images",
+        "label": "Icons",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 320,
+        "min": 160,
+        "max": 600,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "type": "enum",
+        "default": "dnd",
+        "options": [
+          "online",
+          "focus",
+          "dnd"
+        ]
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "water-ripple-refraction",
+    "displayName": "Water Ripple Refraction",
+    "description": "Concentric water rings flow out of the bottom of a painting, bending the picture as they pass, with a soft rim and shade on each swell. Swap in your own image.",
+    "usage": "import WaterRippleRefraction from \"./water-ripple-refraction\"\n\n<WaterRippleRefraction />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "image",
+        "label": "Image",
+        "type": "image",
+        "default": ""
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 35,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 76,
+        "min": 20,
+        "max": 125,
+        "step": 1
+      },
+      {
+        "key": "strength",
+        "label": "Refraction",
+        "type": "number",
+        "default": 5,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "rim",
+        "label": "Rim",
+        "type": "number",
+        "default": 32,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "page-flip-book",
+    "displayName": "Page Flip Book",
+    "description": "A picture book seen face-on: single leaves hinge about the spine in real perspective, each back carrying the next spread, and the book closes onto its centred cover. Click the edges or drag a page to turn it.",
+    "usage": "import PageFlipBook from \"./page-flip-book\"\n\n<PageFlipBook />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "pause",
+        "label": "Pause",
+        "type": "number",
+        "default": 7,
+        "min": 2,
+        "max": 40,
+        "step": 1
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 600,
+        "min": 200,
+        "max": 1200,
+        "step": 1
+      },
+      {
+        "key": "rounded",
+        "label": "Rounded",
+        "type": "number",
+        "default": 15,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "perspective",
+        "label": "Perspective",
+        "type": "number",
+        "default": 500,
+        "min": 100,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "showArrows",
+        "label": "Arrows",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "images",
+        "label": "Spreads",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "image",
+        "label": "Cover",
+        "type": "image",
+        "default": ""
       }
     ]
   },
@@ -1575,6 +2838,93 @@
           "dark",
           "light"
         ]
+      }
+    ]
+  },
+  {
+    "name": "stretch-pill-toggle",
+    "displayName": "Stretch Pill Toggle",
+    "description": "A pill toggle whose knob stretches toward where it is going, with a Plain / Stretch segmented control to compare it against a rigid slide. Click the track to toggle.",
+    "usage": "import StretchPillToggle from \"./stretch-pill-toggle\"\n\n<StretchPillToggle />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "onColor",
+        "label": "On",
+        "type": "color",
+        "default": "#2B76F0"
+      },
+      {
+        "key": "offColor",
+        "label": "Off",
+        "type": "color",
+        "default": "#CFCFCF"
+      },
+      {
+        "key": "knobColor",
+        "label": "Knob",
+        "type": "color",
+        "default": "#FCFCFC"
+      },
+      {
+        "key": "plainLabel",
+        "label": "Plain Label",
+        "type": "string",
+        "default": "Plain"
+      },
+      {
+        "key": "stretchLabel",
+        "label": "Stretch Label",
+        "type": "string",
+        "default": "Stretch"
+      },
+      {
+        "key": "mode",
+        "label": "Mode",
+        "type": "enum",
+        "default": "stretch",
+        "options": [
+          "stretch",
+          "plain"
+        ]
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 34,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "stretch",
+        "label": "Stretch",
+        "type": "number",
+        "default": 25,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 600,
+        "min": 300,
+        "max": 900,
+        "step": 1
       }
     ]
   },
@@ -4444,6 +5794,1040 @@
         "min": 0,
         "max": 1,
         "step": 0.05
+      }
+    ]
+  },
+  {
+    "name": "gooey-delete-confirm",
+    "displayName": "Gooey Delete Confirm",
+    "description": "A round trash button that splits into Confirm and Cancel pills through one smooth, gooey silhouette, and flows back together on Cancel. Click the trash to open it; click Cancel to close it.",
+    "usage": "import GooeyDeleteConfirm from \"./gooey-delete-confirm\"\n\n<GooeyDeleteConfirm />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "accent",
+        "label": "Accent",
+        "type": "color",
+        "default": "#E5142E"
+      },
+      {
+        "key": "confirmText",
+        "label": "Confirm",
+        "type": "string",
+        "default": "Confirm"
+      },
+      {
+        "key": "cancelText",
+        "label": "Cancel",
+        "type": "string",
+        "default": "Cancel"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 196,
+        "min": 40,
+        "max": 400,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "goo",
+        "label": "Goo",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "blur",
+        "label": "Blur",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "scribble-loop-nav",
+    "displayName": "Scribble Loop Nav",
+    "description": "A hand-drawn loop circles the hovered menu item and travels along one continuous stroke, through the labels and into the next loop, when the item changes.",
+    "usage": "import ScribbleLoopNav from \"./scribble-loop-nav\"\n\n<ScribbleLoopNav />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "textColor",
+        "label": "Text",
+        "type": "color",
+        "default": "#F2F2F2"
+      },
+      {
+        "key": "strokeColor",
+        "label": "Stroke",
+        "type": "color",
+        "default": "#EEC12A"
+      },
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": [
+          "Home",
+          "About",
+          "Services",
+          "Portfolio",
+          "Contact"
+        ]
+      },
+      {
+        "key": "active",
+        "label": "Active",
+        "type": "number",
+        "default": 4,
+        "min": 1,
+        "max": 8,
+        "step": 1
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 24,
+        "min": 10,
+        "max": 80,
+        "step": 1
+      },
+      {
+        "key": "gap",
+        "label": "Gap",
+        "type": "number",
+        "default": 72,
+        "min": 0,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "strokeWidth",
+        "label": "Stroke Width",
+        "type": "number",
+        "default": 3,
+        "min": 1,
+        "max": 12,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 32,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "stretch",
+        "label": "Stretch",
+        "type": "number",
+        "default": 35,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "wobble",
+        "label": "Wobble",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "leave",
+        "label": "On Leave",
+        "type": "enum",
+        "default": "hide",
+        "options": [
+          "stay",
+          "return",
+          "hide"
+        ]
+      },
+      {
+        "key": "demo",
+        "label": "Demo",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "crumple-paper-carousel",
+    "displayName": "Crumple Paper Carousel",
+    "description": "Posters lie flat in the centre and crumple into faceted paper balls as they slide away. Scroll, swipe, or let it step on its own.",
+    "usage": "import CrumplePaperCarousel from \"./crumple-paper-carousel\"\n\n<CrumplePaperCarousel />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "images",
+        "label": "Images",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 22,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "crumple",
+        "label": "Crumple",
+        "type": "number",
+        "default": 70,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 100,
+        "min": 30,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "itemWidth",
+        "label": "Width",
+        "type": "number",
+        "default": 294,
+        "min": 160,
+        "max": 900,
+        "step": 1
+      },
+      {
+        "key": "itemHeight",
+        "label": "Height",
+        "type": "number",
+        "default": 344,
+        "min": 200,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "spacing",
+        "label": "Spacing",
+        "type": "number",
+        "default": 30,
+        "min": 10,
+        "max": 60,
+        "step": 1
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "mirror-flip-carousel",
+    "displayName": "Mirror Flip Carousel",
+    "description": "Cards on a track that flip 180° per slot, flaring out to the frame edges in a wide-angle barrel warp with a chromatic fringe. Drag, use the arrows, or let it autoplay.",
+    "usage": "import MirrorFlipCarousel from \"./mirror-flip-carousel\"\n\n<MirrorFlipCarousel />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "images",
+        "label": "Images",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 100,
+        "min": 40,
+        "max": 160,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 19,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "interval",
+        "label": "Interval",
+        "type": "number",
+        "default": 3700,
+        "min": 1000,
+        "max": 10000,
+        "step": 1
+      },
+      {
+        "key": "curve",
+        "label": "Curve",
+        "type": "number",
+        "default": 60,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "rounded",
+        "label": "Rounded",
+        "type": "number",
+        "default": 9,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "arrows",
+        "label": "Arrows",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "button-morph-card",
+    "displayName": "Button Morph Card",
+    "description": "A pill button that grows into a card and shrinks back through one morphing container. The label glides into the card's title slot and the body fades in with a blur. Built-in flight card and confirm dialog.",
+    "usage": "import ButtonMorphCard from \"./button-morph-card\"\n\n<ButtonMorphCard />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Track my flight"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 516,
+        "min": 240,
+        "max": 1000,
+        "step": 1
+      },
+      {
+        "key": "preset",
+        "label": "Built-in",
+        "type": "enum",
+        "default": "flight",
+        "options": [
+          "flight",
+          "confirm"
+        ]
+      },
+      {
+        "key": "labelInCard",
+        "label": "Title in Card",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "duration",
+        "label": "Open",
+        "type": "number",
+        "default": 340,
+        "min": 200,
+        "max": 800,
+        "step": 1
+      },
+      {
+        "key": "rounded",
+        "label": "Rounded",
+        "type": "number",
+        "default": 16,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "flip-invite-ticket",
+    "displayName": "Flip Invite Ticket",
+    "description": "A capsule that tilts and swaps from an invite-ready button to a code with a COPY button, while a header label flips up on its hinge above it.",
+    "usage": "import FlipInviteTicket from \"./flip-invite-ticket\"\n\n<FlipInviteTicket />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "accentColor",
+        "label": "Accent",
+        "type": "color",
+        "default": "#25BF47"
+      },
+      {
+        "key": "pillColor",
+        "label": "Pill",
+        "type": "color",
+        "default": "#FDFDFD"
+      },
+      {
+        "key": "textColor",
+        "label": "Text",
+        "type": "color",
+        "default": "#2B2B2B"
+      },
+      {
+        "key": "readyText",
+        "label": "Ready Text",
+        "type": "string",
+        "default": "Your Invite Is Ready"
+      },
+      {
+        "key": "codeLabel",
+        "label": "Label",
+        "type": "string",
+        "default": "Your Invite Code"
+      },
+      {
+        "key": "codeText",
+        "label": "Code",
+        "type": "string",
+        "default": "LoveSwiftUI"
+      },
+      {
+        "key": "copyText",
+        "label": "Copy Text",
+        "type": "string",
+        "default": "COPY"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 912,
+        "min": 200,
+        "max": 1600,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 36,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "tilt",
+        "label": "Tilt",
+        "type": "number",
+        "default": 30,
+        "min": 0,
+        "max": 60,
+        "step": 1
+      },
+      {
+        "key": "bounce",
+        "label": "Bounce",
+        "type": "number",
+        "default": 78,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "autoPlay",
+        "label": "Auto Play",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "interval",
+        "label": "Interval",
+        "type": "number",
+        "default": 1150,
+        "min": 100,
+        "max": 5000,
+        "step": 1
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "pixel-swarm-dropdown",
+    "displayName": "Pixel Swarm Dropdown",
+    "description": "A select whose menu assembles out of a swarm of square pixel cells in the chosen option's colour, then bursts back into the pill while the label scrambles into the new name.",
+    "usage": "import PixelSwarmDropdown from \"./pixel-swarm-dropdown\"\n\n<PixelSwarmDropdown />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "label",
+        "label": "Label",
+        "type": "string",
+        "default": "Vibe"
+      },
+      {
+        "key": "options",
+        "label": "Options",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 421,
+        "min": 240,
+        "max": 900,
+        "step": 1
+      },
+      {
+        "key": "cellSize",
+        "label": "Pixel Size",
+        "type": "number",
+        "default": 3,
+        "min": 3,
+        "max": 24,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 20,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "holo-card-dispenser",
+    "displayName": "Holo Card Dispenser",
+    "description": "A holographic membership card is issued out of a card reader's slot, its foil sheen follows the pointer, and pressing the button retracts it and issues it again.",
+    "usage": "import HoloCardDispenser from \"./holo-card-dispenser\"\n\n<HoloCardDispenser />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "Welcome to Pro, Nishant"
+      },
+      {
+        "key": "body",
+        "label": "Body",
+        "type": "string",
+        "default": "Download packs and assets, insert them in Figma with the plugin, or let your AI agent fetch them over MCP."
+      },
+      {
+        "key": "buttonLabel",
+        "label": "Button",
+        "type": "string",
+        "default": "Start exploring"
+      },
+      {
+        "key": "linkLabel",
+        "label": "Link",
+        "type": "string",
+        "default": "Connect your AI agent"
+      },
+      {
+        "key": "cardName",
+        "label": "Card Name",
+        "type": "string",
+        "default": "NISHANT"
+      },
+      {
+        "key": "memberLine",
+        "label": "Member Line",
+        "type": "string",
+        "default": "Member since Oct 2026"
+      },
+      {
+        "key": "plan",
+        "label": "Plan",
+        "type": "string",
+        "default": "Quarterly"
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 36,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "scale",
+        "label": "Scale",
+        "type": "number",
+        "default": 100,
+        "min": 50,
+        "max": 150,
+        "step": 1
+      },
+      {
+        "key": "foilStrength",
+        "label": "Foil",
+        "type": "number",
+        "default": 70,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound Volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "scroll-progress-outline",
+    "displayName": "Scroll Progress Outline",
+    "description": "An 'On this page' outline whose arrow rides the connecting path as the page scrolls, and walks itself down the outline on a loop when autoplay is on.",
+    "usage": "import ScrollProgressOutline from \"./scroll-progress-outline\"\n\n<ScrollProgressOutline />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "activeColor",
+        "label": "Active",
+        "type": "color",
+        "default": "#E6E6E6"
+      },
+      {
+        "key": "textColor",
+        "label": "Text",
+        "type": "color",
+        "default": "#767676"
+      },
+      {
+        "key": "lineColor",
+        "label": "Line",
+        "type": "color",
+        "default": "#4D4D4D"
+      },
+      {
+        "key": "title",
+        "label": "Title",
+        "type": "string",
+        "default": "On this page"
+      },
+      {
+        "key": "items",
+        "label": "Items",
+        "type": "array",
+        "default": []
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 24,
+        "min": 8,
+        "max": 64,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 11,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "trigger",
+        "label": "Trigger",
+        "type": "enum",
+        "default": "scroll",
+        "options": [
+          "scroll",
+          "auto"
+        ]
+      },
+      {
+        "key": "autoplay",
+        "label": "Autoplay",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "peel-sticker",
+    "displayName": "Peel Sticker",
+    "description": "Any PNG or SVG as a die-cut vinyl sticker: drag an edge to peel it back over a rolled crease that shows the printed liner, let go and it springs flat. The pointer sweeps a holographic fringe along the border.",
+    "usage": "import PeelSticker from \"./peel-sticker\"\n\n<PeelSticker />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "backText",
+        "label": "Back Text",
+        "type": "string",
+        "default": "blocks"
+      },
+      {
+        "key": "caption",
+        "label": "Caption",
+        "type": "string",
+        "default": "Drag an edge to peel · move over it for the shine"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 560,
+        "min": 120,
+        "max": 1200,
+        "step": 1
+      },
+      {
+        "key": "border",
+        "label": "Border",
+        "type": "number",
+        "default": 24,
+        "min": 0,
+        "max": 60,
+        "step": 1
+      },
+      {
+        "key": "shine",
+        "label": "Shine",
+        "type": "number",
+        "default": 60,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 67,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "damping",
+        "label": "Damping",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "autoPeel",
+        "label": "Auto Peel",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound Volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    ]
+  },
+  {
+    "name": "radial-action-menu",
+    "displayName": "Radial Action Menu",
+    "description": "A round + button that sends six icon buttons flying in along radial spokes, blurred and fading in clockwise from the top, and flings them back out on ×. Buttons swell toward the pointer like drops of liquid.",
+    "usage": "import RadialActionMenu from \"./radial-action-menu\"\n\n<RadialActionMenu />",
+    "tweakSchema": [
+      {
+        "key": "background",
+        "label": "Background",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "buttonColor",
+        "label": "Buttons",
+        "type": "color",
+        "default": "#F5F5F5"
+      },
+      {
+        "key": "iconColor",
+        "label": "Icons",
+        "type": "color",
+        "default": "#000000"
+      },
+      {
+        "key": "size",
+        "label": "Size",
+        "type": "number",
+        "default": 186,
+        "min": 60,
+        "max": 400,
+        "step": 1
+      },
+      {
+        "key": "spread",
+        "label": "Spread",
+        "type": "number",
+        "default": 114,
+        "min": 60,
+        "max": 220,
+        "step": 1
+      },
+      {
+        "key": "speed",
+        "label": "Speed",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
+      },
+      {
+        "key": "stagger",
+        "label": "Stagger",
+        "type": "number",
+        "default": 40,
+        "min": 0,
+        "max": 200,
+        "step": 1
+      },
+      {
+        "key": "autoPlay",
+        "label": "Auto Play",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "tint",
+        "label": "Tint",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "key": "sound",
+        "label": "Sound",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "key": "soundVolume",
+        "label": "Sound Volume",
+        "type": "number",
+        "default": 0.5,
+        "min": 0,
+        "max": 1,
+        "step": 0.05
+      },
+      {
+        "key": "hover",
+        "label": "Hover",
+        "type": "number",
+        "default": 50,
+        "min": 0,
+        "max": 100,
+        "step": 1
       }
     ]
   }

@@ -225,8 +225,9 @@ function Chevron({ dir }: { dir: "left" | "right" }) {
     )
 }
 
-function poseFor(pos: number, count: number, leaving: boolean) {
-    if (leaving) return { x: -62, y: 46, z: 40, rotate: -5, scale: 1, opacity: 1 }
+function poseFor(pos: number, count: number, leaving: boolean, side = 1, drag = 0) {
+    if (leaving) return { x: side * 70, y: 46, z: 40, rotate: side * 5, scale: 1, opacity: 1 }
+    if (pos === 0 && drag !== 0) return { x: drag, y: 0, z: 0, rotate: drag * 0.06, scale: 1, opacity: 1 }
     const shown = pos < Math.min(count, DEPTH)
     return {
         x: pos * DX,
@@ -258,7 +259,8 @@ export default function CardSwap({
     const count = list.length
 
     const [order, setOrder] = React.useState<number[]>(() => list.map((_, i) => i))
-    const [leaving, setLeaving] = React.useState<{ id: number; dir: "next" | "prev" } | null>(null)
+    const [leaving, setLeaving] = React.useState<{ id: number; dir: "next" | "prev"; side: 1 | -1 } | null>(null)
+    const [drag, setDrag] = React.useState(0)
     const [playing, setPlaying] = React.useState(autoplay)
     const [mounted, setMounted] = React.useState(false)
     const [inside, setInside] = React.useState(false)
@@ -267,7 +269,7 @@ export default function CardSwap({
 
     const busy = React.useRef(false)
     const timer = React.useRef<number | null>(null)
-    const swipe = React.useRef<{ x: number; moved: boolean } | null>(null)
+    const swipe = React.useRef<{ x: number; moved: boolean; id: number } | null>(null)
 
     React.useEffect(() => {
         setOrder(list.map((_, i) => i))
@@ -289,12 +291,13 @@ export default function CardSwap({
     }, [])
 
     const go = React.useCallback(
-        (dir: "next" | "prev", user = true) => {
+        (dir: "next" | "prev", user = true, side: 1 | -1 = dir === "next" ? 1 : -1) => {
             if (busy.current || count < 2) return
             busy.current = true
             if (user) cue("whoosh", 200)
             const id = dir === "next" ? order[0] : order[order.length - 1]
-            setLeaving({ id, dir })
+            setDrag(0)
+            setLeaving({ id, dir, side })
             timer.current = window.setTimeout(() => {
                 setOrder((o) => (dir === "next" ? [...o.slice(1), o[0]] : [o[o.length - 1], ...o.slice(0, -1)]))
                 setLeaving(null)
@@ -319,10 +322,10 @@ export default function CardSwap({
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "ArrowRight" || e.key === "Enter" || e.key === " ") {
             e.preventDefault()
-            go("next")
+            go("next", true, 1)
         } else if (e.key === "ArrowLeft") {
             e.preventDefault()
-            go("prev")
+            go("prev", true, -1)
         }
     }
 
@@ -387,22 +390,35 @@ export default function CardSwap({
                     onPointerEnter={() => setInside(true)}
                     onPointerLeave={() => setInside(false)}
                     onPointerDown={(e) => {
-                        swipe.current = { x: e.clientX, moved: false }
+                        if (busy.current) return
+                        swipe.current = { x: e.clientX, moved: false, id: e.pointerId }
+                        try {
+                            e.currentTarget.setPointerCapture(e.pointerId)
+                        } catch {}
                     }}
                     onPointerMove={(e) => {
                         const s = swipe.current
-                        if (s && Math.abs(e.clientX - s.x) > 8) s.moved = true
+                        if (!s || s.id !== e.pointerId) return
+                        const dx = e.clientX - s.x
+                        if (Math.abs(dx) > 8) s.moved = true
+                        // the front card follows the pointer, on a rubber band
+                        if (s.moved) setDrag(110 * Math.tanh(dx / 110))
                     }}
                     onPointerUp={(e) => {
                         const s = swipe.current
                         swipe.current = null
-                        if (!s) return
+                        if (!s || s.id !== e.pointerId) return
                         const dx = e.clientX - s.x
-                        if (Math.abs(dx) > 36) go(dx < 0 ? "next" : "prev")
-                        else if (!s.moved) go("next")
+                        if (Math.abs(dx) > 36) go("next", true, dx < 0 ? -1 : 1)
+                        else if (!s.moved) {
+                            // a click sends the card off the side that was pressed
+                            const r = e.currentTarget.getBoundingClientRect()
+                            go("next", true, e.clientX < r.left + r.width / 2 ? -1 : 1)
+                        } else setDrag(0)
                     }}
                     onPointerCancel={() => {
                         swipe.current = null
+                        setDrag(0)
                     }}
                     style={{
                         position: "relative",
@@ -433,7 +449,8 @@ export default function CardSwap({
                         {list.map((item, id) => {
                             const pos = order.indexOf(id)
                             const isLeaving = leaving !== null && leaving.id === id
-                            const pose = poseFor(pos, count, isLeaving)
+                            const pose = poseFor(pos, count, isLeaving, leaving?.side ?? 1, drag)
+                            const dragging = pos === 0 && drag !== 0 && !isLeaving
                             const initial = {
                                 ...poseFor(pos, count, false),
                                 opacity: 0,
@@ -448,7 +465,9 @@ export default function CardSwap({
                                     initial={initial}
                                     animate={pose}
                                     transition={
-                                        isLeaving
+                                        dragging
+                                            ? { duration: 0 }
+                                            : isLeaving
                                             ? { type: "spring", stiffness: 300, damping: 26 }
                                             : { type: "spring", stiffness: 150, damping: 19, mass: 0.9, delay: mounted ? 0 : pos * 0.07 }
                                     }

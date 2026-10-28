@@ -4,9 +4,15 @@ import Accordionos from "./accordionos";
 import AgentStatus from "./agent-status";
 import Alert from "./alert";
 import ApprovalCard from "./approval-card";
+import AppIconPaddleWheel from "./app-icon-paddle-wheel";
 import Badge from "./badge";
+import BloomWaveText from "./bloom-wave-text";
+import BookshelfCoverFlip from "./bookshelf-cover-flip";
+import BouncingDotTabs from "./bouncing-dot-tabs";
 import Button from "./button";
+import ButtonMorphCard from "./button-morph-card";
 import Card from "./card";
+import CrumplePaperCarousel from "./crumple-paper-carousel";
 import CardSwap from "./card-swap";
 import Carousel from "./carousel";
 import ChatThread from "./chat-thread";
@@ -17,10 +23,18 @@ import DataTable from "./data-table";
 import Dialog from "./dialog";
 import DiffReview from "./diff-review";
 import DistributionChart from "./distribution-chart";
+import FlipInviteTicket from "./flip-invite-ticket";
+import PeelSticker from "./peel-sticker";
+import PixelSwarmDropdown from "./pixel-swarm-dropdown";
 import Dock from "./dock";
+import DraggableClothPrint from "./draggable-cloth-print";
 import DropdownMenu from "./dropdown-menu";
 import DynamicGridGallery from "./dynamic-grid-gallery";
+import GardenProgressSlider from "./garden-progress-slider";
+import GooeyDeleteConfirm from "./gooey-delete-confirm";
 import GlassCarousel from "./glass-carousel";
+import HoloCardDispenser from "./holo-card-dispenser";
+import HoloFlipBadge from "./holo-flip-badge";
 import ImageViewer from "./image-viewer";
 import InfiniteGrid from "./infinite-grid";
 import InlineEdit from "./inline-edit";
@@ -30,14 +44,25 @@ import LetterCascade from "./letter-cascade";
 import Like from "./like";
 import LiqToggle from "./liq-toggle";
 import MagneticDock from "./magnetic-dock";
+import LiquidGlassClock from "./liquid-glass-clock";
+import MirrorFlipCarousel from "./mirror-flip-carousel";
 import MessageBubble from "./message-bubble";
 import OneTimeCode from "./one-time-code";
 import OrbitCardStack from "./orbit-card-stack";
+import PhotoCardGlobe from "./photo-card-globe";
+import RadialActionMenu from "./radial-action-menu";
+import StatusDotPicker from "./status-dot-picker";
+import WaterRippleRefraction from "./water-ripple-refraction";
+import PageFlipBook from "./page-flip-book";
 import PlanList from "./plan-list";
+import PhotoStackLightbox from "./photo-stack-lightbox";
 import PricingTable from "./pricing-table";
 import PromptComposer from "./prompt-composer";
+import QrCodeAssemble from "./qr-code-assemble";
 import ReasoningTrace from "./reasoning-trace";
 import RollingCounter from "./rolling-counter";
+import ScribbleLoopNav from "./scribble-loop-nav";
+import ScrollProgressOutline from "./scroll-progress-outline";
 import ScrollArea from "./scroll-area";
 import Seek from "./seek";
 import SegmentedControl from "./segmented-control";
@@ -48,6 +73,8 @@ import Spiral3dSlider from "./spiral-3d-slider";
 import SplitPane from "./split-pane";
 import StreamingText from "./streaming-text";
 import SuggestionChips from "./suggestion-chips";
+import SwingingLanyardBadge from "./swinging-lanyard-badge";
+import StretchPillToggle from "./stretch-pill-toggle";
 import Switch from "./switch";
 import Tabs from "./tabs";
 import TerminalOutput from "./terminal-output";
@@ -69,9 +96,15 @@ export const components: Record<string, ComponentType<any>> = {
   "agent-status": AgentStatus,
   "alert": Alert,
   "approval-card": ApprovalCard,
+  "app-icon-paddle-wheel": AppIconPaddleWheel,
   "badge": Badge,
+  "bloom-wave-text": BloomWaveText,
+  "bookshelf-cover-flip": BookshelfCoverFlip,
+  "bouncing-dot-tabs": BouncingDotTabs,
   "button": Button,
+  "button-morph-card": ButtonMorphCard,
   "card": Card,
+  "crumple-paper-carousel": CrumplePaperCarousel,
   "card-swap": CardSwap,
   "carousel": Carousel,
   "chat-thread": ChatThread,
@@ -82,10 +115,18 @@ export const components: Record<string, ComponentType<any>> = {
   "dialog": Dialog,
   "diff-review": DiffReview,
   "distribution-chart": DistributionChart,
+  "flip-invite-ticket": FlipInviteTicket,
+  "peel-sticker": PeelSticker,
+  "pixel-swarm-dropdown": PixelSwarmDropdown,
   "dock": Dock,
+  "draggable-cloth-print": DraggableClothPrint,
   "dropdown-menu": DropdownMenu,
   "dynamic-grid-gallery": DynamicGridGallery,
+  "garden-progress-slider": GardenProgressSlider,
+  "gooey-delete-confirm": GooeyDeleteConfirm,
   "glass-carousel": GlassCarousel,
+  "holo-card-dispenser": HoloCardDispenser,
+  "holo-flip-badge": HoloFlipBadge,
   "image-viewer": ImageViewer,
   "infinite-grid": InfiniteGrid,
   "inline-edit": InlineEdit,
@@ -95,15 +136,26 @@ export const components: Record<string, ComponentType<any>> = {
   "like": Like,
   "liq-toggle": LiqToggle,
   "magnetic-dock": MagneticDock,
+  "liquid-glass-clock": LiquidGlassClock,
+  "mirror-flip-carousel": MirrorFlipCarousel,
   "message-bubble": MessageBubble,
   "one-time-code": OneTimeCode,
   "orbit-card-stack": OrbitCardStack,
+  "photo-card-globe": PhotoCardGlobe,
+  "radial-action-menu": RadialActionMenu,
+  "status-dot-picker": StatusDotPicker,
+  "water-ripple-refraction": WaterRippleRefraction,
+  "page-flip-book": PageFlipBook,
   "plan-list": PlanList,
+  "photo-stack-lightbox": PhotoStackLightbox,
   "pricing-table": PricingTable,
   "prompt-composer": PromptComposer,
+  "qr-code-assemble": QrCodeAssemble,
   "reasoning-trace": ReasoningTrace,
   "rolling-counter": RollingCounter,
+  "scribble-loop-nav": ScribbleLoopNav,
   "scroll-area": ScrollArea,
+  "scroll-progress-outline": ScrollProgressOutline,
   "seek": Seek,
   "segmented-control": SegmentedControl,
   "sign-in-form": SignInForm,
@@ -113,6 +165,8 @@ export const components: Record<string, ComponentType<any>> = {
   "split-pane": SplitPane,
   "streaming-text": StreamingText,
   "suggestion-chips": SuggestionChips,
+  "swinging-lanyard-badge": SwingingLanyardBadge,
+  "stretch-pill-toggle": StretchPillToggle,
   "switch": Switch,
   "tabs": Tabs,
   "terminal-output": TerminalOutput,

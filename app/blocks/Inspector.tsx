@@ -72,7 +72,7 @@ function Body({
     const acc = controls.find(([k]) => k === "accent");
     // Carry the page's sound setting in, if this block has sound.
     if (sound && controls.some(([k]) => k === "sound") && !("sound" in base)) base.sound = true;
-    if (acc && !("accent" in base) && accent.toLowerCase() !== String(defaultOf(acc[1])).toLowerCase()) base.accent = accent;
+    if (acc && !("accent" in base) && !(block.props && "accent" in block.props) && accent.toLowerCase() !== String(defaultOf(acc[1])).toLowerCase()) base.accent = accent;
     return base;
   });
   const [theme, setTheme] = useState<"dark" | "light">("dark");
@@ -190,7 +190,7 @@ function Body({
           {dots && <div aria-hidden className="absolute inset-0" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, ${dot} 1px, transparent 0)`, backgroundSize: "20px 20px" }} />}
           {Comp ? (
             <Fit designWidth={width} padX={40} padTop={72} padBottom={64}>
-              <Comp key={`${block.slug}-${run}`} {...values} theme={theme} />
+              <Comp key={`${block.slug}-${run}`} {...block.props} {...values} theme={theme} />
             </Fit>
           ) : null}
 

@@ -259,9 +259,11 @@ export default function DynamicGridGallery({
             apply()
             return
         }
-        progress.set(0)
+        // jump() rebases without recording a velocity; set(0) registered the drop from the old
+        // progress as a huge velocity that the next spring inherited and overshot with.
+        progress.jump(0)
         apply()
-        anim.current = animate(progress, 1, SPRING)
+        anim.current = animate(progress, 1, { ...SPRING, velocity: 0 })
         return () => anim.current?.stop()
     }, [active, cols, rows, grow, reduce, progress, apply])
 

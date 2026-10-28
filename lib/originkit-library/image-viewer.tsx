@@ -28,26 +28,10 @@ interface ImageViewerProps {
     radius: number
 }
 
-/** Generated artwork so the component works with no network and no assets. */
-function art(hue: number, shape: number): string {
-    const svg =
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">` +
-        `<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">` +
-        `<stop offset="0" stop-color="hsl(${hue},70%,52%)"/><stop offset="1" stop-color="hsl(${(hue + 50) % 360},68%,22%)"/></linearGradient></defs>` +
-        `<rect width="800" height="600" fill="url(#g)"/>` +
-        (shape === 0
-            ? `<circle cx="560" cy="210" r="120" fill="rgba(255,255,255,0.22)"/><path d="M0 470 C 200 380 380 520 800 400 L800 600 L0 600Z" fill="rgba(0,0,0,0.28)"/>`
-            : shape === 1
-              ? `<rect x="150" y="130" width="320" height="320" rx="36" fill="rgba(255,255,255,0.2)" transform="rotate(14 310 290)"/><circle cx="560" cy="380" r="86" fill="rgba(0,0,0,0.25)"/>`
-              : `<path d="M0 360 L240 160 L420 330 L560 230 L800 420 L800 600 L0 600Z" fill="rgba(0,0,0,0.3)"/><circle cx="640" cy="150" r="64" fill="rgba(255,255,255,0.3)"/>`) +
-        `</svg>`
-    return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
-}
-
 const DEFAULTS: ImageItem[] = [
-    { src: art(24, 0), alt: "Warm gradient with a sun over rolling hills" },
-    { src: art(262, 1), alt: "Violet gradient with a tilted square and a circle" },
-    { src: art(190, 2), alt: "Teal gradient with a mountain range and a moon" },
+    { src: "https://images.unsplash.com/photo-1791965558115-58fb666a7850?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", alt: "Spiky orange and black sculpture on a dark grey backdrop" },
+    { src: "https://images.unsplash.com/photo-1792187790722-66db7d13a53f?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", alt: "Stone arch bridge reflected in still water under a full moon" },
+    { src: "https://images.unsplash.com/photo-1792592108795-076164280be6?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D", alt: "Old television on a table in a misty lavender field" },
 ]
 
 const FOCUSABLE = "button:not([disabled])"

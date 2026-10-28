@@ -134,8 +134,13 @@ export function useViewportWidth() {
   return w;
 }
 
-/** True while the element is within `margin` px of the viewport. */
-export function useNear<T extends HTMLElement>(margin = 500) {
+/**
+ * True once the element is within `margin` px of the viewport, and stays true until it is
+ * `release` px away. The gap matters: demos can own WebGL contexts and timers, and tearing
+ * them down the moment they scroll out of range made scrolling back rebuild them (and
+ * exhaust the browser's context limit).
+ */
+export function useNear<T extends HTMLElement>(margin = 500, release = 1800) {
   const ref = useRef<T | null>(null);
   const [near, setNear] = useState(false);
   useEffect(() => {
@@ -144,10 +149,15 @@ export function useNear<T extends HTMLElement>(margin = 500) {
       setNear(true);
       return;
     }
-    const io = new IntersectionObserver(([e]) => setNear(e.isIntersecting), { rootMargin: `${margin}px 0px` });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [margin]);
+    const enter = new IntersectionObserver(([e]) => e.isIntersecting && setNear(true), { rootMargin: `${margin}px 0px` });
+    const leave = new IntersectionObserver(([e]) => !e.isIntersecting && setNear(false), { rootMargin: `${release}px 0px` });
+    enter.observe(el);
+    leave.observe(el);
+    return () => {
+      enter.disconnect();
+      leave.disconnect();
+    };
+  }, [margin, release]);
   return { ref, near };
 }
 
@@ -179,9 +189,9 @@ export function Fit({
     const w = Math.max(i.offsetWidth, i.scrollWidth);
     const h = Math.max(i.offsetHeight, i.scrollHeight);
     if (!w || !h) return;
-    const next = Math.min(1, (b.clientWidth - padX * 2) / w, (b.clientHeight - padTop - padBottom) / h);
+    const next = Math.min(1, b.clientWidth / w, b.clientHeight / h);
     setScale((s) => (Math.abs(s - next) < 0.005 ? s : Math.max(next, 0.2)));
-  }, [padX, padTop, padBottom]);
+  }, []);
 
   useLayoutEffect(() => {
     measure();
@@ -194,8 +204,8 @@ export function Fit({
   return (
     <div
       ref={box}
-      className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[inherit]"
-      style={{ paddingTop: padTop - padBottom }}
+      className="absolute flex items-center justify-center"
+      style={{ top: padTop, bottom: padBottom, left: padX, right: padX }}
     >
       <div
         ref={inner}

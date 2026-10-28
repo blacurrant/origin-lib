@@ -7,7 +7,7 @@ import { components } from "@/lib/originkit-library";
 import { ACCENTS, DEFAULT_ACCENT } from "@/app/core/types";
 import { Inspector, decodeProps } from "./Inspector";
 import { FOCUS, Fit, Icon, SITE, useCoarsePointer, useCopy, useNear, useSaved, useSoundPref, useViewportWidth } from "./kit";
-import { BLOCKS, INTERACTIONS, TILE_ASPECT, type Block, type Interaction } from "./manifest";
+import { BLOCKS, INTERACTIONS, tileAspect, type Block, type Interaction } from "./manifest";
 import type { Values } from "./controls";
 
 type Layout = "masonry" | "even";
@@ -20,6 +20,22 @@ function maxCols(w: number) {
 }
 function defaultCols(w: number) {
   return w < 640 ? 1 : w < 1024 ? 2 : 3;
+}
+
+/**
+ * Masonry columns that read left to right: each block goes to the shortest column so far,
+ * so the first row is 1, 2, 3 and the columns stay level. Tiles share a width, so a tile's
+ * height is just 1 / aspect.
+ */
+function masonryColumns(blocks: Block[], cols: number): Block[][] {
+  const out: Block[][] = Array.from({ length: cols }, () => []);
+  const heights = new Array<number>(cols).fill(0);
+  for (const b of blocks) {
+    const c = heights.indexOf(Math.min(...heights));
+    out[c].push(b);
+    heights[c] += 1 / tileAspect(b);
+  }
+  return out;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -72,7 +88,7 @@ function Tile({
   const { ref, near } = useNear<HTMLDivElement>();
   const preview = useRef<HTMLDivElement | null>(null);
   const compact = cols >= 4;
-  const aspect = layout === "even" ? 1.25 : TILE_ASPECT[block.size];
+  const aspect = layout === "even" ? 1.25 : tileAspect(block);
 
   // On a pointer device the preview is live. Two guards keep that from fighting the page:
   // wheel gestures scroll the page (a demo that pans on wheel would trap the scroll), and the
@@ -109,7 +125,7 @@ function Tile({
         <div ref={preview} className={`absolute inset-0 ${coarse ? "pointer-events-none" : ""}`}>
           {Comp && near && (
             <Fit designWidth={480} padX={compact ? 16 : 28} padTop={compact ? 16 : 28} padBottom={compact ? 68 : 92}>
-              <Comp accent={accent} theme="dark" sound={sound} />
+              <Comp accent={accent} theme="dark" sound={sound} {...block.props} />
             </Fit>
           )}
         </div>
@@ -521,11 +537,15 @@ export function Blocks() {
             </button>
           </div>
         ) : layout === "masonry" ? (
-          <ul style={{ columnCount: cols, columnGap: gap }}>
-            {visible.map((b) => (
-              <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} sound={soundOn} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
+          <div className="flex items-start" style={{ gap }}>
+            {masonryColumns(visible, cols).map((column, i) => (
+              <ul key={i} className="min-w-0 flex-1">
+                {column.map((b) => (
+                  <Tile key={b.slug} block={b} accent={accent} cols={cols} layout={layout} coarse={coarse} sound={soundOn} saved={saved.includes(b.slug)} onOpen={open} onToggleSaved={toggleSaved} />
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
         ) : (
           <ul className="grid" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap }}>
             {visible.map((b) => (

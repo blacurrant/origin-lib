@@ -46,8 +46,8 @@ const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
 
 /** Which section a control belongs to: what it says, how it behaves, how it looks. */
 function section(key: string, c: PC): "Content" | "Behavior" | "Style" {
-  if (c.type === "color" || key === "radius" || key === "cornerRadius") return "Style";
-  if (c.type === "array" || c.type === "string") return "Content";
+  if (c.type === "color" || c.type === "font" || key === "radius" || key === "cornerRadius") return "Style";
+  if (c.type === "array" || c.type === "string" || c.type === "responsiveimage" || c.type === "image") return "Content";
   return "Behavior";
 }
 
@@ -186,6 +186,20 @@ function Input({ id, k, c, value, onChange }: { id: string; k: string; c: PC; va
         </select>
       );
     }
+    case "font": {
+      // No font picker here; edit the family, keep the rest of the font as it is.
+      const font = (value && typeof value === "object" ? value : {}) as Values;
+      return (
+        <input
+          id={id}
+          type="text"
+          value={String(font.fontFamily ?? "")}
+          placeholder="Georgia, serif"
+          onChange={(e) => onChange({ ...font, fontFamily: e.target.value || undefined })}
+          className={FIELD}
+        />
+      );
+    }
     case "color":
       return <ColorField value={String(value ?? "")} onChange={onChange} label={label} presets={k === "accent"} />;
     case "array":
@@ -193,7 +207,8 @@ function Input({ id, k, c, value, onChange }: { id: string; k: string; c: PC; va
     case "object":
       return <ObjectFields idPrefix={id} c={c} value={(value as Values) ?? {}} onChange={onChange} />;
     default: {
-      const text = String(value ?? "");
+      // An image control's value is { src, alt }; edit its URL as text.
+      const text = value && typeof value === "object" && "src" in value ? String((value as { src: unknown }).src ?? "") : String(value ?? "");
       if (c.displayTextArea || text.length > 60)
         return <textarea id={id} rows={3} value={text} placeholder={c.placeholder} onChange={(e) => onChange(e.target.value)} className={`${FIELD} h-auto resize-y py-2 leading-[1.5]`} />;
       return <input id={id} type="text" value={text} placeholder={c.placeholder} onChange={(e) => onChange(e.target.value)} className={FIELD} />;
@@ -332,6 +347,9 @@ export function PropsPanel({
   const groups: Record<string, [string, PC][]> = { Content: [], Behavior: [], Style: [] };
   for (const entry of controls) groups[section(entry[0], entry[1])].push(entry);
   const changed = controls.filter(([k, c]) => k in values && !same(values[k], defaultOf(c))).length;
+  // An Advanced group holds the fine tuning, so it starts closed.
+  const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set());
+  const collapsible = (key: string, c: PC) => c.type === "object" && key === "advanced";
 
   return (
     <div>
@@ -359,11 +377,36 @@ export function PropsPanel({
                 const dirty = key in values && !same(values[key], def);
                 const id = `${uid}-${key}`;
                 const inline = c.type === "boolean";
+                const fold = collapsible(key, c);
+                const open = !fold || openGroups.has(key);
                 const header = (
                   <div className="flex items-center gap-2">
-                    <label htmlFor={id} className="text-[12.5px] font-medium text-[#c9c9cc]">
-                      {c.title ?? key}
-                    </label>
+                    {fold ? (
+                      <button
+                        type="button"
+                        aria-expanded={open}
+                        aria-controls={id}
+                        onClick={() =>
+                          setOpenGroups((s) => {
+                            const next = new Set(s);
+                            if (next.has(key)) next.delete(key);
+                            else next.add(key);
+                            return next;
+                          })
+                        }
+                        className={`-ml-1 flex items-center gap-1.5 rounded-md px-1 py-0.5 text-[12.5px] font-medium text-[#c9c9cc] transition-colors hover:text-white ${FOCUS}`}
+                      >
+                        <span className={`text-[#8b8b90] transition-transform ${open ? "rotate-90" : ""}`}>
+                          <Icon name="chevron" size={12} />
+                        </span>
+                        {c.title ?? key}
+                        <span className="text-[11.5px] font-normal text-[#5f5f65]">{Object.keys(c.controls ?? {}).length}</span>
+                      </button>
+                    ) : (
+                      <label htmlFor={id} className="text-[12.5px] font-medium text-[#c9c9cc]">
+                        {c.title ?? key}
+                      </label>
+                    )}
                     {dirty && (
                       <button
                         type="button"
@@ -388,7 +431,11 @@ export function PropsPanel({
                 ) : (
                   <div key={key} className="space-y-2">
                     {header}
-                    <Input id={id} k={key} c={c} value={value} onChange={(v) => onChange(key, v)} />
+                    {open && (
+                      <div id={fold ? id : undefined}>
+                        <Input id={id} k={key} c={c} value={value} onChange={(v) => onChange(key, v)} />
+                      </div>
+                    )}
                   </div>
                 );
               })}
